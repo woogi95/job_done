@@ -13,21 +13,21 @@
 
 ## 2. 커밋 컨벤션
 
-feat : 새로운 기능 구현 및 추가
-fix : 오류 수정
-docs : readme.md, json 파일 등 수정, 라이브러리 설치(문서 관련)
-style : 공백, 세미콜론 및 스타일 수정
-refactor : 코드 리팩토링
-chore : 빌드 부분 혹은 패키지 매니저 수정 사항
-rename : 파일명, 폴더명 수정
-remove : 파일 삭제
+- feat : 새로운 기능 구현 및 추가
+- fix : 오류 수정
+- docs : readme.md, json 파일 등 수정, 라이브러리 설치(문서 관련)
+- style : 공백, 세미콜론 및 스타일 수정
+- refactor : 코드 리팩토링
+- chore : 빌드 부분 혹은 패키지 매니저 수정 사항
+- rename : 파일명, 폴더명 수정
+- remove : 파일 삭제
 
 ## 3. 브랜치 전략
 
-main: 메인 서버 확인용
-develop : 메인에 들어가기 전 서브 확인용
-feature : 추가 기능 개발 확인용
-release : develop 을 release 로 옮긴 후 테스트를 진행용
-hotfix : 버그를 수정용
+- main: 메인 서버 확인용
+- develop : 메인에 들어가기 전 서브 확인용
+- feature : 추가 기능 개발 확인용
+- release : develop 을 release 로 옮긴 후 테스트를 진행용
+- hotfix : 버그를 수정용
 
 ## 폴더구조
