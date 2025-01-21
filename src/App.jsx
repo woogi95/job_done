@@ -7,6 +7,17 @@ import SignUpDone from "./pages/login/SignUpDone";
 import SignUpPage from "./pages/login/SignUpPage";
 import Index from "./pages/mainpage/Index";
 import NotFound from "./pages/NotFound";
+import EmailPassword from "./pages/login/EmailPassword";
+import DetailPage from "./pages/company/Index";
+import ReservationPage from "./pages/company/ReservationPage";
+import MovePage from "./pages/mainpage/move/Index";
+import CarWashPage from "./pages/mainpage/carwash/Index";
+import MyPage from "./pages/mypage/Index";
+import ReviewPage from "./pages/mypage/ReviewPage";
+import Wishlist from "./pages/mypage/Wishlist";
+import MyMessage from "./pages/mypage/MyMessage";
+import UsageDetails from "./pages/mypage/UsageDetails";
+import CleaningPage from "./pages/mainpage/cleaning/Index";
 
 function App() {
   return (
@@ -20,11 +31,42 @@ function App() {
           <Route path="signup" element={<SignUpPage />} />
           <Route path="email" element={<EmailPage />} />
           <Route path="signupdone" element={<SignUpDone />} />
+          <Route path="epw" element={<EmailPassword />} />
         </Route>
         {/* 사업자 등록*/}
         <Route path="/business">
           <Route index element={<BusinessSignUp />} />
           <Route path="number" element={<BusinessNumber />} />
+        </Route>
+        {/* 업체 페이지 */}
+        <Route path="/company">
+          <Route index element={<DetailPage />} />
+          <Route path="reservation" element={<ReservationPage />} />
+        </Route>
+        {/* 세차 페이지 */}
+        <Route path="/carwash">
+          <Route index element={<CarWashPage />} />
+        </Route>
+        {/* 청소 페이지 */}
+        <Route path="/cleaning">
+          <Route index element={<CleaningPage />} />
+        </Route>
+        {/* 이사 페이지 */}
+        <Route path="/move">
+          <Route index element={<MovePage />} />
+        </Route>
+        {/* 세차 페이지 */}
+        <Route path="/carwash">
+          <Route index element={<CarWashPage />} />
+        </Route>
+        {/* 마이페이지 */}
+        <Route path="/mypage">
+          <Route index element={<MyPage />} />
+          <Route path="message" element={<MyMessage />} />
+          <Route path="reservation" element={<ReservationPage />} />
+          <Route path="review" element={<ReviewPage />} />
+          <Route path="usage" element={<UsageDetails />} />
+          <Route path="wishlist" element={<Wishlist />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
