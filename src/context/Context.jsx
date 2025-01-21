@@ -1,7 +1,7 @@
 import React from "react";
 
-function Context() {
+const Context = () => {
   return <div>Context</div>;
-}
+};
 
 export default Context;

@@ -1,7 +1,7 @@
 import React from "react";
 
-const ReviewPage = () => {
+function ReviewPage() {
   return <div>ReviewPage</div>;
-};
+}
 
 export default ReviewPage;

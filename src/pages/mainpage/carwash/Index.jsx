@@ -1,7 +1,7 @@
 import React from "react";
 
-const CarWashPage = () => {
+function CarWashPage() {
   return <div>CarWashPage</div>;
-};
+}
 
 export default CarWashPage;

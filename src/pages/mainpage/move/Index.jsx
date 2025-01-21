@@ -1,7 +1,7 @@
 import React from "react";
 
-const MovePage = () => {
+function MovePage() {
   return <div>MovePage</div>;
-};
+}
 
 export default MovePage;

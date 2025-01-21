@@ -1,7 +1,7 @@
 import React from "react";
 
-const UsageDetails = () => {
+function UsageDetails() {
   return <div>UsageDetails</div>;
-};
+}
 
 export default UsageDetails;

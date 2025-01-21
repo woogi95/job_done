@@ -1,7 +1,7 @@
 import React from "react";
 
-const CleaningPage = () => {
+function CleaningPage() {
   return <div>CleaningPage</div>;
-};
+}
 
 export default CleaningPage;
