@@ -2,7 +2,7 @@ import React from "react";
 import "./Index.css";
 import { Link } from "react-router-dom";
 
-const LoginPage = () => {
+function LoginPage() {
   return (
     <div className="login-div">
       {/* 로그인, 비밀번호 */}
@@ -41,6 +41,6 @@ const LoginPage = () => {
       <div></div>
     </div>
   );
-};
+}
 
 export default LoginPage;

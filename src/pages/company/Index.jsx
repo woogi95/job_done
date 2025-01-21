@@ -1,6 +1,7 @@
-// 업체 상세 페이지
-const DetailPage = () => {
+import React from "react";
+
+function DetailPage() {
   return <div>DetailPage</div>;
-};
+}
 
 export default DetailPage;

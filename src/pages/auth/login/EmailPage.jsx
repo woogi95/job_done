@@ -1,9 +1,9 @@
 import { Button, Form, Input } from "antd";
 import { useRecoilState } from "recoil";
-import { joinUserState } from "../../atoms/loginAtom";
+import { joinUserState } from "../../../atoms/loginAtom";
 import axios from "axios";
 
-const EmailPage = () => {
+function EmailPage() {
   const userInfo = useRecoilState(joinUserState);
   const initialData = {
     email: "by5028@naver.com",
@@ -51,6 +51,6 @@ const EmailPage = () => {
       </Form>
     </div>
   );
-};
+}
 
 export default EmailPage;

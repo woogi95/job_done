@@ -1,7 +1,7 @@
 import React from "react";
 
-const EmailPassword = () => {
+function EmailPassword() {
   return <div>EmailPassword</div>;
-};
+}
 
 export default EmailPassword;

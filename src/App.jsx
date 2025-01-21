@@ -1,13 +1,13 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import BusinessNumber from "./pages/business/BusinessNumber";
-import BusinessSignUp from "./pages/business/Index";
-import EmailPage from "./pages/login/EmailPage";
-import LoginPage from "./pages/login/Index";
-import SignUpDone from "./pages/login/SignUpDone";
-import SignUpPage from "./pages/login/SignUpPage";
+import BusinessNumber from "./pages/auth/business/BusinessNumber";
+import BusinessSignUp from "./pages/auth/business/Index";
+import EmailPage from "./pages/auth/login/EmailPage";
+import LoginPage from "./pages/auth/login/Index";
+import SignUpDone from "./pages/auth/login/SignUpDone";
+import SignUpPage from "./pages/auth/login/SignUpPage";
 import Index from "./pages/mainpage/Index";
 import NotFound from "./pages/NotFound";
-import EmailPassword from "./pages/login/EmailPassword";
+import EmailPassword from "./pages/auth/login/EmailPassword";
 import DetailPage from "./pages/company/Index";
 import ReservationPage from "./pages/company/ReservationPage";
 import MovePage from "./pages/mainpage/move/Index";
@@ -18,6 +18,17 @@ import Wishlist from "./pages/mypage/Wishlist";
 import MyMessage from "./pages/mypage/MyMessage";
 import UsageDetails from "./pages/mypage/UsageDetails";
 import CleaningPage from "./pages/mainpage/cleaning/Index";
+import ExpertMain from "./pages/expert/ExpertMain";
+import CompanyInfo from "./pages/expert/management/CompanyInfo";
+import ExpertDetailPage from "./pages/expert/management/ExpertDetailPage";
+import EditCompanyInfo from "./pages/expert/management/EditCompanyInfo";
+import EditDetailPage from "./pages/expert/management/EditDetailPage";
+import Portfolio from "./pages/expert/management/Portfolio";
+import CreateQuotation from "./pages/expert/quotation/CreateQuotation";
+import EditQuotation from "./pages/expert/quotation/EditQuotation";
+import QuotationService from "./pages/expert/quotation/QuotationService";
+import Payment from "./pages/expert/reservation/Payment";
+import Reservation from "./pages/expert/reservation/Reservation";
 
 function App() {
   return (
@@ -67,6 +78,24 @@ function App() {
           <Route path="review" element={<ReviewPage />} />
           <Route path="usage" element={<UsageDetails />} />
           <Route path="wishlist" element={<Wishlist />} />
+        </Route>
+        {/* 전문가 페이지 */}
+        <Route path="/expert">
+          {/* 관리자 */}
+          <Route index element={<ExpertMain />} />
+          <Route path="management" element={<CompanyInfo />} />
+          <Route path="edit" element={<EditCompanyInfo />} />
+          <Route path="editdetail" element={<EditDetailPage />} />
+          <Route path="detail" element={<ExpertDetailPage />} />
+          <Route path="portfolio" element={<Portfolio />} />
+
+          {/* 견적서 */}
+          <Route path="create" element={<CreateQuotation />} />
+          <Route path="quotation" element={<EditQuotation />} />
+          <Route path="service" element={<QuotationService />} />
+          {/* 예약 */}
+          <Route path="payment" element={<Payment />} />
+          <Route path="reservation" element={<Reservation />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

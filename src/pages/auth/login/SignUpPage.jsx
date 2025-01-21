@@ -1,12 +1,16 @@
 import { Button, Form, Input, Upload } from "antd";
 import { useRecoilState } from "recoil";
-import { isOpenModalUpw, joinUserState, upwCheck } from "../../atoms/loginAtom";
+import {
+  isOpenModalUpw,
+  joinUserState,
+  upwCheck,
+} from "../../../atoms/loginAtom";
 import "./Index.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SignUpPage = () => {
+function SignUpPage() {
   const [match, setMatch] = useRecoilState(upwCheck);
   const [isUpw, setIsUpw] = useRecoilState(isOpenModalUpw);
   const [file, setFile] = useState(null); // 파일 상태 관리
@@ -172,6 +176,6 @@ const SignUpPage = () => {
       )}
     </div>
   );
-};
+}
 
 export default SignUpPage;

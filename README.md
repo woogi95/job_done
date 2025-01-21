@@ -10,6 +10,8 @@
   : camelCase(카멜케이스)
 - 확장자 jsx, tsx
   : PascalCase(파스칼케이스)
+- 화살표 함수 사용
+  : context
 
 ## 2. 커밋 컨벤션
 
