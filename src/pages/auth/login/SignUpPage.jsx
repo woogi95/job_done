@@ -25,6 +25,7 @@ function SignUpPage() {
     upw: "Qkqhdi12",
     upwConfirm: "Qkqhdi12",
     phone: "01012345678",
+    pic: "",
   };
   //취소버튼
   const goCancle = () => {
@@ -46,43 +47,16 @@ function SignUpPage() {
 
   // 폼 제출
   const onSubmit = async data => {
-    const excludeKeys = ["upwConfirm"];
-
-    // 제외된 데이터를 새 객체로 생성
-    const filteredData = Object.fromEntries(
-      Object.entries(data).filter(([key]) => !excludeKeys.includes(key)),
-    );
-
+    console.log(data);
     try {
-      const formData = new FormData();
-
-      // 서버에서 요구하는 데이터 구조에 맞게 추가
-      formData.append(
-        "p",
-        new Blob(
-          [
-            JSON.stringify({
-              filteredData,
-            }),
-          ],
-          { type: "application/json" },
-        ),
-      );
-
-      if (file) {
-        formData.append("pic", file); // 선택된 파일 추가
-      } else {
-        formData.append("pic", ""); // 파일이 없을 경우 빈 값 추가
-      }
       setUserInfo(prev => ({
         ...prev,
-        ...filteredData,
+        ...data,
       }));
-
       const res = await axios.post("/api/email-check", {
-        email: `${filteredData.email}`,
+        email: `${data.email}`,
       });
-      console.log(res);
+      // console.log(res);
       // console.log(userInfo);
 
       navigate("/login/email");

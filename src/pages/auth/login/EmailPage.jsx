@@ -4,6 +4,7 @@ import {
   countDownCheck,
   joinUserState,
   openModalEmail,
+  profilFile,
 } from "../../../atoms/loginAtom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ function EmailPage() {
   const userInfo = useRecoilState(joinUserState);
   const [isEmail, setIsEmail] = useRecoilState(openModalEmail);
   const [countDown, setCountDown] = useRecoilState(countDownCheck);
+  const [file, setFile] = useRecoilState(profilFile); // 파일 상태 관리
   const navigate = useNavigate();
 
   // 네비게이트
@@ -22,23 +24,52 @@ function EmailPage() {
   };
   // 폼 데이터
   const initialData = {
-    email: "by5028@naver.com",
+    email: userInfo[0].email,
+    name: userInfo[0].name,
+    phone: userInfo[0].phone,
     authCode: "",
+    pic: "",
   };
+  console.log(initialData);
   // 이메일인증완료버튼
-  const handleEmailModal = async () => {
-    setIsEmail(false);
+  const handleEmailModal = async data => {
+    const excludeKeys = ["upwConfirm"];
+
+    // 제외된 데이터를 새 객체로 생성
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(([key]) => !excludeKeys.includes(key)),
+    );
+
+    console.log(filteredData); // 필터링된 데이터 확인
+
     try {
-      const header = {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      // 요청 데이터를 생성
+      const payload = {
+        p: {
+          email: filteredData.email,
+          upw: filteredData.upw, // `upw`가 필요하다면 추가
+          name: filteredData.name,
+          phone: filteredData.phone,
         },
+        pic: file || null, // 파일이 없으면 "string" 기본값
       };
-      const res = await axios.post("/api/sign-up", userInfo[0], header);
-      navigate("/login/signupdone");
-      return res;
+      if (data.pic[0]) {
+        payload.append("pic", data.pic[0]); // 파일일 경우
+      } else {
+        payload.append("pic", null); // 파일이 없을 경우
+      }
+      console.log("Payload to send:", payload);
+
+      // Axios POST 요청
+      const res = await axios.post("/api/user/sign-up", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      if (res) {
+        setIsEmail(false);
+        navigate("/login/signupdone");
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -46,20 +77,33 @@ function EmailPage() {
   const onFinish = async data => {
     console.log(data);
     try {
-      const result = await axios.put("/api/auth-check", data);
+      // const result = await axios.put("/api/auth-check", data);
+      const result = await axios.put(
+        `/api/auth-check?email=${data.email}&authCode=${data.authCode}`,
+      );
+
       if (result) {
         setIsEmail(true);
       }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        console.error("Error Response Data:", error.response.data);
+        console.error("Error Status Code:", error.response.status);
+      } else if (error.request) {
+        console.error("No Response Received:", error.request);
+      } else {
+        console.error("Request Error:", error.message);
+      }
     }
   };
+
   // 다시 전송 버튼
   const repeatPost = async () => {
     try {
       const res = await axios.post("/api/email-check", {
         email: `${userInfo[0].email}`,
       });
+
       return res;
     } catch (error) {
       console.log(error);
@@ -128,7 +172,7 @@ function EmailPage() {
       {isEmail && (
         <div className="emailModal">
           <h1>이메일인증이 완료 되었습니다.</h1>
-          <button onClick={() => handleEmailModal()}>확인</button>
+          <button onClick={() => handleEmailModal(userInfo[0])}>확인</button>
         </div>
       )}
     </div>

@@ -14,7 +14,7 @@ export const isOpenModalUpw = atom({
 // 회원가입 폼 저장 상태
 export const joinUserState = atom({
   key: "joinUserState",
-  default: { name: "", email: "", upw: "", upwConfirm: "", phone: "" },
+  default: { name: "", email: "", upw: "", upwConfirm: "", phone: "", pic: "" },
 });
 
 // 이메일 인증완료 모달
@@ -27,4 +27,10 @@ export const openModalEmail = atom({
 export const countDownCheck = atom({
   key: "countDownCheck",
   default: 180,
+});
+
+// 프로필사진 관리
+export const profilFile = atom({
+  key: "profilFile",
+  default: null,
 });
