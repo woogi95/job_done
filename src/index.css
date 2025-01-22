@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+  unicode-range: U+AC00-D7A3;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,4 +25,8 @@ html {
 body {
   font-size: var(--font-size-base);
   color: var(--primary-color);
+}
+html,
+body :root {
+  font-family: "Pretendard-Regular", "Spoqa Han Sans Neo", sans-serif;
 }
