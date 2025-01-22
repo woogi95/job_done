@@ -6,6 +6,7 @@ import {
   upwCheck,
 } from "../../../atoms/loginAtom";
 import "./Index.css";
+import "./signuppage.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,10 @@ function SignUpPage() {
     upwConfirm: "Qkqhdi12",
     phone: "01012345678",
   };
-
+  //취소버튼
+  const goCancle = () => {
+    navigate("/login");
+  };
   // 비밀번호 확인
   const handleChangePassword = () => {
     const pw = upwForm.getFieldValue("upw");
@@ -79,7 +83,7 @@ function SignUpPage() {
         email: `${filteredData.email}`,
       });
       console.log(res);
-      console.log(userInfo);
+      // console.log(userInfo);
 
       navigate("/login/email");
     } catch (error) {
@@ -88,11 +92,11 @@ function SignUpPage() {
   };
 
   return (
-    <div>
+    <div className="signUpDiv">
       <Form
         form={upwForm}
         initialValues={initData}
-        style={{ width: 600, margin: "0 auto" }}
+        style={{ width: 320, margin: "0 auto" }}
         onFinish={onSubmit}
       >
         <Form.Item
@@ -163,8 +167,13 @@ function SignUpPage() {
             <Button>이미지 선택</Button>
           </Upload>
         </Form.Item>
-        <Form.Item>
-          <Button htmlType="submit">이메일 인증하기</Button>
+        <Form.Item className="clickbuttons">
+          <button className="cancle" onClick={() => goCancle()}>
+            취소
+          </button>
+          <Button htmlType="submit" className="nextButton">
+            다음
+          </Button>
         </Form.Item>
       </Form>
 

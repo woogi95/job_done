@@ -16,3 +16,15 @@ export const joinUserState = atom({
   key: "joinUserState",
   default: { name: "", email: "", upw: "", upwConfirm: "", phone: "" },
 });
+
+// 이메일 인증완료 모달
+export const openModalEmail = atom({
+  key: "openModalEmail",
+  default: false,
+});
+
+// 이메일 인증 인풋 시간
+export const countDownCheck = atom({
+  key: "countDownCheck",
+  default: 180,
+});

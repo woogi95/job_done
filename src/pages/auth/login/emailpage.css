@@ -1,0 +1,58 @@
+.ant-form-item {
+  margin-bottom: 10px !important;
+}
+.checkingBox div {
+  display: block;
+}
+.ant-form-item .ant-form-item-control-input-content {
+  font-size: 20px !important;
+}
+.ant-col {
+  text-align: left !important;
+}
+.emailModal {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.emailModal button {
+  border-radius: 1px;
+  border: 1px solid gray;
+}
+.clickbuttons div {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.cancle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  text-align: center;
+  background: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+  cursor: pointer;
+  user-select: none;
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.cancle:hover {
+  background-color: #4581f0;
+}
+.checkingTry {
+  background-color: #4581f0;
+  color: white;
+  width: 150px;
+  height: 40px;
+}
