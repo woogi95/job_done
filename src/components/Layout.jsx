@@ -19,7 +19,7 @@ function Layout() {
   return (
     <div>
       {isLayourVisible && <Header></Header>}
-      <main>
+      <main className="pt-[80px] pb-[100px]">
         <Outlet />
       </main>
       {isLayourVisible && <Footer></Footer>}
