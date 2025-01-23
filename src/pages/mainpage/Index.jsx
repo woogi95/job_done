@@ -53,11 +53,11 @@ const Index = () => {
                 key={item.id}
                 className="flex flex-col rounded-lg w-[400px] gap-[10px] relative group overflow-hidden"
               >
-                <div className="aspect-[4/3] w-full">
+                <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
                   <img
                     src={item.image}
                     alt="사진"
-                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <span className="block w-full overflow-hidden">
@@ -99,11 +99,11 @@ const Index = () => {
                 key={item.id}
                 className="flex flex-col rounded-lg w-[400px] gap-[10px] relative group overflow-hidden"
               >
-                <div className="aspect-[4/3] w-full">
+                <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
                   <img
                     src={item.image}
                     alt="사진"
-                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <span className="block w-full overflow-hidden">
