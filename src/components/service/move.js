@@ -128,15 +128,73 @@ export const ServiceListContentDiv = styled.div`
   }
 
   .list {
-    border: 1px solid #eee;
+    /* border: 1px solid #eee; */
     margin: 15px 0;
-    .listItem {
-      border: 1px solid #eee;
-      width: calc((100% - 60px) / 4);
-      .thum {
-        width: 100%;
-        height: 240px;
-      }
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px 20px;
+  }
+`;
+
+// 서비스 리스트 아이템
+export const ListItemDiv = styled.div`
+  border: 1px solid #eee;
+  width: calc((100% - 60px) / 4);
+
+  /* width: 265px; */
+  overflow: hidden;
+  border-radius: 8px;
+  .thum {
+    width: 100%;
+    height: 265px;
+    background-color: #eee;
+    position: relative;
+  }
+
+  .like svg {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    color: red;
+  }
+
+  .info {
+    > em {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 3px;
+    }
+    h4 {
+      font-size: 15px;
+      color: #111;
+      line-height: 1.2em;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 20px;
+      color: #000;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+  }
+  .countStar {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    svg {
+      font-size: 16px;
+      color: #ff9d00;
+    }
+    em {
+      font-size: 15px;
+      color: #333;
+    }
+    span {
+      font-size: 14px;
+      color: #bbb;
+      font-weight: 500;
     }
   }
 `;
