@@ -1,23 +1,16 @@
 import ServiceListTop from "../../../components/service/ServiceListTop";
-import { IoIosArrowDown } from "react-icons/io";
-
-import {
-  LayoutDiv,
-  ServiceListContentDiv,
-} from "../../../components/service/move";
+import { ServiceContentDiv } from "./cleaning";
+import { LayoutDiv } from "../../../components/service/move";
+import Filter from "../../../components/service/Filter";
 import ServiceListItem from "../../../components/service/ServiceListItem";
+
 function MovePage() {
   return (
     <>
       <ServiceListTop />
-      <ServiceListContentDiv>
+      <ServiceContentDiv>
         <LayoutDiv>
-          <div className="filter-area">
-            <div className="filter">
-              <p>최신순</p>
-              <IoIosArrowDown />
-            </div>
-          </div>
+          <Filter />
           <div className="list">
             <ServiceListItem />
             <ServiceListItem />
@@ -39,8 +32,10 @@ function MovePage() {
             <ServiceListItem />
             <ServiceListItem />
           </div>
+
+          {/* 페이지네이션 넣어야함 */}
         </LayoutDiv>
-      </ServiceListContentDiv>
+      </ServiceContentDiv>
     </>
   );
 }

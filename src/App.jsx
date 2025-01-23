@@ -29,6 +29,7 @@ import EditQuotation from "./pages/expert/quotation/EditQuotation";
 import QuotationService from "./pages/expert/quotation/QuotationService";
 import Payment from "./pages/expert/reservation/Payment";
 import Reservation from "./pages/expert/reservation/Reservation";
+import MoveDetail from "./pages/mainpage/move/Detail";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
         {/* 이사 페이지 */}
         <Route path="/move">
           <Route index element={<MovePage />} />
+          <Route path=":id" element={<MoveDetail />} />
         </Route>
         {/* 세차 페이지 */}
         <Route path="/carwash">

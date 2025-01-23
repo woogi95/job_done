@@ -3,14 +3,14 @@ import styled from "@emotion/styled";
 // 레이아웃(임시)
 export const LayoutDiv = styled.div`
   max-width: 1280px;
-  border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   margin: 0 auto;
 `;
 
 // 서브페이지 - 탑
 export const PageTopDiv = styled.div`
   height: 320px;
-  background-color: #fbfbfb;
+  background-color: rgb(245, 245, 245);
   display: flex;
   justify-content: center;
   align-item: center;
@@ -104,35 +104,48 @@ export const PageTopDiv = styled.div`
   }
 `;
 
-// 서브페이지 - 컨텐츠
-export const ServiceListContentDiv = styled.div`
-  border: 1px solid #eee;
-  padding: 80px 0 160px;
-
-  .filter-area {
+export const FilterDiv = styled.div`
+  display: flex;
+  justify-content: end;
+  position: relative;
+  height: 42px;
+  .select {
+    height: 100%;
+    min-width: 145px;
+    border-radius: 30px;
+    background-color: #323232;
+    padding: 7px 16px 9px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
     display: flex;
-    justify-content: end;
-    .filter {
-      height: 42px;
-      min-width: 145px;
-      border-radius: 30px;
-      background-color: #323232;
-      padding: 7px 16px 9px;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 600;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
   }
+  .options {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    border-radius: 3px;
 
-  .list {
-    /* border: 1px solid #eee; */
-    margin: 15px 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 50px 20px;
+    min-width: 145px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+
+    div {
+      padding: 7px 16px 9px;
+      cursor: pointer;
+      background-color: #eee;
+      transition: all 0.1s;
+      &:hover {
+        background-color: #323232;
+        color: #fff;
+      }
+    }
   }
 `;
 
@@ -140,6 +153,7 @@ export const ServiceListContentDiv = styled.div`
 export const ListItemDiv = styled.div`
   border: 1px solid #eee;
   width: calc((100% - 60px) / 4);
+  cursor: pointer;
 
   /* width: 265px; */
   overflow: hidden;
@@ -158,6 +172,7 @@ export const ListItemDiv = styled.div`
     width: 22px;
     height: 22px;
     color: red;
+    cursor: pointer;
   }
 
   .info {
