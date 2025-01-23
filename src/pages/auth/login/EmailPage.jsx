@@ -15,7 +15,7 @@ function EmailPage() {
   const userInfo = useRecoilState(joinUserState);
   const [isEmail, setIsEmail] = useRecoilState(openModalEmail);
   const [countDown, setCountDown] = useRecoilState(countDownCheck);
-  const [file, setFile] = useRecoilState(profilFile); // 파일 상태 관리
+  const [fileList, setFileList] = useRecoilState(profilFile); // 파일 상태 관리
   const navigate = useNavigate();
 
   // 네비게이트
@@ -27,52 +27,52 @@ function EmailPage() {
     email: userInfo[0].email,
     name: userInfo[0].name,
     phone: userInfo[0].phone,
+    upw: userInfo[0].upw,
     authCode: "",
     pic: "",
   };
-  console.log(initialData);
+  // console.log(initialData);
   // 이메일인증완료버튼
   const handleEmailModal = async data => {
-    const excludeKeys = ["upwConfirm"];
-
-    // 제외된 데이터를 새 객체로 생성
-    const filteredData = Object.fromEntries(
-      Object.entries(data).filter(([key]) => !excludeKeys.includes(key)),
-    );
-
-    console.log(filteredData); // 필터링된 데이터 확인
-
     try {
-      // 요청 데이터를 생성
-      const payload = {
-        p: {
-          email: filteredData.email,
-          upw: filteredData.upw, // `upw`가 필요하다면 추가
-          name: filteredData.name,
-          phone: filteredData.phone,
-        },
-        pic: file || null, // 파일이 없으면 "string" 기본값
-      };
-      if (data.pic[0]) {
-        payload.append("pic", data.pic[0]); // 파일일 경우
-      } else {
-        payload.append("pic", null); // 파일이 없을 경우
-      }
-      console.log("Payload to send:", payload);
+      const formData = new FormData();
 
-      // Axios POST 요청
-      const res = await axios.post("/api/user/sign-up", payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (res) {
-        setIsEmail(false);
-        navigate("/login/signupdone");
+      const requestData = {
+        name: data.name,
+        email: data.email,
+        upw: data.upw,
+        phone: data.phone,
+      };
+
+      // JSON 데이터를 FormData에 추가
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(requestData)], {
+          type: "application/json",
+        }),
+      );
+
+      // 파일 추가 (data.pic이 있는 경우)
+      if (data.pic) {
+        formData.append("pic", data.pic);
       }
+
+      // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
+      const res = await axios.post("/api/user/sign-up", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setIsEmail(false);
+      navigate("/login/signupdone"); // 응답 데이터 확인
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Error during sign-up:",
+        error.response?.data || error.message,
+      );
     }
   };
-
   // 폼 onFinish
   const onFinish = async data => {
     console.log(data);
@@ -170,9 +170,11 @@ function EmailPage() {
         </Form.Item>
       </Form>
       {isEmail && (
-        <div className="emailModal">
-          <h1>이메일인증이 완료 되었습니다.</h1>
-          <button onClick={() => handleEmailModal(userInfo[0])}>확인</button>
+        <div className="emailModalFull">
+          <div className="emailModal">
+            <h1>이메일인증이 완료 되었습니다.</h1>
+            <button onClick={() => handleEmailModal(userInfo[0])}>확인</button>
+          </div>
         </div>
       )}
     </div>

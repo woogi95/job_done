@@ -16,7 +16,11 @@ export const joinUserState = atom({
   key: "joinUserState",
   default: { name: "", email: "", upw: "", upwConfirm: "", phone: "", pic: "" },
 });
-
+// 이메일 중복확인 모달
+export const emailDouble = atom({
+  key: "emailDouble",
+  default: false,
+});
 // 이메일 인증완료 모달
 export const openModalEmail = atom({
   key: "openModalEmail",

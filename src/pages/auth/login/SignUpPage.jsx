@@ -1,8 +1,10 @@
 import { Button, Form, Input, Upload } from "antd";
 import { useRecoilState } from "recoil";
 import {
+  emailDouble,
   isOpenModalUpw,
   joinUserState,
+  profilFile,
   upwCheck,
 } from "../../../atoms/loginAtom";
 import "./Index.css";
@@ -14,9 +16,10 @@ import { useNavigate } from "react-router-dom";
 function SignUpPage() {
   const [match, setMatch] = useRecoilState(upwCheck);
   const [isUpw, setIsUpw] = useRecoilState(isOpenModalUpw);
-  const [file, setFile] = useState(null); // 파일 상태 관리
+  const [fileList, setFileList] = useRecoilState(profilFile); // 파일 상태 관리
   const [upwForm] = Form.useForm();
   const [userInfo, setUserInfo] = useRecoilState(joinUserState);
+  const [emailOk, setEmailOk] = useRecoilState(emailDouble);
   const navigate = useNavigate();
 
   const initData = {
@@ -41,10 +44,24 @@ function SignUpPage() {
   };
 
   // 파일 변경 핸들러
-  const handleFileChange = ({ file }) => {
-    setFile(file.originFileObj);
+  const handleFileChange = ({ file, fileList }) => {
+    setFileList(fileList); // 파일 목록 상태 업데이트
+    setUserInfo(prev => ({ ...prev, pic: file.originFileObj })); // Recoil 상태 업데이트
   };
-
+  // 이메일 중복확인
+  const emailCheck = async email => {
+    console.log(email);
+    try {
+      const res = await axios.post("/api/user/email", {
+        email: `${email}`,
+      });
+      if (res) {
+        setEmailOk(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // 폼 제출
   const onSubmit = async data => {
     console.log(data);
@@ -56,7 +73,7 @@ function SignUpPage() {
       const res = await axios.post("/api/email-check", {
         email: `${data.email}`,
       });
-      // console.log(res);
+      console.log(res);
       // console.log(userInfo);
 
       navigate("/login/email");
@@ -83,12 +100,44 @@ function SignUpPage() {
         <Form.Item
           name={"email"}
           label="이메일"
-          rules={[
-            { required: true, message: "이메일은 필수 항목입니다." },
-            { type: "email", message: "유효한 이메일 주소를 입력해주세요." },
-          ]}
+          rules={
+            emailOk
+              ? [
+                  { required: true, message: "이메일은 필수 항목입니다." },
+                  {
+                    type: "email",
+                    message: "유효한 이메일 주소를 입력해주세요.",
+                  },
+                ]
+              : [
+                  { required: true, message: "중복된 이메일 입니다." },
+                  {
+                    type: "email",
+                    message: "유효한 이메일 주소를 입력해주세요.",
+                  },
+                ]
+          }
         >
-          <Input placeholder="이메일을 입력하세요." />
+          <Input
+            style={{ alignItems: "center" }}
+            placeholder="이메일을 입력하세요."
+            suffix={
+              emailCheck ? (
+                <button
+                  type="button"
+                  className="bg-blue-500 border border-gray-400 w-20 h-6 rounded-lg mb-2"
+                  onClick={() => {
+                    const email = upwForm.getFieldValue("email");
+                    emailCheck(email);
+                  }}
+                >
+                  중복확인
+                </button>
+              ) : (
+                <span>사용가능한 이메일 입니다.</span>
+              )
+            }
+          />
         </Form.Item>
         <Form.Item
           name={"upw"}
@@ -132,11 +181,16 @@ function SignUpPage() {
         >
           <Input placeholder="휴대폰 번호를 입력하세요." />
         </Form.Item>
-        <Form.Item label="프로필 이미지" rules={[{ required: false }]}>
+        <Form.Item
+          label="프로필 이미지"
+          name={"pic"}
+          rules={[{ required: false }]}
+        >
           <Upload
-            beforeUpload={() => false} // 파일 업로드를 막고 선택만 허용
+            fileList={fileList}
+            beforeUpload={() => false}
             onChange={handleFileChange}
-            maxCount={1} // 파일 하나만 선택 가능
+            maxCount={1}
           >
             <Button>이미지 선택</Button>
           </Upload>

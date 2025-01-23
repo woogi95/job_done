@@ -6,8 +6,8 @@
 .login-box-div {
   align-items: center;
   justify-content: center;
-  display: block;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 .login-box {
   background-color: #f9fafb;
