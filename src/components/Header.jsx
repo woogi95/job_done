@@ -2,13 +2,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { isLoginState } from "../atoms/loginAtom";
-
 function Header() {
   const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
-
   const handleLogout = () => {
     setIsLogin({
       isLogind: false,
@@ -16,7 +14,6 @@ function Header() {
     });
     navigate("/");
   };
-
   // 로그인 테스트용
   useEffect(() => {
     setIsLogin({
@@ -24,25 +21,23 @@ function Header() {
       userId: "테스트사용자",
     });
   }, [setIsLogin]);
-
   useEffect(() => {
     const handleClickOutside = e => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setIsMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <>
-      <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] m-auto">
+    <div className="z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
+      <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <a href="/">
             <img src="./images/logo.svg" alt="logo" />
           </a>
-          <ui className="flex gap-10 text-[20px] items-center text-[#1e1e1e]">
+          <ui className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
             <li className="relative group">
               <a href="/cleaning" className="hover:text-[#0B7493]">
                 청소
@@ -212,8 +207,7 @@ function Header() {
         </div>
       </div>
       <div className="h-[1px] w-auto bg-[#E8E8E8]"></div>
-    </>
+    </div>
   );
 }
-
 export default Header;
