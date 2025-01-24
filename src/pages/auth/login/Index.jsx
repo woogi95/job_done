@@ -28,7 +28,7 @@ function LoginPage() {
     navigate("/login/signup");
   };
   return (
-    <div className="login-div">
+    <div>
       {/* 로그인, 비밀번호 */}
       <Form
         initialValues={initData}
@@ -37,7 +37,6 @@ function LoginPage() {
       >
         <Form.Item
           name={"email"}
-          label="이메일"
           rules={[
             { required: true, message: "이메일은 필수 항목입니다." },
             { type: "email", message: "유효한 이메일 주소를 입력해주세요." },
@@ -50,7 +49,6 @@ function LoginPage() {
         </Form.Item>
         <Form.Item
           name={"upw"}
-          label="비밀번호"
           rules={[
             { required: true, message: "비밀번호는 필수 항목입니다." },
             {
@@ -69,14 +67,11 @@ function LoginPage() {
           로그인
         </Button>
         <div className="justify-between flex text-gray-500 mb-10">
-          <input
-            type="checkbox"
-            id="logining"
-            name="logining"
-            // checked={}
-            // onChange={}
-          />
-          <label htmlFor="iogining">로그인 상태 유지</label>
+          <div>
+            <input type="checkbox" id="logining" name="logining" />
+            <label htmlFor="iogining">로그인 상태 유지</label>
+          </div>
+
           <Link to={"/email"} className="text-gray-500">
             아이디•비밀번호 찾기
           </Link>

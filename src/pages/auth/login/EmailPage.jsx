@@ -101,7 +101,7 @@ function EmailPage() {
   const repeatPost = async () => {
     try {
       const res = await axios.post("/api/email-check", {
-        email: `${userInfo[0].email}`,
+        email: `${data.email}`,
       });
 
       return res;
@@ -129,7 +129,7 @@ function EmailPage() {
           name={"email"}
           style={{ display: "block" }}
         >
-          <div>{userInfo[0].email} 로 인증 코드를 발송 했습니다.</div>
+          <div>{userInfo.email} 로 인증 코드를 발송 했습니다.</div>
         </Form.Item>
         <Form.Item
           className="checkingBox"

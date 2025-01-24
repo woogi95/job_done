@@ -32,6 +32,7 @@
 .emailModal button {
   border-radius: 1px;
   border: 1px solid gray;
+  align-items: center;
 }
 .clickbuttons div {
   display: flex;
