@@ -8,6 +8,7 @@ function SignUpDone() {
   };
   return (
     <div style={{ width: 320, alignItems: "center", justifyContent: "center" }}>
+      <span>가입을 환영 합니다.</span>
       <button className="loginButton" onClick={goLoginPage}>
         로그인 하기
       </button>
