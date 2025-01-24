@@ -31,6 +31,7 @@ import Payment from "./pages/expert/reservation/Payment";
 import Reservation from "./pages/expert/reservation/Reservation";
 import NotFound from "./pages/NotFound";
 import Detail from "./pages/mainpage/move/Detail";
+import MyReservation from "./pages/mypage/MyReservation";
 
 function App() {
   return (
@@ -78,7 +79,7 @@ function App() {
           <Route path="/mypage">
             <Route index element={<MyPage />} />
             <Route path="message" element={<MyMessage />} />
-            <Route path="reservation" element={<ReservationPage />} />
+            <Route path="reservation" element={<MyReservation />} />
             <Route path="review" element={<ReviewPage />} />
             <Route path="usage" element={<UsageDetails />} />
             <Route path="wishlist" element={<Wishlist />} />

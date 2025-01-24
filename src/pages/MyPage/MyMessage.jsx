@@ -1,7 +1,8 @@
 import React from "react";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function MyMessage() {
-  return <div>MyMessage</div>;
+  return <MyPageLayout>MyMessage</MyPageLayout>;
 }
 
 export default MyMessage;

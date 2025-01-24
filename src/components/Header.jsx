@@ -149,35 +149,35 @@ function Header() {
                   className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
-                    src="./images/order/default_profile.jpg"
+                    src="/images/order/default_profile.jpg"
                     alt="프로필이미지"
                     className="w-full h-full rounded-full object-cover"
                   />
                 </button>
                 {/* 프로필 */}
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
+                  <div className="absolute flex flex-col items-center justify-center right-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg py-2 z-10">
                     <Link
                       to="/mypage"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       마이페이지
                     </Link>
                     <Link
                       to="/mypage/usage"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       이용내역
                     </Link>
                     <Link
                       to="/mypage/review"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       작성한 리뷰
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block w-full  px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       로그아웃
                     </button>
