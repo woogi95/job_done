@@ -29,18 +29,15 @@ import EditQuotation from "./pages/expert/quotation/EditQuotation";
 import QuotationService from "./pages/expert/quotation/QuotationService";
 import Payment from "./pages/expert/reservation/Payment";
 import Reservation from "./pages/expert/reservation/Reservation";
+import MoveDetail from "./pages/mainpage/move/Detail";
 import Layout from "./components/Layout";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Layout이 적용되지 않는 라우트 */}
-        <Route path="*" element={<NotFound />} />
-
-        {/* Layout이 적용되는 라우트들 */}
-        <Route element={<Layout />}>
-          {/* 메인 페이지 */}
+                 {/* 메인 페이지 */}
           <Route path="/" element={<Index />} />
           {/* 로그인 및 회원가입 */}
           <Route path="/login">
@@ -71,6 +68,7 @@ function App() {
           {/* 이사 페이지 */}
           <Route path="/move">
             <Route index element={<MovePage />} />
+          <Route path=":id" element={<MoveDetail />} />
           </Route>
           {/* 세차 페이지 */}
           <Route path="/carwash">
