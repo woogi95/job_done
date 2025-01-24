@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-scroll";
 import {
+  CountStarCustomDiv,
   CountStarDiv,
   DetailContentsDiv,
   DetailLayout,
@@ -75,38 +76,48 @@ const DetailContents = () => {
           </div>
         </div>
       </DetailContentsDiv>
-      <SummaryDiv style={{ position: isFixed ? "fixed" : "static" }}>
-        <div className="top">
-          <h2>지구컴스</h2>
-          <div
-            className="like"
-            onClick={e => {
-              ToggleLike(e);
-            }}
-          >
-            {isLike ? <BsHeartFill /> : <BsHeart style={{ color: "gray" }} />}
+      <SummaryDiv
+        style={{
+          position: isFixed ? "fixed" : "absolute",
+          top: isFixed ? "80px" : "15px",
+          right: isFixed ? "16.5%" : "0",
+        }}
+      >
+        <div className="inner">
+          <div className="top">
+            <h2>지구컴스</h2>
+            <div
+              className="like"
+              onClick={e => {
+                ToggleLike(e);
+              }}
+            >
+              {isLike ? <BsHeartFill /> : <BsHeart style={{ color: "gray" }} />}
+            </div>
+          </div>
+          <CountStarCustomDiv>
+            <FaStar />
+            <em>4.2</em>
+            <span>(7500)</span>
+          </CountStarCustomDiv>
+          <h3 className="tit">청소 랭킹 1위 잡던어워즈 KS 3년 연속 1위 수상</h3>
+          <div className="desc">
+            <div className="box">
+              <b>Job_Done 횟수</b>
+              <div>5000회</div>
+            </div>
+            <div className="box">
+              <b>경력</b>
+              <div>5년</div>
+            </div>
+          </div>
+          <div className="btn-area">
+            <button>예약하기</button>
+            <a href="/" target="_blank">
+              문의하기
+            </a>
           </div>
         </div>
-        <CountStarDiv>
-          <FaStar />
-          <em>4.2</em>
-          <span>(7500)</span>
-        </CountStarDiv>
-        <h3 className="tit">청소 랭킹 1위 잡던어워즈 KS 3년 연속 1위 수상</h3>
-        <div>
-          <div className="box">
-            <b>Job_Done 횟수</b>
-            <div>5000회</div>
-          </div>
-          <div className="box">
-            <b>경력</b>
-            <div>5년</div>
-          </div>
-        </div>
-        <button>예약하기</button>
-        <a href="/" target="_blank">
-          문의하기
-        </a>
       </SummaryDiv>
     </DetailLayout>
   );

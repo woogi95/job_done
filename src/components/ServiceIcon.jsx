@@ -16,7 +16,7 @@ export const serviceIcons = [
     id: 2,
     title: "이사",
     image: "./images/order/cleaning_icon.jpg",
-    link: "/moving",
+    link: "/move",
   },
 ];
 
