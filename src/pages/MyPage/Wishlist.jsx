@@ -1,7 +1,8 @@
 import React from "react";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function Wishlist() {
-  return <div>Wishlist</div>;
+  return <MyPageLayout>Wishlist</MyPageLayout>;
 }
 
 export default Wishlist;

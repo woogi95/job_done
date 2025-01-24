@@ -1,7 +1,8 @@
 import React from "react";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function UsageDetails() {
-  return <div>UsageDetails</div>;
+  return <MyPageLayout>UsageDetails</MyPageLayout>;
 }
 
 export default UsageDetails;

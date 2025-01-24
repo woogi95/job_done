@@ -1,7 +1,8 @@
 import React from "react";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function MyReservation() {
-  return <div>MyReservation</div>;
+  return <MyPageLayout>MyReservation</MyPageLayout>;
 }
 
 export default MyReservation;
