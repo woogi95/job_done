@@ -31,11 +31,11 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
+    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
       <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <a href="/">
-            <img src="./images/logo.svg" alt="logo" />
+            <img src="/images/logo.svg" alt="logo" />
           </a>
           <ui className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
             <li className="relative group">
