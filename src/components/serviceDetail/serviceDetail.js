@@ -86,28 +86,26 @@ export const DetailTopDiv = styled.div`
       }
     }
   }
-
-  .countStar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 600;
-    svg {
-      font-size: 16px;
-      color: #ff9d00;
-    }
-    em {
-      font-size: 15px;
-      color: #333;
-    }
-    span {
-      font-size: 14px;
-      color: #bbb;
-      font-weight: 500;
-    }
+`;
+export const CountStarDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  svg {
+    font-size: 16px;
+    color: #ff9d00;
+  }
+  em {
+    font-size: 15px;
+    color: #333;
+  }
+  span {
+    font-size: 14px;
+    color: #bbb;
+    font-weight: 500;
   }
 `;
-
 // DetailContents
 export const DetailContentsDiv = styled.div`
   border: 1px solid;
@@ -142,4 +140,32 @@ export const SummaryDiv = styled.div`
   top: 15px;
   z-index: 1001;
   width: 420px;
+  height: 500px;
+  padding: 30px;
+
+  .top {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .like svg {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      color: red;
+      cursor: pointer;
+    }
+  }
+  .tit {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.12em;
+  }
 `;

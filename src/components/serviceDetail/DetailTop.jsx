@@ -1,5 +1,5 @@
 import { FaStar } from "react-icons/fa";
-import { DetailTopDiv } from "./serviceDetail";
+import { CountStarDiv, DetailTopDiv } from "./serviceDetail";
 
 const DetailTop = () => {
   return (
@@ -23,11 +23,11 @@ const DetailTop = () => {
           </div>
           <div className="box">
             <b>리뷰</b>
-            <div className="countStar">
+            <CountStarDiv>
               <FaStar />
               <em>4.2</em>
               <span>(7500)</span>
-            </div>
+            </CountStarDiv>
           </div>
           <div className="box">
             <b>경력</b>
