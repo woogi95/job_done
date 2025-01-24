@@ -8,13 +8,19 @@ import { useRecoilState } from "recoil";
 
 import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
+import { useNavigate } from "react-router-dom";
 function BusinessNumber() {
   const [form] = Form.useForm();
+  const [result, setResult] = useState(null); // 결과를 저장할 상태
+  const [error, setError] = useState(null); // 에러 메시지를 저장할 상태
+
   const [busiInfo, setBusiInfo] = useRecoilState(businessInfo);
   const [numModal, setNumMOdal] = useRecoilState(numDubCheck);
   const [fileList, setFileList] = useState([]); // 파일 상태
   const [previewImages, setPreviewImages] = useState([]); // 이미지 미리보기 상태
   const [checkMessage, setCheckMessage] = useRecoilState(checkMsg);
+  const navigate = useNavigate();
+  const sucess = [setNumMOdal(false), navigate("/")];
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
 
@@ -30,20 +36,23 @@ function BusinessNumber() {
     setCheckMessage(true);
     try {
       const response = await fetch(
-        `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${busiInfo.businessNum}`, // 실제 서비스 키로 대체
+        "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=SYnAPANxYlrtHeae0VoAU1DN2akTqdFZEu4CQCywJBBHl7Ta0O1OH9jceiUbdJ0U%2BVtnIL%2BFWRemuJIT1UvLfg%3D%3D",
+        // ", // 실제 서비스 키로 대체
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ b_no: [busiInfo.businessNum] }),
+          body: JSON.stringify({ b_no: [data] }),
         },
       );
       const result = await response.json();
       if (result) {
+        setResult(result);
         setNumMOdal(true);
       }
       console.log(result);
     } catch (err) {
       console.error(err.message);
+      setError(err.message);
       setCheckMessage(false);
     }
   };
@@ -129,6 +138,8 @@ function BusinessNumber() {
             }
           />
         </Form.Item>
+        {result && <pre>{result.data && result.data[0]?.tax_type}</pre>}
+        {error && <p style={{ color: "red" }}>{error.data.tax_type}</p>}
 
         <Form.Item
           label="사업자 등록증"
@@ -159,12 +170,22 @@ function BusinessNumber() {
             ))}
           </div>
         )}
+        <Form.Item className="clickbuttons">
+          <button className="cancle" onClick={() => goCancle()}>
+            취소
+          </button>
+          <Button htmlType="submit" className="nextButton">
+            다음
+          </Button>
+        </Form.Item>
       </Form>
       {numModal && (
-        <div className="num-ModalFull">
+        <div className="num-ModalFull items-center justify-center">
           <div className="num-Modal">
-            <h1>확인이 완료되었습니다.</h1>
-            <button onClick={() => setNumMOdal(false)}>확인</button>
+            <h1>등록이 완료되었습니다.</h1>
+            <button className="" onClick={() => sucess}>
+              확인
+            </button>
           </div>
         </div>
       )}

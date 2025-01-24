@@ -2,6 +2,7 @@ import { Button, Form, Input, Upload } from "antd";
 import { useRecoilState } from "recoil";
 import {
   emailDouble,
+  emailDub,
   isOpenModalUpw,
   joinUserState,
   profilFile,
@@ -20,6 +21,7 @@ function SignUpPage() {
   const [upwForm] = Form.useForm();
   const [userInfo, setUserInfo] = useRecoilState(joinUserState);
   const [emailOk, setEmailOk] = useRecoilState(emailDouble);
+  const [emailOok, setEmailOok] = useRecoilState(emailDub);
   const navigate = useNavigate();
 
   const initData = {
@@ -50,13 +52,15 @@ function SignUpPage() {
   };
   // 이메일 중복확인
   const emailCheck = async email => {
+    setEmailOok(false);
     console.log(email);
     try {
       const res = await axios.post("/api/user/email", {
         email: `${email}`,
       });
-      if (res) {
-        setEmailOk(true);
+      console.log(res.data.resultData);
+      if (res.data.resultData === 1) {
+        setEmailOk(false);
       }
     } catch (error) {
       console.log(error);
@@ -100,45 +104,39 @@ function SignUpPage() {
         <Form.Item
           name={"email"}
           label="이메일"
-          rules={
-            emailOk
-              ? [
-                  { required: true, message: "이메일은 필수 항목입니다." },
-                  {
-                    type: "email",
-                    message: "유효한 이메일 주소를 입력해주세요.",
-                  },
-                ]
-              : [
-                  { required: true, message: "중복된 이메일 입니다." },
-                  {
-                    type: "email",
-                    message: "유효한 이메일 주소를 입력해주세요.",
-                  },
-                ]
-          }
+          rules={[
+            { required: true, message: "이메일은 필수 항목입니다." },
+            {
+              type: "email",
+              message: "유효한 이메일 주소를 입력해주세요.",
+            },
+          ]}
         >
           <Input
             style={{ alignItems: "center" }}
             placeholder="이메일을 입력하세요."
             suffix={
-              emailCheck ? (
-                <button
-                  type="button"
-                  className="bg-blue-500 border border-gray-400 w-20 h-6 rounded-lg mb-2"
-                  onClick={() => {
-                    const email = upwForm.getFieldValue("email");
-                    emailCheck(email);
-                  }}
-                >
-                  중복확인
-                </button>
-              ) : (
-                <span>사용가능한 이메일 입니다.</span>
-              )
+              <button
+                type="button"
+                className="bg-blue-500 border border-gray-400 w-20 h-6 rounded-lg mb-2"
+                onClick={() => {
+                  const email = upwForm.getFieldValue("email");
+
+                  emailCheck(email);
+                }}
+              >
+                중복확인
+              </button>
             }
           />
         </Form.Item>
+        {emailOok ? (
+          <span>이메일을 입력해주세요.</span>
+        ) : emailOk ? (
+          <span style={{ color: "red" }}>중복된 이메일 입니다.</span>
+        ) : (
+          <span>사용 가능한 이메일 입니다.</span>
+        )}
         <Form.Item
           name={"upw"}
           label="비밀번호"
