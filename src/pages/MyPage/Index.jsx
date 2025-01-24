@@ -4,7 +4,7 @@ import MyPageLayout from "../../components/MyPageLayout";
 function MyPage() {
   return (
     <div>
-      <MyPageLayout>마이페이지</MyPageLayout>
+      <MyPageLayout>내 정보</MyPageLayout>
     </div>
   );
 }
