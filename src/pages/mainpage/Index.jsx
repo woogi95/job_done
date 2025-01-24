@@ -1,13 +1,30 @@
 import React from "react";
 import { serviceIcons, PopularPost } from "../../components/ServiceIcon";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "./styles.css";
 
 const Index = () => {
   return (
-    <div>
+    <div className="pt-[80px]">
       <div>
         {/* 이벤트 배너 */}
         <div className="w-full overflow-hidden">
           <a href="/" className="flex h-[200px] max-w-[1280px] m-auto relative">
+            <Swiper
+              pagination={{
+                dynamicBullets: true,
+              }}
+              modules={[Pagination]}
+              className="mySwiper"
+            >
+              <SwiperSlide>Slide 1</SwiperSlide>
+              <SwiperSlide>Slide 2</SwiperSlide>
+              <SwiperSlide>Slide 3</SwiperSlide>
+              <SwiperSlide>Slide 4</SwiperSlide>
+            </Swiper>
             <img
               src="./images/event/event_banner_1.png"
               alt="이벤트배너"
