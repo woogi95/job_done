@@ -16,3 +16,12 @@ export const joinUserState = atom({
   key: "joinUserState",
   default: { name: "", email: "", upw: "", upwConfirm: "", phone: "" },
 });
+
+// 로그인 상태 저장
+export const isLoginState = atom({
+  key: "isLoginState",
+  default: {
+    isLogind: false,
+    userId: "",
+  },
+});

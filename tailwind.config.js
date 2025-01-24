@@ -5,7 +5,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}", // Vite 프로젝트에 맞는 파일 확장자 추가
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        btColor: "C3EEFB",
+        btTextColor: "0B7493",
+      },
+    },
   },
   plugins: [],
 };

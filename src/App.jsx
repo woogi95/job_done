@@ -30,77 +30,78 @@ import QuotationService from "./pages/expert/quotation/QuotationService";
 import Payment from "./pages/expert/reservation/Payment";
 import Reservation from "./pages/expert/reservation/Reservation";
 import MoveDetail from "./pages/mainpage/move/Detail";
+import Layout from "./components/Layout";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* 메인 페이지 */}
-        <Route path="/" element={<Index />} />
-        {/* 로그인 및 회원가입 */}
-        <Route path="/login">
-          <Route index element={<LoginPage />} />
-          <Route path="signup" element={<SignUpPage />} />
-          <Route path="email" element={<EmailPage />} />
-          <Route path="signupdone" element={<SignUpDone />} />
-          <Route path="epw" element={<EmailPassword />} />
-        </Route>
-        {/* 사업자 등록*/}
-        <Route path="/business">
-          <Route index element={<BusinessSignUp />} />
-          <Route path="number" element={<BusinessNumber />} />
-        </Route>
-        {/* 업체 페이지 */}
-        <Route path="/company">
-          <Route index element={<DetailPage />} />
-          <Route path="reservation" element={<ReservationPage />} />
-        </Route>
-        {/* 세차 페이지 */}
-        <Route path="/carwash">
-          <Route index element={<CarWashPage />} />
-        </Route>
-        {/* 청소 페이지 */}
-        <Route path="/cleaning">
-          <Route index element={<CleaningPage />} />
-        </Route>
-        {/* 이사 페이지 */}
-        <Route path="/move">
-          <Route index element={<MovePage />} />
+                 {/* 메인 페이지 */}
+          <Route path="/" element={<Index />} />
+          {/* 로그인 및 회원가입 */}
+          <Route path="/login">
+            <Route index element={<LoginPage />} />
+            <Route path="signup" element={<SignUpPage />} />
+            <Route path="email" element={<EmailPage />} />
+            <Route path="signupdone" element={<SignUpDone />} />
+            <Route path="epw" element={<EmailPassword />} />
+          </Route>
+          {/* 사업자 등록*/}
+          <Route path="/business">
+            <Route index element={<BusinessSignUp />} />
+            <Route path="number" element={<BusinessNumber />} />
+          </Route>
+          {/* 업체 페이지 */}
+          <Route path="/company">
+            <Route index element={<DetailPage />} />
+            <Route path="reservation" element={<ReservationPage />} />
+          </Route>
+          {/* 세차 페이지 */}
+          <Route path="/carwash">
+            <Route index element={<CarWashPage />} />
+          </Route>
+          {/* 청소 페이지 */}
+          <Route path="/cleaning">
+            <Route index element={<CleaningPage />} />
+          </Route>
+          {/* 이사 페이지 */}
+          <Route path="/move">
+            <Route index element={<MovePage />} />
           <Route path=":id" element={<MoveDetail />} />
-        </Route>
-        {/* 세차 페이지 */}
-        <Route path="/carwash">
-          <Route index element={<CarWashPage />} />
-        </Route>
-        {/* 마이페이지 */}
-        <Route path="/mypage">
-          <Route index element={<MyPage />} />
-          <Route path="message" element={<MyMessage />} />
-          <Route path="reservation" element={<ReservationPage />} />
-          <Route path="review" element={<ReviewPage />} />
-          <Route path="usage" element={<UsageDetails />} />
-          <Route path="wishlist" element={<Wishlist />} />
-        </Route>
-        {/* 전문가 페이지 */}
-        <Route path="/expert">
-          {/* 관리자 */}
-          <Route index element={<ExpertMain />} />
-          <Route path="management" element={<CompanyInfo />} />
-          <Route path="edit" element={<EditCompanyInfo />} />
-          <Route path="editdetail" element={<EditDetailPage />} />
-          <Route path="detail" element={<ExpertDetailPage />} />
-          <Route path="portfolio" element={<Portfolio />} />
+          </Route>
+          {/* 세차 페이지 */}
+          <Route path="/carwash">
+            <Route index element={<CarWashPage />} />
+          </Route>
+          {/* 마이페이지 */}
+          <Route path="/mypage">
+            <Route index element={<MyPage />} />
+            <Route path="message" element={<MyMessage />} />
+            <Route path="reservation" element={<ReservationPage />} />
+            <Route path="review" element={<ReviewPage />} />
+            <Route path="usage" element={<UsageDetails />} />
+            <Route path="wishlist" element={<Wishlist />} />
+          </Route>
+          {/* 전문가 페이지 */}
+          <Route path="/expert">
+            {/* 관리자 */}
+            <Route index element={<ExpertMain />} />
+            <Route path="management" element={<CompanyInfo />} />
+            <Route path="edit" element={<EditCompanyInfo />} />
+            <Route path="editdetail" element={<EditDetailPage />} />
+            <Route path="detail" element={<ExpertDetailPage />} />
+            <Route path="portfolio" element={<Portfolio />} />
 
-          {/* 견적서 */}
-          <Route path="create" element={<CreateQuotation />} />
-          <Route path="quotation" element={<EditQuotation />} />
-          <Route path="service" element={<QuotationService />} />
-          {/* 예약 */}
-          <Route path="payment" element={<Payment />} />
-          <Route path="reservation" element={<Reservation />} />
+            {/* 견적서 */}
+            <Route path="create" element={<CreateQuotation />} />
+            <Route path="quotation" element={<EditQuotation />} />
+            <Route path="service" element={<QuotationService />} />
+            {/* 예약 */}
+            <Route path="payment" element={<Payment />} />
+            <Route path="reservation" element={<Reservation />} />
+          </Route>
         </Route>
-        {/* 404 */}
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
