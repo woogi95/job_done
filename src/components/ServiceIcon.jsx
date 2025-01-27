@@ -152,7 +152,7 @@ export const MessageDetail = [
         pic: "/images/order/Interior_1.jpg",
         companyName: "지구컴스",
         roomCreatedAt: "2025-01-13",
-        companyChat: "안녕하세요",
+        companyChat: "안녕하세요 홈클린 입니다.",
         userChat: "안녕하세요",
         sendDate: "오후2:30",
       },
