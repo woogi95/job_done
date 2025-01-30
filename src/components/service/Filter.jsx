@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { FilterDiv } from "./move";
+import { FilterDiv } from "./service";
 
 const Filter = () => {
   const [selectOption, setSelectOption] = useState("최신순");

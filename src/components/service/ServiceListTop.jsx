@@ -1,5 +1,5 @@
 import { IoSearch } from "react-icons/io5";
-import { PageTopDiv } from "./move";
+import { PageTopDiv } from "./service";
 import { NavLink } from "react-router-dom";
 
 const ServiceListTop = () => {
@@ -11,7 +11,7 @@ const ServiceListTop = () => {
         <ul>
           <li>
             <NavLink
-              to="/cleaning"
+              to="/"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               청소
@@ -19,7 +19,7 @@ const ServiceListTop = () => {
           </li>
           <li>
             <NavLink
-              to="/move"
+              to="/"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               이사
@@ -27,7 +27,7 @@ const ServiceListTop = () => {
           </li>
           <li>
             <NavLink
-              to="/carwash"
+              to="/"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               세차

@@ -1,6 +1,6 @@
 import { FaStar } from "react-icons/fa";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
-import { ListItemDiv } from "./move";
+import { ListItemDiv } from "./service";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 const ServiceListItem = () => {
@@ -12,7 +12,7 @@ const ServiceListItem = () => {
   };
   return (
     <ListItemDiv>
-      <Link to="/move/id">
+      <Link to="/service/id">
         <div className="thum">
           <div
             className="like"
