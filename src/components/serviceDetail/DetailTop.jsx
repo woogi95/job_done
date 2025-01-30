@@ -7,7 +7,7 @@ const DetailTop = () => {
   return (
     <DetailTopDiv>
       <div className="inner">
-        <em>카테고리 > 청소</em>
+        <em>카테고리 `{">"}` 청소</em>
         <h1>청소 랭킹 1위 잡던어워즈 KS 3년 연속 1위 수상</h1>
         <div className="companyInfo">
           <div className="logo"></div>
