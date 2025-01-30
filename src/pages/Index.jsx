@@ -1,5 +1,5 @@
 import React from "react";
-import { serviceIcons, PopularPost } from "../../components/ServiceIcon";
+import { serviceIcons, PopularPost } from "../components/ServiceIcon";
 
 const Index = () => {
   return (

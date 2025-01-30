@@ -8,32 +8,35 @@ import {
   DetailLayout,
   PortfolioListItem,
   PortfolioSwiperDiv,
+  ReviewDiv,
+  StarTotalDiv,
   SummaryDiv,
 } from "./serviceDetail";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
-import { FaStar } from "react-icons/fa";
 
 // 스와이퍼
 import { Swiper, SwiperSlide } from "swiper/react";
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
-// import "./styles.css";
-
-// 포트폴리오 아이콘
-import { FaChevronRight } from "react-icons/fa";
-
 // import required modules
 import { Navigation } from "swiper/modules";
-import Portfolio from "../../pages/expert/management/Portfolio";
+
+// import Portfolio from "../../pages/expert/management/Portfolio";
+// import { NavLink } from "react-router-dom";
+// icon
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { FaStar, FaStarHalf } from "react-icons/fa";
+// 포트폴리오 아이콘
+import { FaChevronRight } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
-  // 찜
-  const [isLike, setIsLike] = useState(false);
+  const [isLike, setIsLike] = useState(false); // 찜
+  const [rating, setRating] = useState(4.2); // 별점
+  const [activeLink, setActiveLink] = useState("about"); //링크 active
+  const navigate = useNavigate();
   const ToggleLike = e => {
     e.preventDefault();
     setIsLike(!isLike);
@@ -66,31 +69,73 @@ const DetailContents = () => {
     swiperRef.current?.slidePrev();
   };
 
+  const renderStars = () => {
+    const fullStars = Math.floor(rating); // 채워진 별 개수
+    const halfStar = rating % 1 >= 0.5; // 반쪽 별 여부
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // 비어 있는 별 개수
+
+    return (
+      <>
+        {Array.from({ length: fullStars }, (_, i) => (
+          <FaStar key={`full-${i}`} color="#EAB838" />
+        ))}
+        {halfStar && <FaStarHalf key="half" color="#EAB838" />}
+        {Array.from({ length: emptyStars }, (_, i) => (
+          <FaStar key={`empty-${i}`} color="#E0E2E7" />
+        ))}
+      </>
+    );
+  };
+  const handleLinkClick = id => {
+    setActiveLink(id);
+  };
   return (
     <DetailLayout>
+      {/* 오른쪽 */}
       <DetailContentsDiv>
         {/* 메뉴 */}
         <nav style={{ position: isFixed ? "fixed" : "static" }}>
           <ul>
             <li>
-              <Link to="about" smooth={true} duration={500}>
+              <Link
+                to="about"
+                smooth={true}
+                duration={1000}
+                offset={-150}
+                className={activeLink === "about" ? "active" : ""}
+                onClick={() => handleLinkClick("about")}
+              >
                 업체소개
               </Link>
             </li>
             <li>
-              <Link to="portfolio" smooth={true} duration={500}>
+              <Link
+                to="portfolio"
+                smooth={true}
+                duration={1000}
+                offset={-150}
+                className={activeLink === "portfolio" ? "active" : ""}
+                onClick={() => handleLinkClick("portfolio")}
+              >
                 포트폴리오
               </Link>
             </li>
             <li>
-              <Link to="reviews" smooth={true} duration={500}>
+              <Link
+                to="reviews"
+                smooth={true}
+                duration={1000}
+                offset={-150}
+                className={activeLink === "reviews" ? "active" : ""}
+                onClick={() => handleLinkClick("reviews")}
+              >
                 리뷰 7500
               </Link>
             </li>
           </ul>
         </nav>
 
-        {/* 콘텐츠 */}
+        {/* 컨텐츠 */}
         <DContsDiv>
           <div className="box" id="about">
             <h2>업체소개</h2>
@@ -119,12 +164,12 @@ const DetailContents = () => {
             <h2>포트폴리오</h2>
             <PortfolioSwiperDiv>
               <Swiper
-                slidesPerView={3}
-                spaceBetween={30}
+                slidesPerView={4}
+                spaceBetween={15}
                 loop={true}
-                pagination={{
-                  clickable: true,
-                }}
+                // pagination={{
+                //   clickable: true,
+                // }}
                 onSwiper={swiper => {
                   swiperRef.current = swiper;
                 }}
@@ -175,22 +220,151 @@ const DetailContents = () => {
                     <h3>포트폴리오 타이틀4</h3>
                   </PortfolioListItem>
                 </SwiperSlide>
+                <SwiperSlide>
+                  <PortfolioListItem>
+                    <div className="imgbox">
+                      <img
+                        src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
+                        alt=""
+                      />
+                    </div>
+                    <h3>포트폴리오 타이틀5</h3>
+                  </PortfolioListItem>
+                </SwiperSlide>
               </Swiper>
-              <button onClick={handlePrev}>Prev</button>
-              <button onClick={handleNext}>Next</button>
+              <div className="btn-area">
+                <button className="prev" onClick={handlePrev}>
+                  Prev
+                </button>
+                <button className="next" onClick={handleNext}>
+                  Next
+                </button>
+              </div>
             </PortfolioSwiperDiv>
           </div>
           <div className="box" id="reviews">
             <h2>리뷰</h2>
-            <p>여기에 리뷰 내용</p>
+            <StarTotalDiv>
+              <h4>지구컴스</h4>
+              <div className="star-container">
+                {/* <p className="star" style={starBackgroundStyle}> */}
+                <p className="star">
+                  {/* ★★★★★ */}
+                  {renderStars()}
+                </p>
+                <span className="star-grade"> {rating.toFixed(1)}</span>
+              </div>
+            </StarTotalDiv>
+            <ReviewDiv>
+              <div className="rv-top">
+                <h3>서비스 리뷰 7,500</h3>
+                <div className="filter">별점 낮은순 +</div>
+              </div>
+              {/* 리뷰리스트 */}
+              <div className="rv-list">
+                {/* 리뷰 */}
+                <div className="rv-item">
+                  {/* 유저리뷰 */}
+                  <div className="user-rv">
+                    <div className="user-info">
+                      <div className="user-photo"></div>
+                      <div className="desc">
+                        <div>
+                          {renderStars()}
+                          <span className="star-grade">
+                            {rating.toFixed(1)}
+                          </span>
+                          <b>25.01.14</b>
+                        </div>
+                        <h4>김**</h4>
+                      </div>
+                    </div>
+                    <div className="comment">
+                      <span>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Eius voluptatem voluptate aut in, explicabo
+                        excepturi. Autem incidunt earum explicabo tempore
+                        distinctio alias quae animi enim sit numquam,
+                        perferendis provident quibusdam.
+                      </span>
+                      <div className="photo">
+                        <div>photo</div>
+                        <div>photo</div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* 사장님댓글 */}
+                  <div className="reply">
+                    <div className="info">
+                      <h4>지구컴즈</h4> <b>20.01.24</b>
+                    </div>
+                    <div className="comment">
+                      <span>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Eius voluptatem voluptate aut in, explicabo
+                        excepturi. Autem incidunt earum explicabo tempore
+                        distinctio alias quae animi enim sit numquam,
+                        perferendis provident quibusdam.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="rv-item">
+                  {/* 유저리뷰 */}
+                  <div className="user-rv">
+                    <div className="user-info">
+                      <div className="user-photo"></div>
+                      <div className="desc">
+                        <div>
+                          {renderStars()}
+                          <span className="star-grade">
+                            {rating.toFixed(1)}
+                          </span>
+                          <b>25.01.14</b>
+                        </div>
+                        <h4>김**</h4>
+                      </div>
+                    </div>
+                    <div className="comment">
+                      <span>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Eius voluptatem voluptate aut in, explicabo
+                        excepturi. Autem incidunt earum explicabo tempore
+                        distinctio alias quae animi enim sit numquam,
+                        perferendis provident quibusdam.
+                      </span>
+                      <div className="photo">
+                        <div>photo</div>
+                        <div>photo</div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* 사장님댓글 */}
+                  <div className="reply">
+                    <div className="info">
+                      <h4>지구컴즈</h4> <b>20.01.24</b>
+                    </div>
+                    <div className="comment">
+                      <span>
+                        Lorem, ipsum dolor sit amet consectetur adipisicing
+                        elit. Eius voluptatem voluptate aut in, explicabo
+                        excepturi. Autem incidunt earum explicabo tempore
+                        distinctio alias quae animi enim sit numquam,
+                        perferendis provident quibusdam.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ReviewDiv>
           </div>
         </DContsDiv>
       </DetailContentsDiv>
+      {/* 왼쪽 */}
       <SummaryDiv
         style={{
           position: isFixed ? "fixed" : "absolute",
-          top: isFixed ? "150px" : "15px",
-          right: isFixed ? "16.5%" : "0",
+          top: isFixed ? "160px" : "15px",
         }}
       >
         <div className="inner">
@@ -222,7 +396,13 @@ const DetailContents = () => {
             </div>
           </div>
           <div className="btn-area">
-            <button>예약하기</button>
+            <button
+              onClick={() => {
+                navigate("/reservation");
+              }}
+            >
+              예약하기
+            </button>
             <a href="/" target="_blank">
               문의하기
             </a>
