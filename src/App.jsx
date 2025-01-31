@@ -5,16 +5,16 @@ import LoginPage from "./pages/auth/login/Index";
 import SignUpPage from "./pages/auth/login/SignUpPage";
 import EmailPage from "./pages/auth/login/EmailPage";
 import SignUpDone from "./pages/auth/login/SignUpDone";
-import EmailPassword from "./pages/auth/login/EmailPassword";
+import PasswordEmail from "./pages/auth/login/PasswordEmail";
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
-import MyPage from "./pages/myPage/Index";
-import MyMessage from "./pages/myPage/MyMessage";
-import ReviewPage from "./pages/myPage/ReviewPage";
-import UsageDetails from "./pages/myPage/UsageDetails";
-import Wishlist from "./pages/myPage/Wishlist";
-import MyReservation from "./pages/myPage/MyReservation";
+import MyPage from "./pages/mypage/Index";
+import MyMessage from "./pages/mypage/MyMessage";
+import ReviewPage from "./pages/mypage/ReviewPage";
+import UsageDetails from "./pages/mypage/UsageDetails";
+import Wishlist from "./pages/mypage/Wishlist";
+import MyReservation from "./pages/mypage/MyReservation";
 
 import ExpertMain from "./pages/expert/ExpertMain";
 
@@ -67,7 +67,7 @@ function App() {
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epw" element={<EmailPassword />} />
+            <Route path="epw" element={<PasswordEmail />} />
           </Route>
           {/* 사업자 등록*/}
           <Route path="/business">
