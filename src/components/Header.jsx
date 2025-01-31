@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginState } from "../atoms/loginAtom";
+import { isLoginState, loginUser } from "../atoms/loginAtom";
 function Header() {
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
+  const [isLogin, setIsLogin] = useRecoilState(loginUser);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
@@ -31,11 +31,11 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
+    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
       <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <a href="/">
-            <img src="./images/logo.svg" alt="logo" />
+            <img src="/images/logo.svg" alt="logo" />
           </a>
           <ui className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
             <li className="relative group">
@@ -149,35 +149,35 @@ function Header() {
                   className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
-                    src="./images/order/default_profile.jpg"
+                    src="/images/order/default_profile.jpg"
                     alt="프로필이미지"
                     className="w-full h-full rounded-full object-cover"
                   />
                 </button>
                 {/* 프로필 */}
                 {isMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
+                  <div className="absolute flex flex-col items-center justify-center right-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg py-2 z-10">
                     <Link
                       to="/mypage"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       마이페이지
                     </Link>
                     <Link
                       to="/mypage/usage"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       이용내역
                     </Link>
                     <Link
                       to="/mypage/review"
-                      className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       작성한 리뷰
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                      className="block w-full  px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       로그아웃
                     </button>

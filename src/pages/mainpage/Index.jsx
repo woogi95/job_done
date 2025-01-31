@@ -1,22 +1,54 @@
 import React from "react";
-import { serviceIcons, PopularPost } from "../../components/ServiceIcon";
+import {
+  serviceIcons,
+  PopularPost,
+  EventBanner,
+} from "../../components/ServiceIcon";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import { useRecoilState } from "recoil";
+import { loginUser } from "../../atoms/loginAtom";
 
 const Index = () => {
+  const [userInfo, setUserInfo] = useRecoilState(loginUser);
   return (
     <div className="pt-[80px]">
       <div>
         {/* 이벤트 배너 */}
         <div className="w-full overflow-hidden">
-          <a href="/" className="flex h-[200px] max-w-[1280px] m-auto relative">
-            <img
-              src="./images/event/event_banner_1.png"
-              alt="이벤트배너"
-              className="w-full object-cover"
-            />
-            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis">
-              즐거운 청소 이벤트!
-            </span>
-          </a>
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            pagination={{
+              dynamicBullets: true,
+            }}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="h-[200px]"
+          >
+            {EventBanner.map(item => (
+              <SwiperSlide key={item.id}>
+                <a
+                  href="/"
+                  className="flex h-[200px] max-w-[1280px] m-auto relative"
+                >
+                  <img
+                    src={item.image}
+                    alt="이벤트배너"
+                    className="w-full object-cover"
+                  />
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis">
+                    {item.title}
+                  </span>
+                </a>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         {/* 서비스 아이콘 */}
         <div>
@@ -46,12 +78,12 @@ const Index = () => {
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
           <span className="flex pb-[10px]">인기 글</span>
-          <div className="flex gap-4">
+          <div className="flex gap-4 justify-center items-center">
             {PopularPost.map(item => (
               <a
                 href="/"
                 key={item.id}
-                className="flex flex-col rounded-lg w-[400px] gap-[10px] relative group overflow-hidden"
+                className="flex flex-col rounded-lg w-1/3 gap-[10px] relative group overflow-hidden"
               >
                 <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
                   <img
@@ -97,7 +129,7 @@ const Index = () => {
               <a
                 href="/"
                 key={item.id}
-                className="flex flex-col rounded-lg w-[400px] gap-[10px] relative group overflow-hidden"
+                className="flex flex-col rounded-lg w-1/3 gap-[10px] relative group overflow-hidden"
               >
                 <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
                   <img

@@ -5,7 +5,9 @@ import LoginPage from "./pages/auth/login/Index";
 import SignUpPage from "./pages/auth/login/SignUpPage";
 import EmailPage from "./pages/auth/login/EmailPage";
 import SignUpDone from "./pages/auth/login/SignUpDone";
-import EmailPassword from "./pages/auth/login/EmailPassword";
+import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
+import PasswordEmail from "./pages/auth/login/PasswordEmail";
+import PasswordEdit from "./pages/auth/login/PasswordEdit";
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 import DetailPage from "./pages/company/Index";
@@ -31,6 +33,7 @@ import Payment from "./pages/expert/reservation/Payment";
 import Reservation from "./pages/expert/reservation/Reservation";
 import NotFound from "./pages/NotFound";
 import Detail from "./pages/mainpage/move/Detail";
+import MyReservation from "./pages/mypage/MyReservation";
 
 function App() {
   return (
@@ -45,7 +48,9 @@ function App() {
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epw" element={<EmailPassword />} />
+            <Route path="epwcheck" element={<PasswordEmailCheck />} />
+            <Route path="epwchecking" element={<PasswordEmail />} />
+            <Route path="epwedit" element={<PasswordEdit />} />
           </Route>
           {/* 사업자 등록*/}
           <Route path="/business">
@@ -78,7 +83,7 @@ function App() {
           <Route path="/mypage">
             <Route index element={<MyPage />} />
             <Route path="message" element={<MyMessage />} />
-            <Route path="reservation" element={<ReservationPage />} />
+            <Route path="reservation" element={<MyReservation />} />
             <Route path="review" element={<ReviewPage />} />
             <Route path="usage" element={<UsageDetails />} />
             <Route path="wishlist" element={<Wishlist />} />

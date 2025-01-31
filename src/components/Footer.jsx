@@ -2,8 +2,8 @@ import React from "react";
 
 function Footer() {
   return (
-    <>
-      <div className="bg-[#064153] h-[200px] flex justify-between items-center space-y-2 gap-5">
+    <div className="bg-[#064153] h-[200px] m-auto">
+      <div className="max-w-[1280px] h-full m-auto flex justify-between items-center px-4">
         <div className="flex flex-col gap-6">
           <div className="flex text-white gap-1">
             <a href="/" className="text-white">
@@ -24,11 +24,11 @@ function Footer() {
 
         <div>
           <a href="/">
-            <img src="./images/logo.svg" alt="logo" />
+            <img src="/images/logo.svg" alt="logo" />
           </a>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
