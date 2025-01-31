@@ -1,9 +1,7 @@
 import { FaStar } from "react-icons/fa";
 import { CountStarDiv, DetailTopDiv } from "./serviceDetail";
-import { useEffect } from "react";
 
 const DetailTop = () => {
-  useEffect(() => {}, []);
   return (
     <DetailTopDiv>
       <div className="inner">
