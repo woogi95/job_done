@@ -11,7 +11,9 @@ function Layout() {
     "/login/signup",
     "/login/email",
     "/login/signupdone",
-    "/login/epw",
+    "/login/epwcheck",
+    "/login/epwchecking",
+    "/login/epwedit",
     "/business",
     "/business/number",
   ];

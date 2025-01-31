@@ -10,8 +10,25 @@ export const isOpenModalUpw = atom({
   key: "isOpenModalUpw",
   default: false,
 });
-
-// 회원가입 폼 저장 상태
+// 로그인 유저
+export const loginUser = atom({
+  key: "loginUser",
+  default: {
+    userId: 0,
+    name: "",
+    email: "",
+    pic: "",
+    accessToken: "",
+    isLogind: false,
+  },
+});
+export const emailForm = atom({
+  key: "emailForm",
+  default: {
+    email: "",
+  },
+});
+// 유저 폼 저장 상태
 export const joinUserState = atom({
   key: "joinUserState",
   default: { name: "", email: "", upw: "", upwConfirm: "", phone: "", pic: "" },
@@ -24,6 +41,11 @@ export const emailDouble = atom({
 export const emailDub = atom({
   key: "emailDub",
   default: true,
+});
+// 이메일 확인 눌러주세요 모달
+export const emailTry = atom({
+  key: "emailTry",
+  default: false,
 });
 // 이메일 인증완료 모달
 export const openModalEmail = atom({

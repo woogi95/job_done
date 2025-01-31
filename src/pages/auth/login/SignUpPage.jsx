@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import {
   emailDouble,
   emailDub,
+  emailTry,
   isOpenModalUpw,
   joinUserState,
   profilFile,
@@ -13,6 +14,7 @@ import "./signuppage.css";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserLayout from "../../../components/UserLayout";
 
 function SignUpPage() {
   const [match, setMatch] = useRecoilState(upwCheck);
@@ -20,8 +22,12 @@ function SignUpPage() {
   const [fileList, setFileList] = useRecoilState(profilFile); // 파일 상태 관리
   const [upwForm] = Form.useForm();
   const [userInfo, setUserInfo] = useRecoilState(joinUserState);
+  // 이메일 중복확인 모달
   const [emailOk, setEmailOk] = useRecoilState(emailDouble);
+  //  이메일 코멘트
   const [emailOok, setEmailOok] = useRecoilState(emailDub);
+  // 이메일 중복 확인 부탁 모달
+  const [emailClick, setEmailClick] = useRecoilState(emailTry);
   const navigate = useNavigate();
 
   const initData = {
@@ -69,25 +75,30 @@ function SignUpPage() {
   // 폼 제출
   const onSubmit = async data => {
     console.log(data);
-    try {
-      setUserInfo(prev => ({
-        ...prev,
-        ...data,
-      }));
-      const res = await axios.post("/api/email-check", {
-        email: `${data.email}`,
-      });
-      console.log(res);
-      // console.log(userInfo);
+    if (emailOk === false) {
+      try {
+        setUserInfo(prev => ({
+          ...prev,
+          ...data,
+        }));
+        const res = await axios.post("/api/email-check", {
+          email: `${data.email}`,
+        });
+        console.log(res);
+        // console.log(userInfo);
 
-      navigate("/login/email");
-    } catch (error) {
-      console.log(error);
+        navigate("/login/email");
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setEmailClick(true);
     }
   };
 
   return (
     <div className="signUpDiv">
+      <UserLayout />
       <Form
         form={upwForm}
         initialValues={initData}
@@ -202,13 +213,21 @@ function SignUpPage() {
           </Button>
         </Form.Item>
       </Form>
-
       {isUpw && (
         <div className="upwModal">
           <h1>비밀번호를 확인해주세요.</h1>
           <button onClick={() => setIsUpw(false)}>확인</button>
         </div>
       )}
+      {emailClick && (
+        <div className="emailModalFull">
+          <div className="emailModal">
+            <h1>이메일 중복 확인 해주세요.</h1>
+            <button onClick={() => setEmailClick(false)}>확인</button>
+          </div>
+        </div>
+      )}
+      ;
     </div>
   );
 }

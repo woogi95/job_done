@@ -24,9 +24,18 @@ function MyPage() {
               alt="profile"
               className="w-[100px] h-[100px] rounded-full"
             />
-            <a className="absolute bottom-0 right-0 bg-white rounded-full text-[#1e1e1e] cursor-pointer w-[30px] h-[30px] flex justify-center items-center text-[24px]">
+            <input
+              id="imgUpload"
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
+            <label
+              htmlFor="imgUpload"
+              className="absolute bottom-0 right-0 bg-white rounded-full text-[#1e1e1e] cursor-pointer w-[30px] h-[30px] flex justify-center items-center text-[24px]"
+            >
               <IoIosCamera />
-            </a>
+            </label>
           </div>
           <button className="flex justify-center items-center w-[50px] h-[30px] bg-white text-black rounded-[8px] border border-gray-300 hover:bg-black hover:text-white">
             적용

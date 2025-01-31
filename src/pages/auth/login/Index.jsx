@@ -2,25 +2,50 @@ import React from "react";
 import "./Index.css";
 import { Link, useNavigate } from "react-router-dom";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import { FcGoogle } from "react-icons/fc";
 import { Button, Form, Input } from "antd";
 import axios from "axios";
+import { useRecoilState } from "recoil";
+import { loginUser } from "../../../atoms/loginAtom";
+import { loginApi } from "../../../apis/login";
 
 function LoginPage() {
+  const [userInfo, setUserInfo] = useRecoilState(loginUser);
   const navigate = useNavigate();
   const initData = {
     email: "",
     upw: "",
   };
   const loginTry = async data => {
-    console.log(data);
+    console.log("로그인 요청:", data);
     try {
-      const res = await axios.post("/api/user/sign-in", data);
-      console.log(res.data);
-      if (res) {
+      const res = await loginApi.post("/api/user/sign-in", data, {
+        withCredentials: true,
+      });
+
+      console.log("서버 응답:", res.data);
+
+      if (res.data.resultData && res.data.resultData.accessToken) {
+        const { accessToken } = res.data.resultData;
+
+        // ✅ accessToken을 localStorage에 저장
+        localStorage.setItem("accessToken", accessToken);
+
+        // ✅ 사용자 상태 업데이트
+        setUserInfo(prev => ({
+          ...prev,
+          ...data,
+          isLogind: true,
+        }));
+
+        // ✅ 로그인 성공 후 메인 페이지로 이동
         navigate("/");
+      } else {
+        alert("로그인 실패: 서버 응답 오류");
       }
     } catch (error) {
-      console.log(error);
+      console.error("로그인 오류:", error);
+      alert("로그인에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -80,10 +105,17 @@ function LoginPage() {
           <div style={{ marginBottom: 10 }}>
             <button
               type="button"
-              className="bg-amber-300 border border-gray-400 w-80 h-11 rounded-lg flex items-center justify-center"
+              className="bg-amber-300 border border-gray-400 w-80 h-11 rounded-lg flex items-center justify-center mb-3"
             >
               <RiKakaoTalkFill style={{ fontSize: 30 }} />
               카카오 로그인
+            </button>
+            <button
+              type="button"
+              className="bg-white border border-gray-400 w-80 h-11 rounded-lg flex items-center justify-center"
+            >
+              <FcGoogle style={{ fontSize: 30 }} />
+              구글 로그인
             </button>
           </div>
           <div style={{ marginBottom: 10 }}>
