@@ -2,10 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function MyPageLayout({ children }) {
-  // const scrollToTop = () => {
-  //   window.scrollTo({ top: 0, behavior: "smooth" });
-  // };
-
   return (
     <div className="flex max-w-[1280px] m-auto pt-[80px]">
       <div className="w-[250px]">
@@ -32,12 +28,12 @@ function MyPageLayout({ children }) {
             </li>
             <li>
               <Link to="/mypage/reservation" className="text-[#616161]">
-                이용내역
+                예약현황
               </Link>
             </li>
             <li>
               <Link to="/mypage/usage" className="text-[#616161]">
-                예약현황
+                이용내역
               </Link>
             </li>
             <li>

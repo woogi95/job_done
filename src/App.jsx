@@ -14,6 +14,8 @@ import MyMessage from "./pages/mypage/MyMessage";
 import ReviewPage from "./pages/mypage/ReviewPage";
 import UsageDetails from "./pages/mypage/UsageDetails";
 import Wishlist from "./pages/mypage/Wishlist";
+import MyReservation from "./pages/mypage/MyReservation";
+
 import ExpertMain from "./pages/expert/ExpertMain";
 
 import NotFound from "./pages/NotFound";
@@ -51,6 +53,7 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
+
 function App() {
   return (
     <Router>
@@ -93,7 +96,7 @@ function App() {
           <Route path="/mypage">
             <Route index element={<MyPage />} />
             <Route path="message" element={<MyMessage />} />
-            {/* <Route path="reservation" element={<ReservationPage />} /> */}
+            <Route path="reservation" element={<MyReservation />} />
             <Route path="review" element={<ReviewPage />} />
             <Route path="usage" element={<UsageDetails />} />
             <Route path="wishlist" element={<Wishlist />} />
