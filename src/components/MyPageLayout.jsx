@@ -2,10 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function MyPageLayout({ children }) {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <div className="flex max-w-[1280px] m-auto pt-[80px]">
       <div className="w-[250px]">
@@ -26,56 +22,32 @@ function MyPageLayout({ children }) {
           </div>
           <ul className="flex flex-col justify-center items-center gap-[40px] text-[24px]">
             <li>
-              <Link
-                to="/mypage"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
+              <Link to="/mypage" className="text-[#616161]">
                 내 정보
               </Link>
             </li>
             <li>
-              <Link
-                to="/mypage/reservation"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
-                이용내역
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/mypage/usage"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
+              <Link to="/mypage/reservation" className="text-[#616161]">
                 예약현황
               </Link>
             </li>
             <li>
-              <Link
-                to="/mypage/wishlist"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
+              <Link to="/mypage/usage" className="text-[#616161]">
+                이용내역
+              </Link>
+            </li>
+            <li>
+              <Link to="/mypage/wishlist" className="text-[#616161]">
                 찜목록
               </Link>
             </li>
             <li>
-              <Link
-                to="/mypage/message"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
+              <Link to="/mypage/message" className="text-[#616161]">
                 메시지함
               </Link>
             </li>
             <li>
-              <Link
-                to="/mypage/review"
-                className="text-[#616161]"
-                onClick={scrollToTop}
-              >
+              <Link to="/mypage/review" className="text-[#616161]">
                 리뷰 관리
               </Link>
             </li>

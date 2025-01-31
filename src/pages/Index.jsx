@@ -3,17 +3,13 @@ import {
   serviceIcons,
   PopularPost,
   EventBanner,
-} from "../../components/ServiceIcon";
+} from "../components/ServiceIcon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
-import { useRecoilState } from "recoil";
-import { loginUser } from "../../atoms/loginAtom";
 
 const Index = () => {
-  const [userInfo, setUserInfo] = useRecoilState(loginUser);
   return (
     <div className="pt-[80px]">
       <div>

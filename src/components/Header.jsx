@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginState, loginUser } from "../atoms/loginAtom";
+import { isLoginState } from "../atoms/loginAtom";
 function Header() {
-  const [isLogin, setIsLogin] = useRecoilState(loginUser);
+  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef();
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="bg-white z-50 fixed flex items-center h-[80px] w-[100%] m-auto">
+    <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b border-[#eee]">
       <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <a href="/">

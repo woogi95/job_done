@@ -1,9 +1,10 @@
 import styled from "@emotion/styled";
-import { LayoutDiv } from "../service/move";
+import { LayoutDiv } from "../../pages/page";
+
 export const DetailLayout = styled(LayoutDiv)`
   display: flex;
   justify-content: space-between;
-  border: 1px solid red;
+  position: relative;
 `;
 export const DetailTopDiv = styled.div`
   background-color: #f3fcfe;
@@ -15,7 +16,6 @@ export const DetailTopDiv = styled.div`
   .inner {
     max-width: 1280px;
     width: 100%;
-    /* border: 1px solid; */
     > em {
       color: rgba(0, 0, 0, 0.65);
       font-size: 14px;
@@ -26,6 +26,7 @@ export const DetailTopDiv = styled.div`
       margin: 5px 0 16px;
     }
 
+    /* 회사 정보 */
     .companyInfo {
       /* border: 1px solid #000; */
       display: flex;
@@ -87,6 +88,7 @@ export const DetailTopDiv = styled.div`
     }
   }
 `;
+
 export const CountStarDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -106,66 +108,425 @@ export const CountStarDiv = styled.div`
     font-weight: 500;
   }
 `;
-// DetailContents
+// 왼쪽 - DetailContents
 export const DetailContentsDiv = styled.div`
-  border: 1px solid;
-  max-width: 780px;
+  max-width: 830px;
   width: 100%;
 
   nav {
     // position: "fixed",
-    top: 0;
+    top: 80px;
     background-color: #fff;
+    max-width: 1280px;
     width: 100%;
-    z-index: 1000;
-    padding: 17px 0;
+    padding-top: 20px;
+    z-index: 8;
+
+    border-bottom: 1px solid rgba(52, 196, 240, 0.45);
     ul {
       display: flex;
-      gap: 40px;
+      /* gap: 40px; */
       li a {
+        display: block;
+        /* border: 1px solid; */
+        padding: 15px 20px;
         cursor: pointer;
+      }
+      a.active {
+        font-weight: 700;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          border-radius: 5px;
+          background: #34c5f0;
+        }
       }
     }
   }
-  .cont {
-    div {
-      height: 100vh;
-      border: 1px solid #bbb;
+`;
+export const DContsDiv = styled.div`
+  /* border: 1px solid #bbb; */
+  /* height: 100vh; */
+  .box {
+    padding: 0px 0 30px;
+
+    &:nth-of-type(2) {
+      border-top: 4px solid #3887ff;
+      border-bottom: 4px solid #3887ff;
+    }
+
+    h2 {
+      border-bottom: 2px solid #3887ff80;
+      font-size: 20px;
+      font-weight: 600;
+      padding: 20px 0;
+    }
+
+    p {
+      padding: 20px 10px;
+      color: #333;
+      line-height: 1.5em;
+    }
+    > img {
+      padding: 0px 10px;
     }
   }
 `;
-export const SummaryDiv = styled.div`
-  border: 1px solid;
-  left: 60%;
-  top: 15px;
-  z-index: 1001;
-  width: 420px;
-  height: 500px;
-  padding: 30px;
+export const PortfolioSwiperDiv = styled.div`
+  padding: 20px 10px;
+  position: relative;
 
-  .top {
-    position: relative;
+  .btn-area {
+    /* border: 1px solid; */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    h2 {
-      font-size: 24px;
-      font-weight: 700;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    z-index: 5;
+    button {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.13);
+      border-radius: 100%;
+      font-size: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .prev:after,
+    .next:after {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      line-height: normal;
+      content: "";
+      width: 30px;
+      height: 30px;
+      background: url("../images/arrow-right.svg") no-repeat center / 12px;
+      transform: translate(0.5px, -1px);
     }
 
-    .like svg {
+    .prev:after {
+      transform: rotate(180deg) translate(0.5px, -1px);
+    }
+  }
+`;
+
+// 포트폴리오 컨텐츠 스와이퍼
+export const PortfolioListItem = styled.div`
+  width: 191.25px;
+  height: 191.25px;
+  border-radius: 8px;
+  background-color: #fff;
+  border: 1px solid #eee;
+  position: relative;
+  overflow: hidden;
+
+  .imgbox {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
       position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 22px;
-      height: 22px;
-      color: red;
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      background-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.3) 62%,
+        rgba(0, 0, 0, 0.7)
+      );
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
       cursor: pointer;
     }
   }
-  .tit {
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.12em;
+  h3 {
+    color: #fff;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 18px;
+  }
+`;
+
+// 리뷰
+export const StarTotalDiv = styled.div`
+  border: 1px solid #eee;
+  background: #f9f9f9;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  gap: 12px;
+  box-shadow: 0px 4px 8px 0 rgba(0, 0, 0, 0.12);
+  h4 {
+    font-weight: 700;
+    font-size: 28px;
+    /* border: 1px solid; */
+  }
+
+  .star-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    p.star {
+      /* border: 1px solid #000; */
+      padding: 0;
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+    }
+    .star-grade {
+      font-weight: 700;
+      font-size: 20px;
+    }
+  }
+`;
+
+// 오른쪽
+export const SummaryDiv = styled.div`
+  top: 0;
+  z-index: 3;
+  position: absolute;
+  margin: 0 auto;
+  max-width: 1280px;
+  width: 100%;
+
+  .inner {
+    width: 330px;
+    min-height: 380px;
+    padding: 40px 30px;
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    .top {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.8);
+        /* line-height: 1.5em; */
+      }
+
+      .like svg {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+        width: 22px;
+        height: 22px;
+        color: red;
+        cursor: pointer;
+      }
+    }
+    .tit {
+      word-break: keep-all;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.23em;
+      margin: 15px 0 8px;
+    }
+
+    .desc {
+      /* border: 1px solid #eee; */
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .box {
+        border-radius: 15px;
+        gap: 10px;
+        background-color: #c3eefb65;
+        color: #0062eb;
+        font-weight: 600;
+        padding: 5px 10px;
+        font-size: 11px;
+        display: flex;
+        justify-content: space-between;
+        div {
+          color: #064153;
+        }
+      }
+    }
+    .btn-area {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      & > * {
+        border: 2px solid #34c5f0;
+        width: 80%;
+        height: 40px;
+        line-height: 36px;
+        font-size: 15px;
+        text-align: center;
+        border-radius: 5px;
+      }
+      button {
+        background-color: #34c5f0;
+        color: #fff;
+        text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+      }
+      a {
+        color: #34c5f0;
+      }
+    }
+  }
+`;
+export const CountStarCustomDiv = styled(CountStarDiv)`
+  /* border: 1px solid; */
+  margin: 3px 0 12px;
+  justify-content: start;
+  em {
+    font-size: 12px;
+    margin: 0 2px 0 3px;
+  }
+  span {
+    font-size: 12px;
+  }
+`;
+// 리뷰
+export const ReviewDiv = styled.div`
+  padding: 50px 0;
+  /* 리뷰 탑 */
+  .rv-top {
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .filter {
+      border: 1px solid #eee;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #555;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
+  /* 리뷰 리스트 */
+  .rv-list {
+    /* border: 1px solid #bbb; */
+    .rv-item {
+      padding: 20px 10px 15px;
+      border-bottom: 2px solid #eee;
+      /* 유저 리뷰 */
+      .user-rv {
+        /* border: 1px solid #eee; */
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+
+          .user-photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            background-color: #eee;
+          }
+          .desc {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            > div {
+              display: flex;
+              align-items: end;
+              font-size: 14px;
+              font-weight: 600;
+              span {
+                margin-left: 3px;
+              }
+              b {
+                font-weight: normal;
+                color: #bbb;
+                margin-left: 6px;
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+      /* 사장님댓글 */
+      .reply {
+        background-color: #f9f9f9;
+        padding: 20px;
+        .info {
+          display: flex;
+          align-items: end;
+          gap: 6px;
+          h4 {
+            /* font-size: 14px; */
+            font-weight: 600;
+          }
+          b {
+            font-weight: normal;
+            color: #bbb;
+            margin-left: 6px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      /* 리뷰 글 - 사장님, 사용자 공통*/
+      .comment {
+        /* border: 1px solid #bbb; */
+        padding: 10px 0;
+        display: flex;
+        gap: 30px;
+        span {
+          word-break: keep-all;
+          color: #555;
+          font-weight: 300;
+          line-height: 1.25em;
+          font-size: 14px;
+        }
+        .photo {
+          display: flex;
+          gap: 10px;
+          > div {
+            width: 80px;
+            height: 80px;
+            background-color: #eee;
+          }
+        }
+      }
+    }
   }
 `;

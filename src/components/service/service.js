@@ -1,12 +1,5 @@
 import styled from "@emotion/styled";
 
-// 레이아웃(임시)
-export const LayoutDiv = styled.div`
-  max-width: 1280px;
-  /* border: 1px solid #eee; */
-  margin: 0 auto;
-`;
-
 // 서브페이지 - 탑
 export const PageTopDiv = styled.div`
   height: 320px;
