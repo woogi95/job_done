@@ -3,10 +3,9 @@ import {
   serviceIcons,
   PopularPost,
   EventBanner,
-} from "../../components/ServiceIcon";
+} from "../components/ServiceIcon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 

@@ -13,6 +13,7 @@ export const PapersDiv = styled.div`
   align-items: center;
 
   .inner {
+    position: relative;
     max-width: 1024px;
     width: 100%;
     max-height: 95vh;
@@ -139,5 +140,11 @@ export const ReservationPaperContDiv = styled(PaperContDiv)`
     strong {
       color: #4581f0;
     }
+  }
+  .pop-close-btn {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    font-size: 30px;
   }
 `;

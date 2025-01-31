@@ -144,7 +144,7 @@ export const FilterDiv = styled.div`
 
 // 서비스 리스트 아이템
 export const ListItemDiv = styled.div`
-  border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   width: calc((100% - 60px) / 4);
   cursor: pointer;
 
@@ -172,35 +172,37 @@ export const ListItemDiv = styled.div`
     > em {
       font-size: 14px;
       color: #777;
-      margin-bottom: 3px;
+      display: block;
+      padding: 3px 0;
     }
     h4 {
       font-size: 15px;
       color: #111;
       line-height: 1.2em;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     p {
       font-size: 20px;
       color: #000;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 10px;
     }
   }
   .countStar {
     display: flex;
+    gap: 1px;
     align-items: center;
     font-weight: 600;
     svg {
-      font-size: 16px;
+      font-size: 14px;
       color: #ff9d00;
     }
     em {
-      font-size: 15px;
+      font-size: 14px;
       color: #333;
     }
     span {
-      font-size: 14px;
+      font-size: 13px;
       color: #bbb;
       font-weight: 500;
     }

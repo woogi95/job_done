@@ -7,11 +7,11 @@ const ServiceListTop = () => {
     <PageTopDiv>
       <div className="inner">
         <h1>청소</h1>
-        <span>청소 > 원룸</span>
+        <span>청소 {">"} 원룸</span>
         <ul>
           <li>
             <NavLink
-              to="/"
+              to="/service"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               청소
