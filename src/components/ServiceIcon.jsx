@@ -173,3 +173,45 @@ export const MessageDetail = [
   //   ],
   // },
 ];
+
+export const ReservationData = [
+  {
+    resultData: [
+      {
+        serviceId: 0,
+        userId: 0,
+        businessName: "홈클린",
+        productName: "집청소",
+        price: 100000,
+        completed: 0,
+        startDate: "2025-1-15",
+      },
+    ],
+  },
+  {
+    resultData: [
+      {
+        serviceId: 0,
+        userId: 0,
+        businessName: "홈클린",
+        productName: "집청소",
+        price: 150000,
+        completed: 1,
+        startDate: "2025-1-20",
+      },
+    ],
+  },
+  {
+    resultData: [
+      {
+        serviceId: 0,
+        userId: 0,
+        businessName: "홈클린",
+        productName: "집청소",
+        price: 150000,
+        completed: 7,
+        startDate: "2025-1-20",
+      },
+    ],
+  },
+];
