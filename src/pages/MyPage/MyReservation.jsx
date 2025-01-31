@@ -40,10 +40,10 @@ function MyReservation() {
                   </span>
                 </div>
                 <div className="flex justify-center items-center gap-[15px]">
-                  <button className="flex justify-center items-center w-[340px] h-[40px] text-[#FFFFFF] bg-[#3887FF] rounded-lg border-[#ABABAB] border-[1px]">
+                  <button className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#FFFFFF] bg-[#3887FF] rounded-lg border-[#ABABAB] border-[1px]">
                     결제하기
                   </button>
-                  <button className="flex justify-center items-center w-[340px] h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]">
+                  <button className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]">
                     예약취소
                   </button>
                 </div>

@@ -51,7 +51,6 @@ export const PopularPost = [
   },
 ];
 
-
 // 이벤트 배너 더미데이터
 export const EventBanner = [
   {
