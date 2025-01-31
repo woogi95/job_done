@@ -364,7 +364,7 @@ const DetailContents = () => {
       <SummaryDiv
         style={{
           position: isFixed ? "fixed" : "absolute",
-          top: isFixed ? "160px" : "15px",
+          top: isFixed ? "180px" : "60px",
         }}
       >
         <div className="inner">

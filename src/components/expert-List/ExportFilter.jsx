@@ -6,21 +6,20 @@ const ExportFilter = () => {
     <EFilterDiv>
       <ul className="btn-area">
         <li>
-          <button>취소</button>
+          <button className="completed3">취소</button>
         </li>
         <li>
-          <button>대기</button>
+          <button className="completed0">대기</button>
         </li>
         <li>
-          <button>완료</button>
+          <button className="completed1">완료</button>
         </li>
         <li>
-          <button>거절</button>
+          <button className="completed5">거절</button>
         </li>
       </ul>
       <div className="search-bar">
         <label htmlFor="">
-          <em></em>
           <input type="text" />
         </label>
         <button>검색</button>

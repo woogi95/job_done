@@ -7,7 +7,7 @@ export const DetailLayout = styled(LayoutDiv)`
   position: relative;
 `;
 export const DetailTopDiv = styled.div`
-  background-color: #f3fcfe;
+  background-color: rgb(223, 249, 255);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,9 +120,10 @@ export const DetailContentsDiv = styled.div`
     max-width: 1280px;
     width: 100%;
     padding-top: 20px;
+
     z-index: 8;
 
-    border-bottom: 1px solid rgba(52, 196, 240, 0.45);
+    border-bottom: 1px solid rgba(199, 199, 199, 0.45);
     ul {
       display: flex;
       /* gap: 40px; */
@@ -143,7 +144,7 @@ export const DetailContentsDiv = styled.div`
           width: 100%;
           height: 4px;
           border-radius: 5px;
-          background: #34c5f0;
+          background: rgb(65, 65, 65);
         }
       }
     }
@@ -154,7 +155,9 @@ export const DContsDiv = styled.div`
   /* height: 100vh; */
   .box {
     padding: 0px 0 30px;
-
+    &:nth-of-type(1) {
+      padding-top: 10px;
+    }
     &:nth-of-type(2) {
       border-top: 4px solid #3887ff;
       border-bottom: 4px solid #3887ff;

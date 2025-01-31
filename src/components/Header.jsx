@@ -31,8 +31,8 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b border-[#eee]">
-      <div className="bg-white flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
+    <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
+      <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
           <a href="/">
             <img src="/images/logo.svg" alt="logo" />
@@ -156,7 +156,7 @@ function Header() {
                 </button>
                 {/* 프로필 */}
                 {isMenuOpen && (
-                  <div className="absolute flex flex-col items-center justify-center right-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg py-2 z-10">
+                  <div className="absolute flex flex-col items-center justify-center right-0 mt-2 w-[100px] bg-white rounded-lg shadow-lg py-2">
                     <Link
                       to="/mypage"
                       className="block px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"

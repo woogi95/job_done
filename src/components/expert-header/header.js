@@ -9,7 +9,7 @@ export const HeaderDiv = styled.div`
   align-items: center;
 
   .b-logo {
-    width: 250px;
+    width: 20%;
     height: 40px;
     display: flex;
     justify-content: center;
@@ -26,7 +26,7 @@ export const HeaderDiv = styled.div`
       transform: translateY(-50%);
       width: 2px;
       height: 30px;
-      background-color: rgba(255, 255, 255, 0.4);
+      background-color: rgba(255, 255, 255, 0.2);
     }
   }
 

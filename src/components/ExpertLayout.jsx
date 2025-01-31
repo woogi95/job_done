@@ -26,12 +26,12 @@ const ExpertLayout = () => {
       height: calc(100% - 67px);
       /* side menu */
       > div:nth-child(1) {
-        width: 250px;
+        width: 20%;
         background-color: #2a58ad;
       }
       /* outlet */
       > div:nth-child(2) {
-        width: calc(100% - 250px);
+        width: 80%;
         background-color: #eaeef1;
       }
     }

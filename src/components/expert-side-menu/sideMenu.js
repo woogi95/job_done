@@ -52,12 +52,7 @@ export const SideMenuDiv = styled.div`
           font-size: 20px;
         }
       }
-      > a.active + ul {
-        background-color: #1d4c9e;
-        box-shadow:
-          rgba(10, 0, 65, 0.12) 3px 3px 6px 0px inset,
-          rgba(0, 0, 0, 0.04) -3px -3px 6px 1px inset;
-      }
+
       ul {
         display: flex;
         flex-direction: column;
@@ -65,6 +60,10 @@ export const SideMenuDiv = styled.div`
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-out;
+        background-color: #1d4c9e;
+        box-shadow:
+          rgba(10, 0, 65, 0.12) 3px 3px 6px 0px inset,
+          rgba(0, 0, 0, 0.04) -3px -3px 6px 1px inset;
 
         li {
           display: flex;

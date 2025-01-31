@@ -2,9 +2,9 @@ import styled from "@emotion/styled";
 import { BtnAreaDiv } from "../../components/papers/papers";
 
 export const ReservationDiv = styled.div`
-  border: 1px solid #eee;
+  /* border: 1px solid #eee; */
   padding: 80px 100px;
-
+  /* background-color: rgb(248, 248, 248); */
   .tit {
     text-align: center;
     font-size: 38px;
@@ -12,7 +12,7 @@ export const ReservationDiv = styled.div`
 `;
 export const ReserVationContDiv = styled.div`
   /* border: 1px solid yellow; */
-  padding: 50px 0;
+  padding: 80px 0 50px;
 
   > form {
     width: 100%;
@@ -30,12 +30,12 @@ export const ReserVationContDiv = styled.div`
   }
   form::after {
     content: "";
-    width: 3px;
+    width: 2px;
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 980px;
+    height: 910px;
     background-color: #eee;
   }
   h3 {
@@ -286,7 +286,7 @@ export const SelectOptionDiv = styled.div`
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fdfdfd;
-    height: 703px;
+    height: 652px;
     overflow-y: auto;
     h4 {
       font-size: 16px;
