@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import MyPageLayout from "../../components/MyPageLayout";
 import { MessageDetail, MessageTest } from "../../components/ServiceIcon";
@@ -156,6 +157,7 @@ function MyMessage() {
       </div>
     </MyPageLayout>
   );
+
 }
 
 export default MyMessage;

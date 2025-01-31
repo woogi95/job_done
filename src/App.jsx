@@ -9,12 +9,12 @@ import EmailPassword from "./pages/auth/login/EmailPassword";
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
-import MyPage from "./pages/mypage/Index";
-import MyMessage from "./pages/mypage/MyMessage";
-import ReviewPage from "./pages/mypage/ReviewPage";
-import UsageDetails from "./pages/mypage/UsageDetails";
-import Wishlist from "./pages/mypage/Wishlist";
-import MyReservation from "./pages/mypage/MyReservation";
+import MyPage from "./pages/myPage/Index";
+import MyMessage from "./pages/myPage/MyMessage";
+import ReviewPage from "./pages/myPage/ReviewPage";
+import UsageDetails from "./pages/myPage/UsageDetails";
+import Wishlist from "./pages/myPage/Wishlist";
+import MyReservation from "./pages/myPage/MyReservation";
 
 import ExpertMain from "./pages/expert/ExpertMain";
 

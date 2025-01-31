@@ -20,7 +20,10 @@ function BusinessNumber() {
   const [previewImages, setPreviewImages] = useState([]); // 이미지 미리보기 상태
   const [checkMessage, setCheckMessage] = useRecoilState(checkMsg);
   const navigate = useNavigate();
-  const sucess = [setNumMOdal(false), navigate("/")];
+  const sucess = () => {
+    setNumMOdal(false);
+    navigate("/");
+  };
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
 
@@ -47,7 +50,6 @@ function BusinessNumber() {
       const result = await response.json();
       if (result) {
         setResult(result);
-        setNumMOdal(true);
       }
       console.log(result);
     } catch (err) {
@@ -90,6 +92,9 @@ function BusinessNumber() {
           "Content-Type": "multipart/form-data",
         },
       });
+      if (res) {
+        setNumMOdal(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -182,10 +187,19 @@ function BusinessNumber() {
       {numModal && (
         <div className="num-ModalFull items-center justify-center">
           <div className="num-Modal">
-            <h1>등록이 완료되었습니다.</h1>
-            <button className="" onClick={() => sucess}>
-              확인
-            </button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>등록이 완료되었습니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => sucess}>확인</button>
+            </div>
           </div>
         </div>
       )}

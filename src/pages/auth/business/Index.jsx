@@ -16,7 +16,7 @@ function BusinessSignUp() {
     businessName: "싹 박멸해",
     address: "만경관근처",
     serviceTypeId: 1,
-    busiCreatedAt: "2019.06.08",
+    busiCreatedAt: Date,
     tel: "0533836669",
   };
 
@@ -38,7 +38,7 @@ function BusinessSignUp() {
     // 문자열로 변환
     const formattedData = {
       ...data,
-      busiCreatedAt: data.busiCreatedAt.format("YYYY.MM.DD"),
+      // busiCreatedAt: data.busiCreatedAt.format("YYYY.MM.DD"),
     };
     console.log(formattedData);
     setBusiInfo(prev => ({
@@ -164,7 +164,7 @@ function BusinessSignUp() {
 
         {/* 창업날짜 */}
         <Form.Item label="창업 날짜" name={"busiCreatedAt"}>
-          <DatePicker format={`YYYY.MM.DD`} />
+          <DatePicker format={"YYYY.MM.DD"} />
         </Form.Item>
         <Form.Item className="clickbuttons">
           <button className="cancle" onClick={() => goCancle()}>

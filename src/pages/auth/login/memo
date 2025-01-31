@@ -24,45 +24,7 @@ function 함수명 (){
   }, []);
 
   return (
-    <Form.Item
-                name="aca_addr"
-                className="ml-[130px]"
-                rules={[
-                  { required: true, message: "학원 주소를 입력해 주세요." },
-                ]}
-              >
-                <Input
-                  className="input"
-                  id="acaAddr"
-                  placeholder="학원 기본주소"
-                  readOnly
-                />
-              </Form.Item>
-                <Form.Item>
-                  <button
-                    type="button"
-                    className="min-w-[84px] h-14 bg-[#E8EEF3] rounded-xl font-bold text-sm"
-                    onClick={() => handleAddressSearch()}
-                  >
-                    주소 검색
-                  </button>
-                </Form.Item>
-              
-
-              <Form.Item
-                name="aca_addr2"
-                className="ml-[130px]"
-                rules={[
-                  { required: true, message: "학원 주소를 입력해 주세요." },
-                ]}
-              >
-                <Input
-                  className="input"
-                  id="acaAddr2"
-                  maxLength={20}
-                  placeholder="학원 상세주소"
-                />
-              </Form.Item>
+    
 )
 }
 
@@ -82,3 +44,91 @@ Form.Item
                     readOnly
                   />
                 </Form.Item>
+
+
+                function 함수명 (){
+                  const handleAddressSearch = () => {
+                    new window.daum.Postcode({
+                      oncomplete: (data: any) => {
+                        // 우편번호와 기본주소 입력
+                        form.setFieldsValue({ aca_zipcode: data.zonecode }); // Form의 값도 업데이트
+                        form.setFieldsValue({ aca_addr: data.address }); // Form의 값도 업데이트
+                      },
+                    }).open();
+                  };
+                
+                  useEffect(() => {
+                    // Daum 우편번호 스크립트 로드
+                    const script = document.createElement("script");
+                    script.src =
+                      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+                    script.async = true;
+                    document.body.appendChild(script);
+                
+                    // 컴포넌트 언마운트 시 스크립트 제거
+                    return () => {
+                      document.body.removeChild(script);
+                    };
+                  }, []);
+                
+                  return (
+                
+                              <div className="flex gap-3 w-full">
+                                <Form.Item
+                                  name="aca_zipcode"
+                                  label="학원 주소"
+                                  className="w-full"
+                                  rules={[
+                                    { required: true, message: "학원 주소를 입력해 주세요." },
+                                  ]}
+                                >
+                                  <Input
+                                    className="input"
+                                    id="acaZipcode"
+                                    maxLength={6}
+                                    placeholder="우편번호"
+                                    readOnly
+                                  />
+                                </Form.Item>
+                                <Form.Item>
+                                  <button
+                                    type="button"
+                                    className="min-w-[84px] h-14 bg-[#E8EEF3] rounded-xl font-bold text-sm"
+                                    onClick={() => handleAddressSearch()}
+                                  >
+                                    주소 검색
+                                  </button>
+                                </Form.Item>
+                              </div>
+                
+                              <Form.Item
+                                name="aca_addr"
+                                className="ml-[130px]"
+                                rules={[
+                                  { required: true, message: "학원 주소를 입력해 주세요." },
+                                ]}
+                              >
+                                <Input
+                                  className="input"
+                                  id="acaAddr"
+                                  placeholder="학원 기본주소"
+                                  readOnly
+                                />
+                              </Form.Item>
+                
+                              <Form.Item
+                                name="aca_addr2"
+                                className="ml-[130px]"
+                                rules={[
+                                  { required: true, message: "학원 주소를 입력해 주세요." },
+                                ]}
+                              >
+                                <Input
+                                  className="input"
+                                  id="acaAddr2"
+                                  maxLength={20}
+                                  placeholder="학원 상세주소"
+                                />
+                              </Form.Item>
+                )
+                }

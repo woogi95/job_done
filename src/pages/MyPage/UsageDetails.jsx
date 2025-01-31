@@ -2,6 +2,7 @@ import React from "react";
 import MyPageLayout from "../../components/MyPageLayout";
 
 function UsageDetails() {
+
   return (
     <MyPageLayout>
       <div className=" flex justify-center items-center pb-[30px]">
@@ -23,6 +24,7 @@ function UsageDetails() {
       </div>
     </MyPageLayout>
   );
+
 }
 
 export default UsageDetails;
