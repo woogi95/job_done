@@ -512,6 +512,7 @@ export const ReviewDiv = styled.div`
         /* border: 1px solid #bbb; */
         padding: 10px 0;
         display: flex;
+        justify-content: space-between;
         gap: 30px;
         span {
           word-break: keep-all;
