@@ -45,3 +45,46 @@ export const businessDetailState = atom({
     contents: "",
   },
 });
+
+// 견적서 & 예약서 & 결제서
+
+export const papersState = atom({
+  key: "papersState",
+  default: {
+    serviceId: 0,
+    userName: "",
+    userPhone: "",
+    businessName: "",
+    reservedName: "",
+    productName: "",
+    businessPhone: "",
+    price: 0,
+    completed: 0,
+    comment: "",
+    addComment: "",
+    startDate: "",
+    endDate: "",
+    address: "",
+    businessAddress: "",
+    categoryName: "",
+    businessNum: "",
+    createdAt: "",
+    pyeong: "",
+    options: [
+      {
+        productOptionId: 0,
+        optionName: "",
+        optionDetails: [
+          {
+            optionDetailId: 0,
+            detailName: "",
+            detailPrice: 0,
+            contents: "",
+          },
+        ],
+      },
+    ],
+    mstartTime: "",
+    mendTime: "",
+  },
+});

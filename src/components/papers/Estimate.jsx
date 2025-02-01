@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
 import axios from "axios";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { papersState } from "../../atoms/businessAtom";
 
 const Estimate = () => {
-  const [estimateInfo, setEstimateInfo] = useState({});
+  const [papers, setPapers] = useRecoilState(papersState);
+  const papersInfo = useRecoilValue(papersState);
   const getEstimate = async () => {
     try {
-      const res = await axios.get("/api/service/detail?serviceId=1");
+      const res = await axios.get(`/api/service/detail`, {
+        params: { serviceId: 28 },
+      });
       // console.log(res.data.resultData);
-      setEstimateInfo(res.data.resultData);
+      setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(papers);
   useEffect(() => {
     getEstimate();
   }, []);
-  console.log(estimateInfo);
   return (
     <PapersDiv>
       <div className="inner">
         <div className="logo"></div>
         <PaperContDiv>
           <h2 className="tit">
-            요청하신{" "}
+            요청하신
             <strong>
               견적서가
               <br /> 완료
@@ -32,8 +37,8 @@ const Estimate = () => {
           </h2>
           <span className="description">
             기다려 주셔서 감사합니다. <br />
-            예약 내역 및 견적 내용은 <em>마이페이지>예약현황</em>에서 확인하실
-            수 있습니다.
+            예약 내역 및 견적 내용은 <em>마이페이지{">"}예약현황</em>에서
+            확인하실 수 있습니다.
             <br /> 수정사항이나 문의 사항이 있으시면, "문의하기"를 통해 연락
             주시기 바랍니다.
             <br />
@@ -48,23 +53,23 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>등록번호</p>
-                  <span>----</span>
+                  <span>{papersInfo.businessNum}</span>
                 </li>
                 <li>
                   <p>업체번호</p>
-                  <span>----</span>
+                  <span>{papersInfo.businessPhone}</span>
                 </li>
                 <li>
                   <p>상호명</p>
-                  <span>{estimateInfo.businessName}</span>
+                  <span>{papersInfo.businessName}</span>
                 </li>
                 <li>
                   <p>분류</p>
-                  <span>{estimateInfo.categoryName}</span>
+                  <span>{papersInfo.categoryName}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>----</span>
+                  <span>{papersInfo.businessAddress}</span>
                 </li>
               </ul>
             </div>
@@ -73,15 +78,15 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>예약자</p>
-                  <span>{estimateInfo.reservedName}</span>
+                  <span>{papersInfo.reservedName}</span>
                 </li>
                 <li>
                   <p>연락처</p>
-                  <span>{estimateInfo.userPhone}</span>
+                  <span>{papersInfo.userPhone}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{estimateInfo.address}</span>
+                  <span>{papersInfo.address}</span>
                 </li>
               </ul>
             </div>
@@ -90,7 +95,7 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>견적일</p>
-                  <span>{estimateInfo.createdAt}</span>
+                  <span>{papersInfo.createdAt}</span>
                 </li>
                 <li>
                   <p>방문날짜</p>
@@ -125,7 +130,7 @@ const Estimate = () => {
                 </li>
                 <li>
                   <p>견적비용</p>
-                  <span>{estimateInfo.createdAt}</span>
+                  <span>{papersInfo.createdAt}</span>
                 </li>
                 <li>
                   <p>특이사항</p>

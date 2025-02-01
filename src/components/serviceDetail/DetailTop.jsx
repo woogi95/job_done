@@ -24,7 +24,7 @@ const DetailTop = () => {
             <h3>
               {businessDetail.businessName}
               <em>
-                {businessDetail.openingTime.slice(0, 5)} -{" "}
+                {businessDetail.openingTime.slice(0, 5)} -
                 {businessDetail.closingTime.slice(0, 5)}
               </em>
             </h3>
