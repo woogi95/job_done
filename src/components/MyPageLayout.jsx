@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function MyPageLayout({ children }) {
   return (
     <div className="flex max-w-[1280px] m-auto pt-[80px]">
-      <div className="w-[250px]">
+      <div className="min-w-[250px]">
         <div className="flex flex-col gap-[100px]">
           <div className="flex justify-center items-center text-[36px]">
             마이페이지

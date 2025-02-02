@@ -12,6 +12,62 @@ function MyPage() {
   const [showConfirmPw, setShowConfirmPw] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [deletePw, setDeletePw] = useState(false);
+  const [profileImg, setProfileImg] = useState(
+    "/images/order/default_profile.jpg",
+  );
+  const [isEdit, setIsEdit] = useState(false);
+
+  const handleImgUpload = e => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImg(reader.result);
+        setIsEdit(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // 전화번호 포맷팅
+  const formatPhoneNumber = value => {
+    const numbers = value.replace(/[^\d]/g, "");
+    if (numbers.length <= 3) {
+      return numbers;
+    } else if (numbers.length <= 7) {
+      return numbers.slice(0, 3) + "-" + numbers.slice(3);
+    } else {
+      return (
+        numbers.slice(0, 3) +
+        "-" +
+        numbers.slice(3, 7) +
+        "-" +
+        numbers.slice(7, 11)
+      );
+    }
+  };
+
+  // 전화번호 하이픈?
+  const handlePhoneChange = e => {
+    const formatNumber = formatPhoneNumber(e.target.value);
+    if (formatNumber.length <= 13) {
+      setPhoneNumber(formatNumber);
+      setIsEdit(true);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (isEdit) {
+      const updatedData = {
+        pic: profileImg,
+        p: {
+          phone: phoneNumber.replace(/-/g, ""),
+        },
+      };
+      console.log("Updated data:", updatedData);
+      setIsEdit(false);
+    }
+  };
 
   return (
     <>
@@ -20,15 +76,16 @@ function MyPage() {
           <div className="text-[24px]">내 정보</div>
           <div className="relative">
             <img
-              src="/images/order/default_profile.jpg"
+              src={profileImg}
               alt="profile"
-              className="w-[100px] h-[100px] rounded-full"
+              className="w-[100px] h-[100px] rounded-full object-cover"
             />
             <input
               id="imgUpload"
               type="file"
               accept="image/*"
               className="hidden"
+              onChange={handleImgUpload}
             />
             <label
               htmlFor="imgUpload"
@@ -37,7 +94,16 @@ function MyPage() {
               <IoIosCamera />
             </label>
           </div>
-          <button className="flex justify-center items-center w-[50px] h-[30px] bg-white text-black rounded-[8px] border border-gray-300 hover:bg-black hover:text-white">
+          <button
+            className={`flex justify-center items-center w-[50px] h-[30px] rounded-[8px] border border-gray-300 
+              ${
+                isEdit
+                  ? "bg-black text-white hover:bg-gray-800"
+                  : "bg-gray-200 text-gray-500 cursor-not-allowed"
+              }`}
+            onClick={handleSubmit}
+            disabled={!isEdit}
+          >
             적용
           </button>
           <div className="flex flex-col gap-[20px]">
@@ -46,24 +112,25 @@ function MyPage() {
                 type="text"
                 value="이름"
                 readOnly
-                className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3]"
+                className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3] bg-gray-100"
               />
             </div>
             <div>
               <input
                 type="text"
-                value="이메일"
+                value="이메일?"
                 readOnly
-                className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3]"
+                className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3] bg-gray-100"
               />
             </div>
             <div className="relative">
               <input
                 type="text"
                 value={phoneNumber}
-                onChange={e => setPhoneNumber(e.target.value)}
+                onChange={handlePhoneChange}
                 readOnly={!isPhoneEdit}
                 className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3]"
+                maxLength={13}
               />
               <button
                 onClick={() => setIsPhoneEdit(!isPhoneEdit)}
