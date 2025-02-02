@@ -36,6 +36,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import axios from "axios";
 import { reviewListState } from "../../atoms/reviewAtom";
+// import PfPopup from "../portfolio/PfPopup";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
@@ -144,6 +145,20 @@ const DetailContents = () => {
   useEffect(() => {
     getReviewList();
   }, []);
+
+  // 문의하기
+  const openWindow = () => {
+    const width = 410;
+    const height = 570;
+    const left = (screen.width - width) / 2;
+    const top = (screen.height - height) / 2;
+
+    window.open(
+      "/service/contactus",
+      "_blank",
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
+    );
+  };
   return (
     <DetailLayout>
       {/* 오른쪽 */}
@@ -196,7 +211,11 @@ const DetailContents = () => {
             <h2>업체소개</h2>
             <p>{parse(businessDetail.contents)}</p>
             {detailPicList.map((item, index) => (
-              <img src={detailPicList[index].pic} alt="상품디테일사진" />
+              <img
+                key={businessDetail.businessId}
+                src={detailPicList[index].pic}
+                alt="상품디테일사진"
+              />
             ))}
           </div>
           <div className="box" id="portfolio">
@@ -398,12 +417,11 @@ const DetailContents = () => {
             >
               예약하기
             </button>
-            <a href="/" target="_blank">
-              문의하기
-            </a>
+            <button onClick={openWindow}>문의하기</button>
           </div>
         </div>
       </SummaryDiv>
+      {/* <PfPopup /> */}
     </DetailLayout>
   );
 };

@@ -402,8 +402,9 @@ export const SummaryDiv = styled.div`
         color: #fff;
         text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
       }
-      a {
+      button:last-child {
         color: #34c5f0;
+        background-color: #fff;
       }
     }
   }

@@ -51,7 +51,6 @@ export const PopularPost = [
   },
 ];
 
-
 // 이벤트 배너 더미데이터
 export const EventBanner = [
   {
@@ -155,7 +154,7 @@ export const MessageDetail = [
         roomCreatedAt: "2025-01-13",
         companyChat: "안녕하세요 홈클린 입니다.",
         userChat: "안녕하세요",
-        sendDate: "오후2:30",
+        sendTime: "오후2:30",
       },
     ],
   },

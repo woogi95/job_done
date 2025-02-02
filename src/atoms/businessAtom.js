@@ -47,7 +47,6 @@ export const businessDetailState = atom({
 });
 
 // 견적서 & 예약서 & 결제서
-
 export const papersState = atom({
   key: "papersState",
   default: {
