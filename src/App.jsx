@@ -2,10 +2,15 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import LoginPage from "./pages/auth/login/Index";
+//회원가입
 import SignUpPage from "./pages/auth/login/SignUpPage";
 import EmailPage from "./pages/auth/login/EmailPage";
 import SignUpDone from "./pages/auth/login/SignUpDone";
+// 비밀번호 재설정
 import PasswordEmail from "./pages/auth/login/PasswordEmail";
+import PasswordEdit from "./pages/auth/login/PasswordEdit";
+import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
+// 업체 등록
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
@@ -68,7 +73,9 @@ function App() {
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epw" element={<PasswordEmail />} />
+            <Route path="epw" element={<PasswordEdit />} />
+            <Route path="epwcheck" element={<PasswordEmailCheck />} />
+            <Route path="epwemail" element={<PasswordEmail />} />
           </Route>
           {/* 사업자 등록*/}
           <Route path="/business">

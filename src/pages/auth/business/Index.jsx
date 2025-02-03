@@ -15,7 +15,7 @@ function BusinessSignUp() {
     businessNum: "12245678910",
     businessName: "싹 박멸해",
     address: "만경관근처",
-    serviceTypeId: 1,
+    detailTypeId: 1,
     busiCreatedAt: Date,
     tel: "0533836669",
   };
@@ -135,7 +135,7 @@ function BusinessSignUp() {
           <Input placeholder="휴대폰 번호를 입력하세요." />
         </Form.Item>
         {/* 카테고리 */}
-        <Form.Item name={"serviceTypeId"} label="업체 분류">
+        <Form.Item name={"detailTypeId"} label="업체 분류">
           <Select
             style={{
               width: 120,

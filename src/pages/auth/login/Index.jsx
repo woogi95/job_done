@@ -8,6 +8,7 @@ import axios from "axios";
 import { useRecoilState } from "recoil";
 import { loginUser } from "../../../atoms/loginAtom";
 import { loginApi } from "../../../apis/login";
+import UserLayout from "../../../components/UserLayout";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -19,9 +20,7 @@ function LoginPage() {
   const loginTry = async data => {
     console.log("로그인 요청:", data);
     try {
-      const res = await loginApi.post("/api/user/sign-in", data, {
-        withCredentials: true,
-      });
+      const res = await axios.post("/api/user/sign-in", data);
 
       console.log("서버 응답:", res.data);
 
@@ -54,6 +53,9 @@ function LoginPage() {
   };
   return (
     <div>
+      <div style={{ marginBottom: 40 }}>
+        <UserLayout />
+      </div>
       {/* 로그인, 비밀번호 */}
       <Form
         initialValues={initData}

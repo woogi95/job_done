@@ -7,7 +7,7 @@ export const businessInfo = atom({
     businessNum: "",
     businessName: "",
     address: "",
-    serviceTypeId: "",
+    detailTypeId: "",
     busiCreatedAt: "2019.06.08",
     tel: "0533836669",
     paper: "",
@@ -23,7 +23,6 @@ export const checkMsg = atom({
   key: "checkMsg",
   default: true,
 });
-
 // 한 업체 조회(업체 디테일 정보)
 export const businessDetailState = atom({
   key: "businessDetailState",

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import MyPageLayout from "../../components/MyPageLayout";
 import { MessageDetail, MessageTest } from "../../components/ServiceIcon";
@@ -9,8 +8,13 @@ function MyMessage() {
   const [message, setMessage] = useState("");
 
   const handleSendMessage = () => {
-    console.log("Sending message:", message);
+    console.log("보낸 메시지:", message, "방:", selectedRoomId);
   };
+
+  // 선택된 방의 메시지 상세 정보를 찾는 함수
+  const selectedRoom = MessageDetail.find(
+    item => item.resultData[0].roomId === selectedRoomId,
+  );
 
   return (
     <MyPageLayout>
@@ -23,12 +27,14 @@ function MyMessage() {
             {/* 메시지 리스트 */}
             <div className="flex flex-col gap-[10px]">
               {MessageTest.map(item => (
-                <div>
-                  <div
-                    key={item.resultData[0].roomId}
-                    className="flex justify-center items-center p-[20px]"
-                  >
-                    <button className="flex gap-[10px]">
+                <div key={item.resultData[0].roomId}>
+                  <div className="flex justify-center items-center p-[20px]">
+                    <button
+                      className="flex gap-[10px]"
+                      onClick={() =>
+                        setSelectedRoomId(item.resultData[0].roomId)
+                      }
+                    >
                       <img
                         src={item.resultData[0].pic}
                         alt="업체 이미지"
@@ -58,20 +64,17 @@ function MyMessage() {
           </div>
           {/* 상세 메시지 */}
           <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5] ml-0">
-            {MessageDetail.map(item => (
-              <div
-                key={item.resultData[0].roomId}
-                className="flex flex-col h-full w-full"
-              >
+            {selectedRoom ? (
+              <div className="flex flex-col h-full w-full">
                 {/* 업체 정보 */}
                 <div className="flex p-[10px] items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
                   <img
-                    src={item.resultData[0].pic}
+                    src={selectedRoom.resultData[0].pic}
                     alt="업체 이미지"
                     className="w-[40px] h-[40px] rounded-full"
                   />
                   <span className="text-[24px] font-semibold pl-[10px]">
-                    {item.resultData[0].companyName}
+                    {selectedRoom.resultData[0].companyName}
                   </span>
                 </div>
                 {/* 채팅내용 */}
@@ -79,19 +82,19 @@ function MyMessage() {
                   <div>
                     <div className="flex justify-center items-center border rounded-full w-full h-[24px] bg-[#ECEDF0] text-[12px] text-[#A2A2A2]">
                       <span className="text-center m-3">
-                        {item.resultData[0].roomCreatedAt}
+                        {selectedRoom.resultData[0].roomCreatedAt}
                       </span>
                     </div>
                   </div>
                   <div className="flex self-start gap-[10px] py-[15px]">
                     <img
-                      src={item.resultData[0].pic}
+                      src={selectedRoom.resultData[0].pic}
                       alt="업체 이미지"
                       className="w-[40px] h-[40px] rounded-full"
                     />
                     <span className="flex justify-center items-center max-w-[240px] h-full bg-white rounded-bl-[8px] rounded-tr-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
                       <div className="m-4">
-                        {item.resultData[0].companyChat}
+                        {selectedRoom.resultData[0].companyChat}
                       </div>
                     </span>
                   </div>
@@ -151,13 +154,16 @@ function MyMessage() {
                   </button>
                 </div>
               </div>
-            ))}
+            ) : (
+              <div className="flex justify-center items-center h-full text-gray-500">
+                채팅방을 선택해주세요
+              </div>
+            )}
           </div>
         </div>
       </div>
     </MyPageLayout>
   );
-
 }
 
 export default MyMessage;

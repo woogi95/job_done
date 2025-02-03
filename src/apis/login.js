@@ -39,6 +39,7 @@ loginApi.interceptors.response.use(
           localStorage.setItem("accessToken", newAccessToken);
 
           // ✅ 원래 요청에 새로운 AccessToken을 추가하여 재시도
+          originalRequest.headers = originalRequest.headers || {};
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return loginApi(originalRequest);
         }
