@@ -10,6 +10,7 @@ export const ModalDiv = styled.div`
   align-items: center;
   top: 0;
   left: 0;
+  z-index: 999;
 `;
 export const LayerDiv = styled.div`
   max-width: 450px;
@@ -191,18 +192,3 @@ export const PicDiv = styled.div`
     }
   }
 `;
-
-// 업체디테일 모달
-
-// export const PfModalDiv = styled(ModalDiv)`
-//   width: 100%;
-//   height: 100%;
-//   background-color: rgba(255, 255, 255, 1);
-//   position: fixed;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   top: 0;
-//   left: 0;
-//   z-index: 999;
-// `;
