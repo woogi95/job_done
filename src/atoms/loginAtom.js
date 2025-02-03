@@ -14,7 +14,7 @@ export const isOpenModalUpw = atom({
 export const loginUser = atom({
   key: "loginUser",
   default: {
-    userId: 0,
+    userId: 1,
     name: "",
     email: "",
     phone: "",

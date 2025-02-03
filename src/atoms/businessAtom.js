@@ -90,3 +90,15 @@ export const papersState = atom({
     mendTime: "",
   },
 });
+
+// 포트폴리오 리스트
+export const portfolioListState = atom({
+  key: "portfolioListState",
+  default: [
+    {
+      portfolioId: 0,
+      title: "",
+      isThumnail: "",
+    },
+  ],
+});
