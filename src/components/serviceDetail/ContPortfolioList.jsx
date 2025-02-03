@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 // 스와이퍼
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
@@ -9,7 +9,7 @@ import { PortfolioListItem, PortfolioSwiperDiv } from "./serviceDetail";
 // import required modules
 import { Navigation } from "swiper/modules";
 
-const ContPortfolioList = () => {
+const ContPortfolioList = ({ setIsPfDetailPop }) => {
   // swiper
   const swiperRef = useRef(null);
   const handleNext = () => {
@@ -35,7 +35,12 @@ const ContPortfolioList = () => {
       >
         <SwiperSlide>
           <PortfolioListItem>
-            <div className="imgbox">
+            <div
+              className="imgbox"
+              onClick={() => {
+                setIsPfDetailPop(true);
+              }}
+            >
               <img
                 src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
                 alt=""
@@ -46,7 +51,12 @@ const ContPortfolioList = () => {
         </SwiperSlide>
         <SwiperSlide>
           <PortfolioListItem>
-            <div className="imgbox">
+            <div
+              className="imgbox"
+              onClick={() => {
+                setIsPfDetailPop(true);
+              }}
+            >
               <img
                 src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
                 alt=""
@@ -57,7 +67,12 @@ const ContPortfolioList = () => {
         </SwiperSlide>
         <SwiperSlide>
           <PortfolioListItem>
-            <div className="imgbox">
+            <div
+              className="imgbox"
+              onClick={() => {
+                setIsPfDetailPop(true);
+              }}
+            >
               <img
                 src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
                 alt=""
@@ -68,7 +83,12 @@ const ContPortfolioList = () => {
         </SwiperSlide>
         <SwiperSlide>
           <PortfolioListItem>
-            <div className="imgbox">
+            <div
+              className="imgbox"
+              onClick={() => {
+                setIsPfDetailPop(true);
+              }}
+            >
               <img
                 src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
                 alt=""
@@ -79,7 +99,12 @@ const ContPortfolioList = () => {
         </SwiperSlide>
         <SwiperSlide>
           <PortfolioListItem>
-            <div className="imgbox">
+            <div
+              className="imgbox"
+              onClick={() => {
+                setIsPfDetailPop(true);
+              }}
+            >
               <img
                 src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
                 alt=""

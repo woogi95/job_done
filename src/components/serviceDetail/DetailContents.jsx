@@ -29,6 +29,7 @@ const DetailContents = () => {
   const [isLike, setIsLike] = useState(false); // 찜
 
   const [activeLink, setActiveLink] = useState("about"); //링크 active
+  const [isPfDetailPop, setIsPfDetailPop] = useState(false);
 
   const businessDetail = useRecoilValue(businessDetailState);
   const navigate = useNavigate();
@@ -160,7 +161,7 @@ const DetailContents = () => {
           </div>
           <div className="box" id="portfolio">
             <h2>포트폴리오</h2>
-            <ContPortfolioList />
+            <ContPortfolioList setIsPfDetailPop={setIsPfDetailPop} />
           </div>
           <div className="box" id="reviews">
             <h2>리뷰</h2>
@@ -215,7 +216,10 @@ const DetailContents = () => {
           </div>
         </div>
       </SummaryDiv>
-      <PfPopup />
+      <PfPopup
+        setIsPfDetailPop={setIsPfDetailPop}
+        isPfDetailPop={isPfDetailPop}
+      />
     </DetailLayout>
   );
 };
