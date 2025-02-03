@@ -3,6 +3,7 @@ import MyPageLayout from "../../components/MyPageLayout";
 import { IoIosCamera } from "react-icons/io";
 import { HiOutlinePencilAlt, HiEye, HiEyeOff } from "react-icons/hi";
 import axios from "axios";
+import * as yup from "yup";
 
 function MyPage() {
   const [isPhoneEdit, setIsPhoneEdit] = useState(false);
@@ -19,7 +20,33 @@ function MyPage() {
     "/images/order/default_profile.jpg",
   );
   const [isEdit, setIsEdit] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isSuccessModal, setIsSuccessModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [isDeleteSuccessModal, setIsDeleteSuccessModal] = useState(false);
 
+  // 유효성 검사
+  const passwordSchema = yup.object().shape({
+    currentPassword: yup.string().required("현재 비밀번호를 입력해주세요."),
+    newPassword: yup
+      .string()
+      .min(8, "비밀번호는 최소 8자 이상이어야 합니다.")
+      .matches(
+        /^(?=.*[a-zA-Z])(?=.*[0-9])/,
+        "비밀번호는 영문과 숫자를 포함해야 합니다.",
+      )
+      .required("새 비밀번호를 입력해주세요."),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("newPassword")], "비밀번호가 일치하지 않습니다.")
+      .required("비밀번호 확인을 입력해주세요."),
+  });
+
+  // 프사 업로드
   const handleImgUpload = e => {
     const file = e.target.files[0];
     if (file) {
@@ -32,6 +59,7 @@ function MyPage() {
     }
   };
 
+  // 유저 정보 관련들
   const getUserInfo = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -42,9 +70,9 @@ function MyPage() {
         },
       });
       console.log("API:", res);
-      console.log("유저 데이터:", res.data);
+      console.log("유저 데이터:", res.data.resultData);
 
-      const userData = res.data;
+      const userData = res.data.resultData;
       setUserName(userData.name);
       setUserEmail(userData.email);
       setPhoneNumber(userData.phone);
@@ -88,17 +116,100 @@ function MyPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isEdit) {
-      const updatedData = {
-        pic: profileImg,
-        p: {
-          phone: phoneNumber.replace(/-/g, ""),
-        },
-      };
-      console.log("Updated data:", updatedData);
-      setIsEdit(false);
+      try {
+        const userId = localStorage.getItem("userId");
+        const updatedData = {
+          p: {
+            userId: parseInt(userId),
+            phone: phoneNumber.replace(/-/g, ""),
+            name: userName,
+          },
+          pic: profileImg,
+        };
+
+        const response = await axios.patch("/api/user", updatedData);
+
+        if (response.status === 200) {
+          alert("회원정보가 수정되었습니다.");
+          setIsEdit(false);
+        }
+      } catch (error) {
+        console.error("회원정보 수정 실패:", error);
+        alert("회원정보 수정에 실패했습니다.");
+      }
     }
+  };
+
+  // 비밀번호 변경
+  const handlePasswordChange = async () => {
+    try {
+      await passwordSchema.validate(
+        {
+          currentPassword,
+          newPassword,
+          confirmPassword,
+        },
+        { abortEarly: false },
+      );
+
+      setError("");
+
+      const userId = localStorage.getItem("userId");
+      const res = await axios.patch("/api/user/password", {
+        userId: parseInt(userId),
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        email: userEmail,
+      });
+
+      if (res.status === 200) {
+        setIsPwModalOpen(false);
+        setIsSuccessModal(true);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setError("");
+      } else {
+        setError("비밀번호 변경에 실패했습니다. 다시 시도해주세요.");
+      }
+    } catch (error) {
+      console.error("비밀번호 변경 에러:", error.response || error);
+    }
+  };
+
+  // 회원 탈퇴
+  const handleDeleteAccount = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.delete("/api/user", {
+        data: {
+          userId: parseInt(userId),
+          upw: deletePassword,
+        },
+      });
+
+      if (response.status === "회원정보 삭제 완료") {
+        setIsDeleteModal(false);
+        setIsDeleteSuccessModal(true);
+      } else {
+        setDeleteError("비밀번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      console.error("회원탈퇴 실패:", error);
+      if (error.response?.status === 401) {
+        setDeleteError("비밀번호가 일치하지 않습니다.");
+      } else {
+        setDeleteError("회원탈퇴 처리 중 오류가 발생했습니다.");
+      }
+    }
+  };
+
+  const handleSuccessModalClose = () => {
+    setIsDeleteSuccessModal(false);
+    localStorage.clear();
+    window.location.href = "/";
   };
 
   return (
@@ -201,10 +312,18 @@ function MyPage() {
               비밀번호 변경
             </h2>
 
+            {error && (
+              <div className="mb-4 text-red-500 text-sm text-center">
+                {error}
+              </div>
+            )}
+
             <div className="relative mb-3">
               <input
                 type={showCurrentPw ? "text" : "password"}
                 placeholder="현재 비밀번호"
+                value={currentPassword}
+                onChange={e => setCurrentPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <button
@@ -220,6 +339,8 @@ function MyPage() {
               <input
                 type={showNewPw ? "text" : "password"}
                 placeholder="새 비밀번호"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <button
@@ -235,6 +356,8 @@ function MyPage() {
               <input
                 type={showConfirmPw ? "text" : "password"}
                 placeholder="새 비밀번호 확인"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded"
               />
               <button
@@ -249,11 +372,19 @@ function MyPage() {
             <div className="flex justify-end gap-2 pt-[10px]">
               <button
                 className="px-4 py-2 bg-gray-200 rounded"
-                onClick={() => setIsPwModalOpen(false)}
+                onClick={() => {
+                  setIsPwModalOpen(false);
+                  setCurrentPassword("");
+                  setNewPassword("");
+                  setConfirmPassword("");
+                }}
               >
                 취소
               </button>
-              <button className="px-4 py-2 bg-[#3887FF] text-white rounded">
+              <button
+                className="px-4 py-2 bg-[#3887FF] text-white rounded"
+                onClick={handlePasswordChange}
+              >
                 변경하기
               </button>
             </div>
@@ -273,10 +404,18 @@ function MyPage() {
               <p>탈퇴하시려면 비밀번호를 입력해주세요.</p>
             </div>
 
+            {deleteError && (
+              <div className="text-red-500 text-sm mb-4 text-center">
+                {deleteError}
+              </div>
+            )}
+
             <div className="relative mb-4">
               <input
                 type={deletePw ? "text" : "password"}
                 placeholder="비밀번호 입력"
+                value={deletePassword}
+                onChange={e => setDeletePassword(e.target.value)}
                 className="w-full px-3 py-2 border rounded h-[40px]"
               />
               <button
@@ -291,12 +430,67 @@ function MyPage() {
             <div className="flex justify-end gap-2 pt-[10px]">
               <button
                 className="px-4 py-2 bg-gray-200 rounded"
-                onClick={() => setIsDeleteModal(false)}
+                onClick={() => {
+                  setIsDeleteModal(false);
+                  setDeletePassword("");
+                  setDeleteError("");
+                }}
               >
                 취소
               </button>
-              <button className="px-4 py-2 bg-[#FF3044] text-white rounded">
+              <button
+                className="px-4 py-2 bg-[#FF3044] text-white rounded"
+                onClick={handleDeleteAccount}
+              >
                 탈퇴하기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 비밀번호 변경 성공 모달 */}
+      {isSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
+            <div className="text-center mb-6">
+              <h2 className="text-[18px] font-normal mb-4">
+                비밀번호 변경 완료
+              </h2>
+              <p className="text-gray-600">
+                비밀번호가 성공적으로 변경되었습니다.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="px-4 py-2 bg-[#3887FF] text-white rounded"
+                onClick={() => setIsSuccessModal(false)}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 회원탈퇴 완료 모달 */}
+      {isDeleteSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
+            <div className="text-center mb-6">
+              <h2 className="text-[18px] font-normal mb-4">회원탈퇴 완료</h2>
+              <p className="text-gray-600">
+                회원탈퇴가 완료되었습니다.
+                <br />
+                그동안 이용해 주셔서 감사합니다.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="px-4 py-2 bg-[#3887FF] text-white rounded"
+                onClick={handleSuccessModalClose}
+              >
+                확인
               </button>
             </div>
           </div>
