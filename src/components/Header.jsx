@@ -62,23 +62,23 @@ function Header() {
   const handleCategoryClick = categoryId => {
     setSelectedCategory(categoryId);
     setSelectedDetailType(null);
-    navigate(`/api/category?categoryId=${categoryId}`);
+    navigate(`/service?categoryId=${categoryId}`);
   };
 
   const handleDetailTypeClick = (categoryId, detailTypeId) => {
     setSelectedCategory(categoryId);
     setSelectedDetailType(detailTypeId);
-    navigate(
-      `/api/category/detail?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
-    );
+    navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
   };
 
   useEffect(() => {
     console.log("선택된 카테고리:", selectedCategory);
+    setSelectedCategory(selectedCategory);
   }, [selectedCategory]);
 
   useEffect(() => {
     console.log("선택된 디테일 타입:", selectedDetailType);
+    setSelectedDetailType(selectedDetailType);
   }, [selectedDetailType]);
 
   useEffect(() => {

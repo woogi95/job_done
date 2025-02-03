@@ -10,8 +10,8 @@ function Detail() {
   const [businessDetail, setBusinessDetail] =
     useRecoilState(businessDetailState);
   // http://112.222.157.156:5224/api/business/%7BbusinessId%7D?businessId=1
-  const businessId = 1;
-  const getBusinessDetail = async () => {
+  const businessId = businessDetail.businessId;
+  const getBusinessDetail = async businessId => {
     try {
       const res = await axios.get(
         `/api/business/%7BbusinessId%7D?businessId=${businessId}`,

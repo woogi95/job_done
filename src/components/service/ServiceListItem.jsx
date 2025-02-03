@@ -2,10 +2,9 @@ import { FaStar } from "react-icons/fa";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { ListItemDiv } from "./service";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 const ServiceListItem = ({ business }) => {
   const [isLike, setIsLike] = useState(false);
-  const { id } = useParams();
   const ToggleLike = e => {
     e.preventDefault();
     setIsLike(!isLike);
@@ -18,9 +17,10 @@ const ServiceListItem = ({ business }) => {
       setIsLike(false);
     }
   }, [business.like]);
+  console.log("!! business", business);
   return (
     <ListItemDiv>
-      <Link to="/service/${business.businessId}">
+      <Link to={`/service/${business.businessId}`}>
         <div className="thum">
           <img src={business.pic} alt="" />
           <div

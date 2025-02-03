@@ -194,6 +194,11 @@ export const ListItemDiv = styled.div`
       height: 38.41px;
       line-height: 1.2em;
       margin-bottom: 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     p {
       font-size: 20px;
