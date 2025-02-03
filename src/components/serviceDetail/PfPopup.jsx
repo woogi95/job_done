@@ -1,10 +1,43 @@
-import { PfLayerDiv, PfModalDiv } from "./serviceDetail";
+import { PfLayerDiv, PfModalDiv, PhotoAreaDiv } from "./serviceDetail";
+// icon
+import { CgClose } from "react-icons/cg";
+// swiper
+// Import Swiper React components
+import { Swiper, SwiperSlide } from "swiper/react";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
 
-const PfPopup = () => {
-  return (
+// import required modules
+import { Pagination } from "swiper/modules";
+
+const PfPopup = ({ isPfDetailPop, setIsPfDetailPop }) => {
+  return isPfDetailPop ? (
     <PfModalDiv>
       <PfLayerDiv>
-        <div className="photo-area"></div>
+        <PhotoAreaDiv>
+          <Swiper
+            pagination={true}
+            modules={[Pagination]}
+            className="pfdetail-img"
+          >
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+          </Swiper>
+        </PhotoAreaDiv>
         <div className="txt-area">
           <h3>타이틀</h3>
           <ul>
@@ -27,8 +60,17 @@ const PfPopup = () => {
           </span>
           <button>견적 요청하기</button>
         </div>
+        <button
+          onClick={() => {
+            setIsPfDetailPop(false);
+          }}
+        >
+          <CgClose />
+        </button>
       </PfLayerDiv>
     </PfModalDiv>
+  ) : (
+    <></>
   );
 };
 

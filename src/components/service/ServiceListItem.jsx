@@ -39,7 +39,7 @@ const ServiceListItem = ({ business }) => {
           <div className="countStar">
             <FaStar />
             <em>{business.scoreAvg}</em>
-            <span>({business.reviewNumbers.toLocaleString()})</span>
+            <span>({business.reviewCount.toLocaleString()})</span>
           </div>
         </div>
       </Link>

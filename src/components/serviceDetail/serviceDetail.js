@@ -545,29 +545,92 @@ export const PfModalDiv = styled(ModalDiv)`
 export const PfLayerDiv = styled(LayerDiv)`
   max-width: 680px;
   min-height: auto;
-  height: 400px;
+  height: 450px;
   background-color: #fff;
   display: flex;
   padding: 50px 0;
+  position: relative;
 
-  .photo-area {
-    border: 1px solid;
-    width: 400px;
-    height: 100%;
+  /* 닫기 버튼 */
+  > button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
   }
 
   .txt-area {
-    border: 1px solid;
+    border-left: 1px solid #ccc;
     width: calc(100% - 400px);
     height: 100%;
+    padding: 15px;
+    position: relative;
 
     h3 {
-      font-size: 24px;
+      font-size: 18px;
+      line-height: 1.25em;
       font-weight: 600;
+      margin-bottom: 15px;
     }
     ul {
       border: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+      background-color: #eee;
+      gap: 10px;
+      padding: 15px 8px;
       li {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+
+        b {
+          width: 90px;
+          color: #111;
+          /* font-weight: 300; */
+        }
+        p {
+          color: #555;
+          font-weight: 500;
+        }
+      }
+    }
+    span {
+      font-size: 14px;
+      line-height: 1.35em;
+      color: #555;
+      word-break: keep-all;
+    }
+    button {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 30px);
+      height: 45px;
+      line-height: 45px;
+      background-color: #3887ff;
+      border-radius: 4px;
+      color: #fff;
+    }
+  }
+`;
+
+export const PhotoAreaDiv = styled.div`
+  /* border: 1px solid; */
+  width: 400px;
+  height: 100%;
+  .pfdetail-img {
+    /* border: 1px solid red; */
+    width: 100%;
+    height: 100%;
+    .swiper-slide {
+      background-color: #eee;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     }
   }
