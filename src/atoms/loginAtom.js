@@ -17,11 +17,13 @@ export const loginUser = atom({
     userId: 0,
     name: "",
     email: "",
+    phone: "",
     pic: "",
     accessToken: "",
     isLogind: false,
   },
 });
+
 export const emailForm = atom({
   key: "emailForm",
   default: {
@@ -65,7 +67,7 @@ export const profilFile = atom({
   default: null,
 });
 
-// 로그인 상태 저장
+// 로그인 상태 저장 테스트용
 export const isLoginState = atom({
   key: "isLoginState",
   default: {
