@@ -1,26 +1,108 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { isLoginState } from "../atoms/loginAtom";
+import { loginUser } from "../atoms/loginAtom";
+import {
+  categoriesState,
+  detailTypesState,
+  selectedCategoryState,
+  selectedDetailTypeState,
+} from "../atoms/categoryAtom";
+import axios from "axios";
+
 function Header() {
-  const [isLogin, setIsLogin] = useRecoilState(isLoginState);
+  const [userInfo, setUserInfo] = useRecoilState(loginUser);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [categories, setCategories] = useRecoilState(categoriesState);
+  const [detailTypes, setDetailTypes] = useRecoilState(detailTypesState);
+  const [selectedCategory, setSelectedCategory] = useRecoilState(
+    selectedCategoryState,
+  );
+  const [selectedDetailType, setSelectedDetailType] = useRecoilState(
+    selectedDetailTypeState,
+  );
   const menuRef = useRef();
   const navigate = useNavigate();
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`/api/category`);
+      // console.log("카테고리는 뭐 오는데? : ", res);
+      setCategories(res.data.resultData);
+    } catch (error) {
+      console.error("Categories error:", error.response || error);
+    }
+  };
+
+  const fetchDetailTypes = async categoryId => {
+    try {
+      const res = await axios.get(`/api/category/detail`, {
+        params: { categoryId: categoryId },
+      });
+      // console.log("디테일은 뭐 오는데? : ", res);
+      setDetailTypes(prev => ({
+        ...prev,
+        [categoryId]: res.data.resultData,
+      }));
+    } catch (error) {
+      console.error(categoryId, ":", error.response?.data || error.message);
+    }
+  };
+
   const handleLogout = () => {
-    setIsLogin({
+    localStorage.removeItem("accessToken");
+
+    setUserInfo({
+      accessToken: "",
       isLogind: false,
-      userId: "",
     });
     navigate("/");
   };
-  // 로그인 테스트용
+
+  const handleCategoryClick = categoryId => {
+    setSelectedCategory(categoryId);
+    setSelectedDetailType(null);
+    navigate(`/api/category?categoryId=${categoryId}`);
+  };
+
+  const handleDetailTypeClick = (categoryId, detailTypeId) => {
+    setSelectedCategory(categoryId);
+    setSelectedDetailType(detailTypeId);
+    navigate(
+      `/api/category/detail?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
+    );
+  };
+
   useEffect(() => {
-    setIsLogin({
-      isLogind: true,
-      userId: "테스트사용자",
+    console.log("선택된 카테고리:", selectedCategory);
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    console.log("선택된 디테일 타입:", selectedDetailType);
+  }, [selectedDetailType]);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("accessToken");
+
+    if (storedToken) {
+      setUserInfo(prev => ({
+        ...prev,
+        accessToken: storedToken,
+        isLogind: true,
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    categories.forEach(category => {
+      fetchDetailTypes(category.categoryId);
     });
-  }, [setIsLogin]);
+  }, [categories]);
+
   useEffect(() => {
     const handleClickOutside = e => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -30,6 +112,7 @@ function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
@@ -37,86 +120,39 @@ function Header() {
           <a href="/">
             <img src="/images/logo.svg" alt="logo" />
           </a>
-          <ui className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
-            <li className="relative group">
-              <a href="/cleaning" className="hover:text-[#0B7493]">
-                청소
-              </a>
-              <div className="absolute hidden group-hover:block w-auto pt-4">
-                <div className="bg-white shadow-md rounded-lg flex whitespace-nowrap ">
-                  <a
-                    href="/cleaning"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs border-2 "
-                  >
-                    집청소
-                  </a>
-                  <a
-                    href="/cleaning"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs"
-                  >
-                    사무실청소
-                  </a>
-                  <a
-                    href="/cleaning"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs"
-                  >
-                    특수청소
-                  </a>
+          <ul className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
+            {categories.map(category => (
+              <li key={category.categoryId} className="relative group">
+                <button
+                  className="hover:text-[#0B7493] py-2"
+                  onClick={() => handleCategoryClick(category.categoryId)}
+                >
+                  {category.categoryName}
+                </button>
+                <div className="absolute hidden group-hover:block w-auto pt-2">
+                  <div className="bg-white shadow-md rounded-lg flex flex-col whitespace-nowrap">
+                    {detailTypes[category.categoryId]?.map(detailType => (
+                      <button
+                        key={detailType.detailTypeId}
+                        className="block px-6 py-3 hover:bg-gray-100 text-[16px] text-left"
+                        onClick={() =>
+                          handleDetailTypeClick(
+                            category.categoryId,
+                            detailType.detailTypeId,
+                          )
+                        }
+                      >
+                        {detailType.detailTypeName}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </li>
-            <li className="relative group">
-              <a href="/carwash" className="hover:text-[#0B7493]">
-                세차
-              </a>
-              <div className="absolute hidden group-hover:block w-auto pt-4">
-                <div className="bg-white shadow-lg rounded-lg flex whitespace-nowrap">
-                  <a
-                    href="/carwash"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs"
-                  >
-                    일반차량
-                  </a>
-                  <a
-                    href="/carwash"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs"
-                  >
-                    특수차량
-                  </a>
-                </div>
-              </div>
-            </li>
-            <li className="relative group">
-              <a href="/move" className="hover:text-[#0B7493]">
-                이사
-              </a>
-              <div className="absolute hidden group-hover:block w-auto pt-4">
-                <div className="bg-white shadow-lg rounded-lg flex whitespace-nowrap">
-                  <a
-                    href="/move"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs  "
-                  >
-                    가정 이사
-                  </a>
-                  <a
-                    href="/move"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs  "
-                  >
-                    사무실 이사
-                  </a>
-                  <a
-                    href="/move"
-                    className="block px-4 py-[10px] hover:bg-gray-100 text-xs  "
-                  >
-                    보관 이사
-                  </a>
-                </div>
-              </div>
-            </li>
-          </ui>
+              </li>
+            ))}
+          </ul>
         </div>
         <div className="flex items-center gap-4 text-sm ">
-          {isLogin.isLogind ? (
+          {userInfo.isLogind ? (
             // 로그인 상태
             <>
               <Link
@@ -184,11 +220,6 @@ function Header() {
                   </div>
                 )}
               </div>
-              {/* {isLogin.userId && (
-                <span className="flex items-center justify-center h-7">
-                  {isLogin.userId}님
-                </span>
-              )} */}
             </>
           ) : (
             // 로그아웃 상태

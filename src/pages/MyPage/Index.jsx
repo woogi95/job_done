@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MyPageLayout from "../../components/MyPageLayout";
 import { IoIosCamera } from "react-icons/io";
 import { HiOutlinePencilAlt, HiEye, HiEyeOff } from "react-icons/hi";
+import axios from "axios";
 
 function MyPage() {
   const [isPhoneEdit, setIsPhoneEdit] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState("전화번호");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const [isPwModalOpen, setIsPwModalOpen] = useState(false);
   const [showCurrentPw, setShowCurrentPw] = useState(false);
   const [showNewPw, setShowNewPw] = useState(false);
@@ -28,6 +31,35 @@ function MyPage() {
       reader.readAsDataURL(file);
     }
   };
+
+  const getUserInfo = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+
+      const res = await axios.get(`/api/user`, {
+        params: {
+          userId: userId,
+        },
+      });
+      console.log("API:", res);
+      console.log("유저 데이터:", res.data);
+
+      const userData = res.data;
+      setUserName(userData.name);
+      setUserEmail(userData.email);
+      setPhoneNumber(userData.phone);
+      if (userData.profileImage) {
+        setProfileImg(userData.profileImage);
+      }
+    } catch (error) {
+      console.log("API:", error);
+      console.log("유저 데이터:", res.data);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   // 전화번호 포맷팅
   const formatPhoneNumber = value => {
@@ -110,7 +142,7 @@ function MyPage() {
             <div>
               <input
                 type="text"
-                value="이름"
+                value={userName}
                 readOnly
                 className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3] bg-gray-100"
               />
@@ -118,7 +150,7 @@ function MyPage() {
             <div>
               <input
                 type="text"
-                value="이메일?"
+                value={userEmail}
                 readOnly
                 className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3] bg-gray-100"
               />

@@ -2,15 +2,10 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
 import LoginPage from "./pages/auth/login/Index";
-//회원가입
 import SignUpPage from "./pages/auth/login/SignUpPage";
 import EmailPage from "./pages/auth/login/EmailPage";
 import SignUpDone from "./pages/auth/login/SignUpDone";
-// 비밀번호 재설정
 import PasswordEmail from "./pages/auth/login/PasswordEmail";
-import PasswordEdit from "./pages/auth/login/PasswordEdit";
-import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
-// 업체 등록
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
@@ -58,7 +53,6 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
-import ContactUs from "./pages/servicepage/ContactUs";
 
 function App() {
   return (
@@ -73,9 +67,7 @@ function App() {
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epw" element={<PasswordEdit />} />
-            <Route path="epwcheck" element={<PasswordEmailCheck />} />
-            <Route path="epwemail" element={<PasswordEmail />} />
+            <Route path="epw" element={<PasswordEmail />} />
           </Route>
           {/* 사업자 등록*/}
           <Route path="/business">
@@ -99,7 +91,6 @@ function App() {
           <Route path="/service">
             <Route index element={<Service />} />
             <Route path=":id" element={<Detail />} />
-            <Route path="contactus" element={<ContactUs />} />
           </Route>
           {/* 마이페이지 */}
           <Route path="/mypage">
@@ -138,7 +129,7 @@ function App() {
             <Route path="/expert/payment-management">
               <Route index element={<PaymentList />} />
             </Route>
-            {/* 일정관리 */}
+            {/* 일정관리 - 3차 */}
             <Route path="/expert/schedule-management">
               <Route index element={<ScheduleList />} />
             </Route>
