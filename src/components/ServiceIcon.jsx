@@ -171,20 +171,20 @@ export const MessageDetail = [
       },
     ],
   },
-  // {
-  //   resultData: [
-  //     {
-  //       roomId: 2,
-  //       chatId: 2,
-  //       pic: "/images/order/Interior_1.jpg",
-  //       companyName: "홈클린",
-  //       roomCreatedAt: "2025-01-15",
-  //       companyChat: "안녕하세요 ㅎㅎ",
-  //       userChat: "안녕하세요 ㅎㅎ",
-  //       sendDate: "오후4:30",
-  //     },
-  //   ],
-  // },
+  {
+    resultData: [
+      {
+        roomId: 2,
+        chatId: 2,
+        pic: "/images/order/Interior_1.jpg",
+        companyName: "홈클린",
+        roomCreatedAt: "2025-01-15",
+        companyChat: "안녕하세요 ㅎㅎ",
+        userChat: "안녕하세요 ㅎㅎ",
+        sendDate: "오후4:30",
+      },
+    ],
+  },
 ];
 
 export const ReservationData = [
