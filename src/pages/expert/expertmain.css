@@ -12,13 +12,5 @@
   background-color: #b1f1fc;
 }
 .fc .fc-button {
-  background-color: white;
-  width: 40px;
-  height: 20px;
-}
-
-.fc-icon {
-  width: 100%;
-  height: 100%;
-  color: black;
+  background-color: rgb(85, 151, 238);
 }
