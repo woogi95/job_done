@@ -1,3 +1,16 @@
+export const statusText = {
+  0: "확인중...",
+  1: "예약완료",
+  2: "결제 대기중",
+  3: "예약취소",
+  4: "예약취소",
+  5: "예약취소",
+  6: "결제완료",
+  7: "작업완료",
+  8: "작업완료",
+  9: "작업완료",
+};
+
 export const serviceIcons = [
   // 대충만든 더미데이터
   {
@@ -50,7 +63,6 @@ export const PopularPost = [
     review: "4.5",
   },
 ];
-
 
 // 이벤트 배너 더미데이터
 export const EventBanner = [
@@ -159,20 +171,20 @@ export const MessageDetail = [
       },
     ],
   },
-  // {
-  //   resultData: [
-  //     {
-  //       roomId: 2,
-  //       chatId: 2,
-  //       pic: "/images/order/Interior_1.jpg",
-  //       companyName: "홈클린",
-  //       roomCreatedAt: "2025-01-15",
-  //       companyChat: "안녕하세요 ㅎㅎ",
-  //       userChat: "안녕하세요 ㅎㅎ",
-  //       sendDate: "오후4:30",
-  //     },
-  //   ],
-  // },
+  {
+    resultData: [
+      {
+        roomId: 2,
+        chatId: 2,
+        pic: "/images/order/Interior_1.jpg",
+        companyName: "홈클린",
+        roomCreatedAt: "2025-01-15",
+        companyChat: "안녕하세요 ㅎㅎ",
+        userChat: "안녕하세요 ㅎㅎ",
+        sendDate: "오후4:30",
+      },
+    ],
+  },
 ];
 
 export const ReservationData = [

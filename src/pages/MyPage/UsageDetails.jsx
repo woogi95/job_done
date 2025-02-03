@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MyPageLayout from "../../components/MyPageLayout";
+import axios from "axios";
+import { statusText } from "../../components/ServiceIcon";
 
 function UsageDetails() {
+  const [usage, setUsage] = useState([]);
+
+  const fetchUsageData = async () => {
+    try {
+      const res = await axios.get("/api/service", {
+        params: {
+          userId: 1,
+          status: 1,
+          page: 1,
+          size: 10,
+        },
+      });
+      console.log("API Response:", res.data.resultData);
+      setUsage(res.data.resultData);
+    } catch (error) {
+      console.error("Error fetching usage data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsageData();
+  }, []);
 
   return (
     <MyPageLayout>
@@ -15,16 +39,28 @@ function UsageDetails() {
         <div className="text-center">금액</div>
         <div className="text-center">진행상황</div>
       </div>
-      <div className="grid grid-cols-5 py-[15px] px-[25px] pt-[30px]">
-        <div className="text-center">2025-01-13</div>
-        <div className="text-center">세차요정 밋돌세</div>
-        <div className="text-center">세차</div>
-        <div className="text-center">150,000원</div>
-        <div className="text-center">완료</div>
-      </div>
+      {usage &&
+        usage.length > 0 &&
+        usage.map((item, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-5 py-[15px] px-[25px] pt-[30px]"
+          >
+            <div className="text-center">
+              {item.createdAt ? item.createdAt.slice(0, 10) : ""}
+            </div>
+            <div className="text-center">{item.businessName || ""}</div>
+            <div className="text-center">{item.productName || "세차"}</div>
+            <div className="text-center">
+              {item.price ? `${item.price.toLocaleString()}원` : "150,000원"}
+            </div>
+            <div className="text-center">
+              {statusText[item.completed] || "확인중..."}
+            </div>
+          </div>
+        ))}
     </MyPageLayout>
   );
-
 }
 
 export default UsageDetails;
