@@ -1,19 +1,28 @@
 import { FaStar } from "react-icons/fa";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { ListItemDiv } from "./service";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-const ServiceListItem = () => {
+const ServiceListItem = ({ business }) => {
   const [isLike, setIsLike] = useState(false);
   const { id } = useParams();
   const ToggleLike = e => {
     e.preventDefault();
     setIsLike(!isLike);
   };
+
+  useEffect(() => {
+    if (business.like === 1) {
+      setIsLike(true);
+    } else {
+      setIsLike(false);
+    }
+  }, [business.like]);
   return (
     <ListItemDiv>
-      <Link to="/service/id">
+      <Link to="/service/${business.businessId}">
         <div className="thum">
+          <img src={business.pic} alt="" />
           <div
             className="like"
             onClick={e => {
@@ -24,13 +33,13 @@ const ServiceListItem = () => {
           </div>
         </div>
         <div className="info">
-          <em>업체명</em>
-          <h4>두 줄 타이틀입니다. 두 줄 타이틀입니다. 두 줄 타이틀입니다.</h4>
-          <p>50,000 ~</p>
+          <em>{business.businessName}</em>
+          <h4>{business.title}</h4>
+          <p>{business.price.toLocaleString()} ~</p>
           <div className="countStar">
             <FaStar />
-            <em>4.2</em>
-            <span>(7500)</span>
+            <em>{business.scoreAvg}</em>
+            <span>({business.reviewNumbers.toLocaleString()})</span>
           </div>
         </div>
       </Link>

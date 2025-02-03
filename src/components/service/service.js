@@ -144,6 +144,12 @@ export const FilterDiv = styled.div`
 
 // 서비스 리스트 아이템
 export const ListItemDiv = styled.div`
+  transition: all 0.3s;
+  transform: scale(1);
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  }
   /* border: 1px solid #eee; */
   width: calc((100% - 60px) / 4);
   cursor: pointer;
@@ -156,6 +162,11 @@ export const ListItemDiv = styled.div`
     height: 265px;
     background-color: #eee;
     position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 
   .like svg {
@@ -169,6 +180,8 @@ export const ListItemDiv = styled.div`
   }
 
   .info {
+    padding: 5px;
+    background: rgb(248, 248, 248);
     > em {
       font-size: 14px;
       color: #777;
@@ -176,8 +189,9 @@ export const ListItemDiv = styled.div`
       padding: 3px 0;
     }
     h4 {
-      font-size: 15px;
+      font-size: 16px;
       color: #111;
+      height: 38.41px;
       line-height: 1.2em;
       margin-bottom: 8px;
     }

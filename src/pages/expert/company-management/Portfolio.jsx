@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ExpertListPageDiv } from "../reservation-management/reservationMangement";
 import { TiPlus } from "react-icons/ti";
 import {
@@ -5,14 +6,22 @@ import {
   PortfolioListItemDiv,
   TitleAreaDiv,
 } from "./companyManagement";
+// import EditPortfolio from "../../../components/portfolio/EditPortfolio";
+import AddPortfolio from "../../../components/portfolio/AddPortfolio";
 import EditPortfolio from "../../../components/portfolio/EditPortfolio";
 
 function Portfolio() {
+  const [isPopPfAdd, setIsPopPfAdd] = useState(false);
+  const [isPopPfEdit, setIsPopPfEdit] = useState(false);
   return (
     <ExpertListPageDiv>
       <TitleAreaDiv>
         <h2 className="tit">포트폴리오</h2>
-        <button>
+        <button
+          onClick={() => {
+            setIsPopPfAdd(true);
+          }}
+        >
           <p>포트폴리오</p> <TiPlus />
         </button>
       </TitleAreaDiv>
@@ -24,7 +33,13 @@ function Portfolio() {
           <div className="txt-area">
             <h4 className="tit">포트폴리오 타이틀</h4>
             <div className="btn-area">
-              <button>수정하기</button>
+              <button
+                onClick={() => {
+                  setIsPopPfEdit(true);
+                }}
+              >
+                수정하기
+              </button>
               <button>삭제하기</button>
             </div>
           </div>
@@ -36,7 +51,13 @@ function Portfolio() {
           <div className="txt-area">
             <h4 className="tit">포트폴리오 타이틀</h4>
             <div className="btn-area">
-              <button>수정하기</button>
+              <button
+                onClick={() => {
+                  setIsPopPfEdit(true);
+                }}
+              >
+                수정하기
+              </button>
               <button>삭제하기</button>
             </div>
           </div>
@@ -48,7 +69,13 @@ function Portfolio() {
           <div className="txt-area">
             <h4 className="tit">포트폴리오 타이틀</h4>
             <div className="btn-area">
-              <button>수정하기</button>
+              <button
+                onClick={() => {
+                  setIsPopPfEdit(true);
+                }}
+              >
+                수정하기
+              </button>
               <button>삭제하기</button>
             </div>
           </div>
@@ -60,13 +87,20 @@ function Portfolio() {
           <div className="txt-area">
             <h4 className="tit">포트폴리오 타이틀</h4>
             <div className="btn-area">
-              <button>수정하기</button>
+              <button
+                onClick={() => {
+                  setIsPopPfEdit(true);
+                }}
+              >
+                수정하기
+              </button>
               <button>삭제하기</button>
             </div>
           </div>
         </PortfolioListItemDiv>
       </PortfolioListDiv>
-      <EditPortfolio />
+      {isPopPfAdd ? <AddPortfolio setIsPopPfAdd={setIsPopPfAdd} /> : <></>}
+      {isPopPfEdit ? <EditPortfolio setIsPopPfEdit={setIsPopPfEdit} /> : <></>}
     </ExpertListPageDiv>
   );
 }

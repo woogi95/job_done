@@ -3,7 +3,7 @@ import { LayerDiv, ModalDiv, PicDiv } from "./portfolio";
 import { FaPlus } from "react-icons/fa";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
-const EditPortfolio = ({ setIsPopPfEdit }) => {
+const AddPortfolio = ({ setIsPopPfAdd }) => {
   // 파일 미리보기 URL을 저장할 배열 상태
   const [filePreviews, setFilePreviews] = useState([]);
 
@@ -34,7 +34,7 @@ const EditPortfolio = ({ setIsPopPfEdit }) => {
   return (
     <ModalDiv>
       <LayerDiv>
-        <div className="tit">포트폴리오 수정</div>
+        <div className="tit">포트폴리오 등록</div>
         <label htmlFor="">
           <h2>타이틀</h2>
           <input type="text" />
@@ -110,7 +110,7 @@ const EditPortfolio = ({ setIsPopPfEdit }) => {
           <button
             className="cancel"
             onClick={() => {
-              setIsPopPfEdit(false);
+              setIsPopPfAdd(false);
             }}
           >
             취소
@@ -118,10 +118,10 @@ const EditPortfolio = ({ setIsPopPfEdit }) => {
           <button
             className="okay"
             onClick={() => {
-              setIsPopPfEdit(false);
+              setIsPopPfAdd(false);
             }}
           >
-            등록
+            수정완료
           </button>
         </div>
       </LayerDiv>
@@ -129,4 +129,4 @@ const EditPortfolio = ({ setIsPopPfEdit }) => {
   );
 };
 
-export default EditPortfolio;
+export default AddPortfolio;

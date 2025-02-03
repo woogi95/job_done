@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { LayoutDiv } from "../../pages/page";
+import { LayerDiv, ModalDiv } from "../portfolio/portfolio";
 
 export const DetailLayout = styled(LayoutDiv)`
   display: flex;
@@ -402,8 +403,9 @@ export const SummaryDiv = styled.div`
         color: #fff;
         text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
       }
-      a {
+      button:last-child {
         color: #34c5f0;
+        background-color: #fff;
       }
     }
   }
@@ -512,6 +514,7 @@ export const ReviewDiv = styled.div`
         /* border: 1px solid #bbb; */
         padding: 10px 0;
         display: flex;
+        justify-content: space-between;
         gap: 30px;
         span {
           word-break: keep-all;
@@ -529,6 +532,42 @@ export const ReviewDiv = styled.div`
             background-color: #eee;
           }
         }
+      }
+    }
+  }
+`;
+
+// 업체디테일 모달
+
+export const PfModalDiv = styled(ModalDiv)`
+  background-color: rgba(0, 0, 0, 0.75);
+`;
+export const PfLayerDiv = styled(LayerDiv)`
+  max-width: 680px;
+  min-height: auto;
+  height: 400px;
+  background-color: #fff;
+  display: flex;
+  padding: 50px 0;
+
+  .photo-area {
+    border: 1px solid;
+    width: 400px;
+    height: 100%;
+  }
+
+  .txt-area {
+    border: 1px solid;
+    width: calc(100% - 400px);
+    height: 100%;
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+    ul {
+      border: 1px solid #eee;
+      li {
       }
     }
   }

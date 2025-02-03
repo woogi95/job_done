@@ -58,6 +58,7 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
+import ContactUs from "./pages/servicepage/ContactUs";
 
 function App() {
   return (
@@ -98,6 +99,7 @@ function App() {
           <Route path="/service">
             <Route index element={<Service />} />
             <Route path=":id" element={<Detail />} />
+            <Route path="contactus" element={<ContactUs />} />
           </Route>
           {/* 마이페이지 */}
           <Route path="/mypage">
@@ -136,7 +138,7 @@ function App() {
             <Route path="/expert/payment-management">
               <Route index element={<PaymentList />} />
             </Route>
-            {/* 일정관리 - 3차 */}
+            {/* 일정관리 */}
             <Route path="/expert/schedule-management">
               <Route index element={<ScheduleList />} />
             </Route>

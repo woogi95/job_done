@@ -23,24 +23,66 @@ export const checkMsg = atom({
   key: "checkMsg",
   default: true,
 });
-
-export const businessDInfo = atom({
-  key: "businessDInfo",
+// 한 업체 조회(업체 디테일 정보)
+export const businessDetailState = atom({
+  key: "businessDetailState",
   default: {
-    logo: "string",
+    logo: "",
     detailTypeId: 0,
-    detailTypeName: "string",
+    detailTypeName: "",
     businessId: 0,
-    businessName: "string",
-    title: "string",
+    businessName: "",
+    title: "",
     scoreAvg: 0,
     price: 0,
     like: 0,
-    address: "string",
+    address: "",
     serviceCount: 0,
-    openingTime: "string",
-    closingTime: "string",
-    busiCreatedAt: "string",
-    contents: "string",
+    openingTime: "",
+    closingTime: "",
+    busiCreatedAt: "",
+    contents: "",
+  },
+});
+
+// 견적서 & 예약서 & 결제서
+export const papersState = atom({
+  key: "papersState",
+  default: {
+    serviceId: 0,
+    userName: "",
+    userPhone: "",
+    businessName: "",
+    reservedName: "",
+    productName: "",
+    businessPhone: "",
+    price: 0,
+    completed: 0,
+    comment: "",
+    addComment: "",
+    startDate: "",
+    endDate: "",
+    address: "",
+    businessAddress: "",
+    categoryName: "",
+    businessNum: "",
+    createdAt: "",
+    pyeong: "",
+    options: [
+      {
+        productOptionId: 0,
+        optionName: "",
+        optionDetails: [
+          {
+            optionDetailId: 0,
+            detailName: "",
+            detailPrice: 0,
+            contents: "",
+          },
+        ],
+      },
+    ],
+    mstartTime: "",
+    mendTime: "",
   },
 });
