@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 // scroll
 import { Link } from "react-scroll";
@@ -21,51 +21,87 @@ import {
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { FaStar } from "react-icons/fa";
 // recoil
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
+import { loginUser } from "../../atoms/loginAtom";
+import { likeStatusState } from "../../atoms/like";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
-  const [isLike, setIsLike] = useState(false); // 찜
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
 
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
 
   const businessDetail = useRecoilValue(businessDetailState);
+  const loginUserState = useRecoilValue(loginUser);
+  const userId = loginUserState.userId;
+  const businessId = businessDetail.businessId;
+  // console.log("`~~~~~~~~~~~~userId", userId);
+  console.log("`~~~~~~~~~~~~businessId", businessDetail.businessId);
+  const { id } = useParams();
   const navigate = useNavigate();
-  const ToggleLike = e => {
+  const ToggleLike = async e => {
     e.preventDefault();
-    setIsLike(!isLike);
+    setLikeStatus({
+      ...likeStatus,
+      isLiked: !likeStatus.isLiked,
+      businessId,
+    });
+
+    try {
+      // POST 요청 보내기
+      const response = await axios.post("/api/like", {
+        userId,
+        businessId,
+      });
+
+      if (response.status === 200) {
+        console.log("success:", response.data);
+      } else {
+        console.log("Failed:", response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const businessId = 1;
+  // 상세설명 사진들
   const [detailPicList, setDetailPicList] = useState([
-    {
-      businessId: 0,
-      pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
-    },
-    {
-      businessId: 0,
-      pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
-    },
-    {
-      businessId: 0,
-      pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
-    },
+    // {
+    //   businessId: 0,
+    //   pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
+    // }
   ]);
-  const getDetailPagePic = async () => {
+
+  useEffect(() => {
+    if (likeStatus.businessId) {
+      setLikeStatus({
+        ...likeStatus,
+        isLiked: likeStatus.isLiked,
+        businessId,
+      });
+    }
+  }, [businessId, setLikeStatus]);
+
+  const getDetailPagePic = async businessId => {
     try {
+      // `/api/business/${businessId}?businessId=${businessId}`,
       const res = await axios.get(
-        `/api/business/pic/%7BbusinessId%7D?businessId=${businessId}`,
+        `/api/business/pic/${businessId}?businessId=${businessId}`,
       );
       console.log(res.data.resultData);
+      setDetailPicList(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
+
+  console.log(detailPicList);
   useEffect(() => {
-    getDetailPagePic();
-  }, []);
+    getDetailPagePic(id);
+  }, [id]);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -140,7 +176,7 @@ const DetailContents = () => {
                 className={activeLink === "reviews" ? "active" : ""}
                 onClick={() => handleLinkClick("reviews")}
               >
-                리뷰 7500
+                리뷰 {businessDetail.reviewCount}
               </Link>
             </li>
           </ul>
@@ -150,7 +186,9 @@ const DetailContents = () => {
         <DContsDiv>
           <div className="box" id="about">
             <h2>업체소개</h2>
-            <p>{parse(businessDetail.contents)}</p>
+            <p>
+              {businessDetail.contents ? parse(businessDetail.contents) : ""}
+            </p>
             {detailPicList.map((item, index) => (
               <img
                 key={businessDetail.businessId}
@@ -185,15 +223,19 @@ const DetailContents = () => {
                 ToggleLike(e);
               }}
             >
-              {isLike ? <BsHeartFill /> : <BsHeart style={{ color: "gray" }} />}
+              {likeStatus.isLiked ? (
+                <BsHeartFill />
+              ) : (
+                <BsHeart style={{ color: "gray" }} />
+              )}
             </div>
           </div>
           <CountStarCustomDiv>
             <FaStar />
             <em>{businessDetail.scoreAvg} </em>
-            <span>(7500)</span>
+            <span>({businessDetail.reviewCount})</span>
           </CountStarCustomDiv>
-          <h3 className="tit">청소 랭킹 1위 잡던어워즈 KS 3년 연속 1위 수상</h3>
+          <h3 className="tit">{businessDetail.title}</h3>
           <div className="desc">
             <div className="box">
               <b>Job_Done 횟수</b>
@@ -201,7 +243,7 @@ const DetailContents = () => {
             </div>
             <div className="box">
               <b>경력</b>
-              <div>5년</div>
+              <div>{businessDetail.years}</div>
             </div>
           </div>
           <div className="btn-area">

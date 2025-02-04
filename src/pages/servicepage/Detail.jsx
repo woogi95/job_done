@@ -5,16 +5,18 @@ import DetailContents from "../../components/serviceDetail/DetailContents";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
+import { useParams } from "react-router-dom";
 
 function Detail() {
+  const { id } = useParams();
   const [businessDetail, setBusinessDetail] =
     useRecoilState(businessDetailState);
   // http://112.222.157.156:5224/api/business/%7BbusinessId%7D?businessId=1
-  const businessId = 1;
-  const getBusinessDetail = async () => {
+  // const businessId = businessDetail.businessId;
+  const getBusinessDetail = async businessId => {
     try {
       const res = await axios.get(
-        `/api/business/%7BbusinessId%7D?businessId=${businessId}`,
+        `/api/business/${businessId}?businessId=${businessId}`,
       );
       console.log("resultData : ", res.data.resultData);
       setBusinessDetail(res.data.resultData);
@@ -24,10 +26,10 @@ function Detail() {
   };
   // console.log("businessDetail", businessDetail);
   useEffect(() => {
-    if (businessId) {
-      getBusinessDetail();
+    if (id) {
+      getBusinessDetail(id);
     }
-  }, [businessId]);
+  }, [id]);
   // const { id } = useParams();
   return (
     <div>

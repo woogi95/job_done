@@ -7,9 +7,12 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { papersState } from "../../atoms/businessAtom";
 
 const UserReservation = () => {
-  const [estimateInfo, setEstimateInfo] = useState({});
+  // const [estimateInfo, setEstimateInfo] = useState({});
+  const [estimateInfo, setEstimateInfo] = useRecoilValue(papersState);
   const getEstimate = async () => {
     try {
       const res = await axios.get("/api/service/detail?serviceId=1");

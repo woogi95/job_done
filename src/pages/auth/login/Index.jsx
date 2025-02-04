@@ -35,9 +35,21 @@ function LoginPage() {
           console.log("업데이트 후 userInfo:", newState);
           return newState;
         });
-
+        
+        // ✅ 사용자 상태 업데이트
+        setUserInfo({
+          userId: res.data.resultData.userId,
+          name: res.data.resultData.name,
+          email: res.data.resultData.email,
+          pic: res.data.resultData.pic,
+          accessToken: res.data.resultData.accessToken,
+          businessId: res.data.resultData.businessId,
+          isLogind: true,
+        });
+        
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("userId", userId);
+
 
         navigate("/");
       } else {

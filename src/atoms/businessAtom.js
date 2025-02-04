@@ -26,23 +26,29 @@ export const checkMsg = atom({
 // 한 업체 조회(업체 디테일 정보)
 export const businessDetailState = atom({
   key: "businessDetailState",
-  default: {
-    logo: "",
-    detailTypeId: 0,
-    detailTypeName: "",
-    businessId: 0,
-    businessName: "",
-    title: "",
-    scoreAvg: 0,
-    price: 0,
-    like: 0,
-    address: "",
-    serviceCount: 0,
-    openingTime: "",
-    closingTime: "",
-    busiCreatedAt: "",
-    contents: "",
-  },
+  default: [
+    {
+      logo: null,
+      detailTypeId: 0,
+      detailTypeName: null,
+      businessId: 0,
+      businessName: null,
+      title: null,
+      scoreAvg: 0,
+      price: 0,
+      like: 0,
+      address: null,
+      serviceCount: 0,
+      openingTime: null,
+      closingTime: null,
+      years: 0,
+      contents: null,
+      reviewCount: 0,
+      tel: null,
+      tel2: null,
+      tel3: null,
+    },
+  ],
 });
 
 // 견적서 & 예약서 & 결제서
@@ -53,8 +59,7 @@ export const papersState = atom({
     userName: "",
     userPhone: "",
     businessName: "",
-    reservedName: "",
-    productName: "",
+    detailTypeName: "",
     businessPhone: "",
     price: 0,
     completed: 0,
@@ -67,22 +72,35 @@ export const papersState = atom({
     categoryName: "",
     businessNum: "",
     createdAt: "",
+    updatedAt: "",
     pyeong: "",
     options: [
       {
-        productOptionId: 0,
         optionName: "",
-        optionDetails: [
-          {
-            optionDetailId: 0,
-            detailName: "",
-            detailPrice: 0,
-            contents: "",
-          },
-        ],
+        optionDetailName: "",
+        optionDetailPrice: 0,
+      },
+    ],
+    etc: [
+      {
+        etcId: 0,
+        etcPrice: 0,
+        etcComment: "",
       },
     ],
     mstartTime: "",
     mendTime: "",
   },
+});
+
+// 포트폴리오 리스트
+export const portfolioListState = atom({
+  key: "portfolioListState",
+  default: [
+    {
+      portfolioId: 0,
+      title: "",
+      isThumnail: "",
+    },
+  ],
 });

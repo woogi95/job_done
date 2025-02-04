@@ -2,25 +2,58 @@ import { FaStar } from "react-icons/fa";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { ListItemDiv } from "./service";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { businessDetailState } from "../../atoms/businessAtom";
+import { loginUser } from "../../atoms/loginAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { likeStatusState } from "../../atoms/like";
+import axios from "axios";
 const ServiceListItem = ({ business }) => {
-  const [isLike, setIsLike] = useState(false);
-  const { id } = useParams();
-  const ToggleLike = e => {
-    e.preventDefault();
-    setIsLike(!isLike);
-  };
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  const businessDetail = useRecoilValue(businessDetailState);
+  const loginUserState = useRecoilValue(loginUser);
+  const userId = loginUserState.userId;
+  const businessId = businessDetail.businessId;
 
-  useEffect(() => {
-    if (business.like === 1) {
-      setIsLike(true);
-    } else {
-      setIsLike(false);
+  const ToggleLike = async e => {
+    e.preventDefault();
+    // setLikeStatus({
+    //   ...likeStatus,
+    //   isLiked: !likeStatus.isLiked,
+    //   businessId,
+    // });
+    setLikeStatus({ businessId: businessId, isLiked: !likeStatus.isLiked });
+
+    try {
+      // POST 요청 보내기
+      const response = await axios.post("/api/like", {
+        userId,
+        businessId,
+      });
+
+      if (response.status === 200) {
+        console.log("success:", response.data);
+      } else {
+        console.log("Failed:", response.data);
+      }
+    } catch (error) {
+      console.error(error);
     }
-  }, [business.like]);
+  };
+  useEffect(() => {
+    if (likeStatus.businessId) {
+      setLikeStatus({
+        ...likeStatus,
+        isLiked: likeStatus.isLiked,
+        businessId,
+      });
+    }
+  }, [businessId, setLikeStatus]);
+  console.log("!! business", business);
   return (
     <ListItemDiv>
-      <Link to="/service/${business.businessId}">
+      {/* /service/detail?serviceId=1 */}
+      <Link to={`/service/${business.businessId}`}>
         <div className="thum">
           <img src={business.pic} alt="" />
           <div
@@ -29,7 +62,11 @@ const ServiceListItem = ({ business }) => {
               ToggleLike(e);
             }}
           >
-            {isLike ? <BsHeartFill /> : <BsHeart style={{ color: "gray" }} />}
+            {likeStatus.isLiked ? (
+              <BsHeartFill />
+            ) : (
+              <BsHeart style={{ color: "gray" }} />
+            )}
           </div>
         </div>
         <div className="info">

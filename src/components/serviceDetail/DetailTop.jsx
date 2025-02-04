@@ -24,8 +24,7 @@ const DetailTop = () => {
             <h3>
               {businessDetail.businessName}
               <em>
-                {businessDetail.openingTime.slice(0, 5)} -
-                {businessDetail.closingTime.slice(0, 5)}
+                {businessDetail.openingTime} -{businessDetail.closingTime}
               </em>
             </h3>
             <b>{businessDetail.address}</b>
@@ -41,12 +40,12 @@ const DetailTop = () => {
             <CountStarDiv>
               <FaStar />
               <em>{businessDetail.scoreAvg}</em>
-              <span>(7500)</span>
+              <span>({businessDetail.reviewCount})</span>
             </CountStarDiv>
           </div>
           <div className="box">
             <b>경력</b>
-            <div>5년</div>
+            <div>{businessDetail.years}</div>
           </div>
         </div>
       </div>
