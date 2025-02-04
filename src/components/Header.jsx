@@ -76,7 +76,7 @@ function Header() {
     setSelectedCategory(categoryId);
     setSelectedDetailType(detailTypeId);
     navigate(
-      `/api/category/detail?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
+      `/api//detail?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
     );
   };
 

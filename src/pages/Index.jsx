@@ -8,8 +8,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { FaStar } from "react-icons/fa";
 
 const Index = () => {
+  const companyList = () => {
+    try {
+      const res = await axios.get("/api/business", {
+        params: {
+          categoryId: [1, 2, 3],
+        },
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="pt-[80px]">
       <div>
@@ -96,7 +109,11 @@ const Index = () => {
                 </span>
                 <div className="flex justify-between text-[14px]">
                   <span>{item.company}</span>
-                  <span>{item.review}</span>
+                  <span className="flex justify-center items-center gap-[3px]">
+                    <FaStar className="text-[#FF9D00] translate-y-[-2px]" />
+                    {item.score}
+                    <span className="text-gray-400">{`(${item.reviewNumbers})`}</span>
+                  </span>
                 </div>
               </a>
             ))}
@@ -142,7 +159,11 @@ const Index = () => {
                 </span>
                 <div className="flex justify-between text-[14px]">
                   <span>{item.company}</span>
-                  <span>{item.review}</span>
+                  <span className="flex justify-center items-center gap-[3px]">
+                    <FaStar className="text-[#FF9D00] translate-y-[-2px]" />
+                    {item.score}
+                    <span className="text-gray-400">{`(${item.reviewNumbers})`}</span>
+                  </span>
                 </div>
               </a>
             ))}

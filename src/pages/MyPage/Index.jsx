@@ -120,16 +120,36 @@ function MyPage() {
     if (isEdit) {
       try {
         const userId = localStorage.getItem("userId");
-        const updatedData = {
+        const requestData = {
           p: {
             userId: parseInt(userId),
             phone: phoneNumber.replace(/-/g, ""),
             name: userName,
           },
-          pic: profileImg,
         };
 
-        const response = await axios.patch("/api/user", updatedData);
+        const formData = new FormData();
+
+        // p 객체를 FormData에 추가
+        formData.append(
+          "p",
+          new Blob([JSON.stringify(requestData.p)], {
+            type: "application/json",
+          }),
+        );
+
+        // 프로필 이미지가 변경된 경우에만 이미지 추가
+        if (profileImg && profileImg.startsWith("data:image")) {
+          const response = await fetch(profileImg);
+          const blob = await response.blob();
+          formData.append("pic", blob, "profile.jpg");
+        }
+
+        const response = await axios.patch("/api/user", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         if (response.status === 200) {
           alert("회원정보가 수정되었습니다.");
