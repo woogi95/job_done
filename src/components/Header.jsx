@@ -50,11 +50,18 @@ function Header() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    localStorage.clear();
+
+    document.cookie.split(";").forEach(cookie => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    });
 
     setUserInfo({
       accessToken: "",
       isLogind: false,
+      userId: null,
     });
     navigate("/");
   };
@@ -69,6 +76,7 @@ function Header() {
     setSelectedCategory(categoryId);
     setSelectedDetailType(detailTypeId);
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
+
   };
 
   useEffect(() => {
@@ -83,12 +91,14 @@ function Header() {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
+    const storedUserId = localStorage.getItem("userId");
 
     if (storedToken) {
       setUserInfo(prev => ({
         ...prev,
         accessToken: storedToken,
         isLogind: true,
+        userId: storedUserId,
       }));
     }
   }, []);

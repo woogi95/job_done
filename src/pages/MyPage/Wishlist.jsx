@@ -4,6 +4,17 @@ import { UsageTest } from "../../components/ServiceIcon";
 import { FaStar } from "react-icons/fa";
 
 function Wishlist() {
+  const getWishlist = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const res = await axios.get("/api/like", {
+        params: { userId: userId },
+      });
+      console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <MyPageLayout>
       <div className="flex justify-center items-center pb-[50px]">
