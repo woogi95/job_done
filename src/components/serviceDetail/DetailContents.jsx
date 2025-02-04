@@ -249,7 +249,7 @@ const DetailContents = () => {
           <div className="btn-area">
             <button
               onClick={() => {
-                navigate("/reservation");
+                navigate(`/reservation/?businessId=${businessId}`);
               }}
             >
               예약하기

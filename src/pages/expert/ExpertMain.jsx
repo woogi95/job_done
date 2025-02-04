@@ -4,6 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import "./expertmain.css";
 import { useRecoilState } from "recoil";
+import { businessDetailState } from "../../atoms/businessAtom";
 
 const BigBox = styled.div`
   height: 100%;
@@ -14,7 +15,7 @@ const BigBox = styled.div`
   font-family: "Pretendard-Regular", "Spoqa Han Sans Neo", "Roboto", sans-serif;
 `;
 function ExpertMain() {
-  const [businessInfo, setBusinessInfo] = useRecoilState();
+  const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   return (
     <div style={{ backgroundColor: "white", padding: 15 }}>
       {/* 상단 예약 건수 등 3 칸 */}
