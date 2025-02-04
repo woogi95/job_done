@@ -76,7 +76,6 @@ function Header() {
     setSelectedCategory(categoryId);
     setSelectedDetailType(detailTypeId);
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
-
   };
 
   useEffect(() => {
@@ -127,9 +126,9 @@ function Header() {
     <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
-          <a href="/">
+          <Link to={"/"}>
             <img src="/images/logo.svg" alt="logo" />
-          </a>
+          </Link>
           <ul className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
             {categories.map(category => (
               <li key={category.categoryId} className="relative group">

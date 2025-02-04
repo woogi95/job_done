@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 import { FaStar } from "react-icons/fa";
 
 const Index = () => {
-  const companyList = () => {
+  const companyList = async () => {
     try {
       const res = await axios.get("/api/business", {
         params: {
@@ -22,7 +22,7 @@ const Index = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="pt-[80px]">
       <div>
