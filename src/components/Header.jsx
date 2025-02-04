@@ -120,40 +120,6 @@ function Header() {
     });
   }, [categories]);
 
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const storedProfileImg = localStorage.getItem("userPic");
-    if (storedProfileImg) {
-      setProfileImg(`http://112.222.157.156:5224${storedProfileImg}`);
-    }
-
-    const handleStorageChange = e => {
-      if (e.key === "userPic") {
-        setProfileImg(
-          e.newValue
-            ? `http://112.222.157.156:5224${e.newValue}`
-            : "/images/order/default_profile.jpg",
-        );
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
-
-  useEffect(() => {
-    console.log("현재 로그인 상태:", userInfo);
-  }, [userInfo]);
-
   return (
     <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
