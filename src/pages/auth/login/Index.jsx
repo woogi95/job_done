@@ -31,11 +31,15 @@ function LoginPage() {
         localStorage.setItem("accessToken", accessToken);
 
         // ✅ 사용자 상태 업데이트
-        setUserInfo(prev => ({
-          ...prev,
-          ...data,
+        setUserInfo({
+          userId: res.data.resultData.userId,
+          name: res.data.resultData.name,
+          email: res.data.resultData.email,
+          pic: res.data.resultData.pic,
+          accessToken: res.data.resultData.accessToken,
+          businessId: res.data.resultData.businessId,
           isLogind: true,
-        }));
+        });
 
         // ✅ 로그인 성공 후 메인 페이지로 이동
         navigate("/");

@@ -16,11 +16,14 @@ import {
   selectedCategoryState,
   selectedDetailTypeState,
 } from "../../atoms/categoryAtom";
+import { likeStatusState } from "../../atoms/like";
 
 function Service() {
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   // console.log("----->", categoryId, detailTypeId);
+  // const [businessId, setBusinessId] = useState(0);
   const [businessList, setBusinessList] = useState([]);
 
   const getBusinessList = async (categoryId, detailTypeId) => {
@@ -36,6 +39,11 @@ function Service() {
   };
   // console.log("!! =>", businessList);
 
+  const handleClickBusiness = businessId => {
+    if (businessId === businessList.businessId) {
+      setLikeStatus(!isLiked, businessId);
+    }
+  };
   useEffect(() => {
     console.log("categoryId", categoryId);
     console.log("detailTypeId", detailTypeId);
@@ -43,7 +51,7 @@ function Service() {
       getBusinessList(categoryId, detailTypeId);
     }
   }, [categoryId, detailTypeId]);
-  // console.log("cateIdBox", cateIdBox);
+
   return (
     <>
       <ServiceListTop />
@@ -56,6 +64,9 @@ function Service() {
                 key={businessList.businessId}
                 // key={index}
                 business={item}
+                onClick={() => {
+                  handleClickBusiness(businessList.businessId);
+                }}
               />
             ))}
           </div>

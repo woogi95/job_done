@@ -13,20 +13,22 @@ const ServiceListItem = ({ business }) => {
   const businessDetail = useRecoilValue(businessDetailState);
   const loginUserState = useRecoilValue(loginUser);
   const userId = loginUserState.userId;
+  const businessId = businessDetail.businessId;
 
   const ToggleLike = async e => {
     e.preventDefault();
-    setLikeStatus({
-      ...likeStatus,
-      isLiked: !likeStatus.isLiked,
-      businessId: businessDetail.businessId,
-    });
+    // setLikeStatus({
+    //   ...likeStatus,
+    //   isLiked: !likeStatus.isLiked,
+    //   businessId,
+    // });
+    setLikeStatus({ businessId: businessId, isLiked: !likeStatus.isLiked });
 
     try {
       // POST 요청 보내기
       const response = await axios.post("/api/like", {
         userId,
-        businessId: businessDetail.businessId,
+        businessId,
       });
 
       if (response.status === 200) {
@@ -43,10 +45,10 @@ const ServiceListItem = ({ business }) => {
       setLikeStatus({
         ...likeStatus,
         isLiked: likeStatus.isLiked,
-        businessId: businessDetail.businessId,
+        businessId,
       });
     }
-  }, [business.businessId, setLikeStatus]);
+  }, [businessId, setLikeStatus]);
   console.log("!! business", business);
   return (
     <ListItemDiv>

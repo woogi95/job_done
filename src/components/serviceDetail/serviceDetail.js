@@ -353,7 +353,7 @@ export const SummaryDiv = styled.div`
       }
     }
     .tit {
-      word-break: keep-all;
+      word-break: break-all;
       font-size: 22px;
       font-weight: 600;
       line-height: 1.23em;

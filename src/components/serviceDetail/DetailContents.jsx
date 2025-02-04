@@ -36,8 +36,9 @@ const DetailContents = () => {
   const businessDetail = useRecoilValue(businessDetailState);
   const loginUserState = useRecoilValue(loginUser);
   const userId = loginUserState.userId;
+  const businessId = businessDetail.businessId;
   // console.log("`~~~~~~~~~~~~userId", userId);
-  // console.log("`~~~~~~~~~~~~businessId", businessDetail.businessId);
+  console.log("`~~~~~~~~~~~~businessId", businessDetail.businessId);
   const { id } = useParams();
   const navigate = useNavigate();
   const ToggleLike = async e => {
@@ -45,14 +46,14 @@ const DetailContents = () => {
     setLikeStatus({
       ...likeStatus,
       isLiked: !likeStatus.isLiked,
-      businessId: businessDetail.businessId,
+      businessId,
     });
 
     try {
       // POST 요청 보내기
       const response = await axios.post("/api/like", {
         userId,
-        businessId: businessDetail.businessId,
+        businessId,
       });
 
       if (response.status === 200) {
@@ -78,10 +79,10 @@ const DetailContents = () => {
       setLikeStatus({
         ...likeStatus,
         isLiked: likeStatus.isLiked,
-        businessId: businessDetail.businessId,
+        businessId,
       });
     }
-  }, [business.businessId, setLikeStatus]);
+  }, [businessId, setLikeStatus]);
 
   const getDetailPagePic = async businessId => {
     try {

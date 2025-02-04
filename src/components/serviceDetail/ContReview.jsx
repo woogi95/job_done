@@ -18,7 +18,7 @@ const ContReview = () => {
   const getReviewList = async businessId => {
     try {
       const res = await axios.get(
-        `/api/review?businessId=${2}&page=${page}&size=${size}`,
+        `/api/review?businessId=${businessId}&page=${page}&size=${size}`,
       );
       console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
