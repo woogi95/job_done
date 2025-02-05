@@ -9,7 +9,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner, serviceIcons } from "../components/ServiceIcon";
 
 const Index = () => {
-
   const [categories, setCategories] = useState({});
   const [companies, setCompanies] = useState([]);
   const BASE_URL = "http://112.222.157.156:5224";
