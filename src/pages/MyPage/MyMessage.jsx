@@ -1,114 +1,150 @@
-import React, { useState, useEffect } from "react";
-import MyPageLayout from "../../components/MyPageLayout";
-import { MessageDetail, MessageTest } from "../../components/ServiceIcon";
-import { FiSend } from "react-icons/fi";
 import axios from "axios";
+import { FiSend } from "react-icons/fi";
+import MyPageLayout from "../../components/MyPageLayout";
+import { useState, useEffect } from "react";
 
 function MyMessage() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
-  const [message, setMessage] = useState("");
-  const [chatRooms, setChatRooms] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [chatRooms, setChatRooms] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
+  const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
 
-  // 채팅방 목록 조회 함수
-  const fetchChatRooms = async () => {
-    const userId = localStorage.getItem("userId");
+  const IMAGE_BASE_URL = "http://112.222.157.156:5224/images/";
 
+  // 방 리스트
+  const chatRoomList = async () => {
     try {
       setLoading(true);
       const res = await axios.get("/api/room", {
         params: {
-          user_id: 2,
+          userId: localStorage.getItem("userId"),
         },
       });
-      // API 응답이 배열이 아닌 경우 처리
-      const roomsData = Array.isArray(res.data) ? res.data : [res.data];
-      setChatRooms(roomsData);
-      console.log(roomsData);
+      console.log("API 리스폰스:", res.data);
+      if (res.data && Array.isArray(res.data.resultData)) {
+        setChatRooms(res.data.resultData);
+      } else {
+        console.error("리스폰스 실패 : ", res.data);
+        setChatRooms([]);
+      }
     } catch (error) {
-      console.error("채팅방 조회 실패:", error);
+      console.error("채팅방 목록 조회 실패:", error.response || error);
       setChatRooms([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // 채팅 메시지 조회 함수 추가
+  // 채팅 조회
   const fetchChatMessages = async roomId => {
     try {
       const res = await axios.get("/api/chat", {
-        params: {
-          roomId: roomId,
-        },
+        params: { roomId },
       });
-      setChatMessages(res.data.resultData);
+      console.log("채팅 메시지:", res.data);
+      if (res.data && Array.isArray(res.data.resultData)) {
+        setChatMessages(res.data.resultData);
+      } else {
+        setChatMessages([]);
+      }
     } catch (error) {
       console.error("채팅 메시지 조회 실패:", error);
       setChatMessages([]);
     }
   };
 
-  useEffect(() => {
-    fetchChatRooms();
-  }, []);
-
-  useEffect(() => {
-    if (selectedRoomId) {
-      fetchChatMessages(selectedRoomId);
-    }
-  }, [selectedRoomId]);
-
-  const handleImageUpload = e => {
-    const files = Array.from(e.target.files);
-    const imagePromises = files.map(file => {
-      return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(imagePromises).then(images => {
-      setSelectedImages(images);
-    });
+  // 방 선택시 번호
+  const handleRoomSelect = roomId => {
+    setSelectedRoomId(roomId);
+    fetchChatMessages(roomId);
+    console.log("선택된 방 번호:", roomId);
   };
 
-  const handleSendMessage = async () => {
-    if (!selectedRoomId || (!message.trim() && selectedImages.length === 0))
-      return;
+  const sendMessage = async () => {
+    if (!selectedRoomId || !message.trim()) return;
+
+    const messageData = {
+      p: {
+        roomId: selectedRoomId,
+        contents: message,
+        flag: 1,
+      },
+    };
+
+    if (selectedImages.length > 0) {
+      messageData.pics = selectedImages.map(image => image.name);
+    }
+
+    const data = JSON.stringify(messageData);
+    console.log("전송하려는 데이터:", data);
 
     try {
-      const payload = {
-        p: {
-          roomId: selectedRoomId,
-          contents: message.trim(),
-          flag: 1,
+      const res = await axios.post("/api/chat", data, {
+        headers: {
+          "Content-Type": "application/json",
         },
-        pics: selectedImages,
-      };
+      });
 
-      await axios.post("/api/chat", payload);
-
-      // 메시지 전송 후 채팅 목록 새로고침
-      fetchChatMessages(selectedRoomId);
-
-      // 입력 필드 초기화
+      console.log("메시지 전송 응답:", res.data);
+      // 채팅 목록 새로고침
+      await fetchChatMessages(selectedRoomId);
       setMessage("");
       setSelectedImages([]);
-
-      // 파일 input 초기화
-      const fileInput = document.getElementById("imageUpload");
-      if (fileInput) fileInput.value = "";
     } catch (error) {
-      console.error("메시지 전송 실패:", error);
+      console.error("메시지 전송 에러:", error.response?.data || error);
+      console.log("전체 에러 객체:", error);
     }
   };
 
-  // 방 찾아서 채팅 띄우기
-  const selectedRoom = chatRooms.find(
-    room => room.resultData[0].roomId === selectedRoomId,
+  // 이미지 업로드 핸들러
+  const handleImageUpload = event => {
+    const files = Array.from(event.target.files);
+    setSelectedImages(files);
+    console.log("선택된 이미지:", files);
+  };
+
+  // 메시지 전송 핸들러
+  const handleSendMessage = sendMessage;
+
+  useEffect(() => {
+    chatRoomList();
+  }, []);
+
+  const renderRoomItem = item => (
+    <div key={item.roomId}>
+      <div className="flex justify-center items-center p-[20px]">
+        <button
+          className="flex gap-[10px]"
+          onClick={() => handleRoomSelect(item.roomId)}
+        >
+          <img
+            src={
+              item.pic ? `${IMAGE_BASE_URL}${item.pic}` : "/default-profile.png"
+            }
+            alt="업체 이미지"
+            className="w-[50px] h-[50px] rounded-full object-cover"
+          />
+          <div className="flex flex-col gap-[5px] text-left w-full">
+            <span className="text-[12px] font-semibold text-left">
+              {item.businessName}
+            </span>
+            <div className="truncate font-[14px] text-left">
+              {item.title.length > 15
+                ? `${item.title.slice(0, 15)}...`
+                : item.title}
+            </div>
+            <div className="text-[12px] text-[#B8B8B8] text-left">
+              {item.roomCreatedAt}
+            </div>
+          </div>
+        </button>
+      </div>
+      <div className="flex justify-center w-full">
+        <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] w-[85%]"></div>
+      </div>
+    </div>
   );
 
   return (
@@ -118,76 +154,54 @@ function MyMessage() {
       </div>
       <div className="flex justify-center w-full">
         <div className="flex justify-between items-start w-[780px]">
-          <div className="flex justify-center w-[280px] h-[800px] bg-[#ffffff]">
+          <div className="flex justify-center w-[280px] h-[800px] bg-[#ffffff] overflow-hidden">
             {/* 메시지 리스트 */}
-            <div className="flex flex-col gap-[10px] w-full">
+            <div className="flex flex-col gap-[10px] w-full overflow-y-auto">
               {loading ? (
                 <div className="flex justify-center items-center p-[20px]">
                   로딩중...
                 </div>
-              ) : chatRooms.length === 0 ? (
+              ) : !chatRooms || chatRooms.length === 0 ? (
                 <div className="flex justify-center items-center h-full text-gray-500">
                   활성화된 채팅이 없습니다
                 </div>
               ) : (
-                chatRooms.map(item => (
-                  <div key={item.resultData[0].roomId}>
-                    <div className="flex justify-center items-center p-[20px]">
-                      <button
-                        className="flex gap-[10px]"
-                        onClick={() =>
-                          setSelectedRoomId(item.resultData[0].roomId)
-                        }
-                      >
-                        <img
-                          src={item.resultData[0].pic}
-                          alt="업체 이미지"
-                          className="w-[50px] h-[50px] rounded-full"
-                        />
-                        <div className="flex flex-col gap-[5px] text-left w-full">
-                          <span className="text-[12px] font-semibold text-left">
-                            {item.resultData[0].companyName}
-                          </span>
-                          <div className="truncate font-[14px] text-left">
-                            {item.resultData[0].title.length > 15
-                              ? `${item.resultData[0].title.slice(0, 15)}...`
-                              : item.resultData[0].title}
-                          </div>
-                          <div className="text-[12px] text-[#B8B8B8] text-left">
-                            {item.resultData[0].roomCreatedAt}
-                          </div>
-                        </div>
-                      </button>
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] w-[85%]"></div>
-                    </div>
-                  </div>
-                ))
+                chatRooms.map(renderRoomItem)
               )}
             </div>
           </div>
           {/* 상세 메시지 */}
           <div className="flex flex-col h-[800px] w-[500px] bg-[#F5F5F5] ml-0">
-            {selectedRoom ? (
+            {selectedRoomId ? (
               <div className="flex flex-col h-full w-full">
                 {/* 업체 정보 */}
                 <div className="flex p-[10px] items-center h-[80px] w-full bg-[#EEEEEE] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]">
                   <img
-                    src={selectedRoom.resultData[0].pic}
+                    src={
+                      chatRooms.find(item => item.roomId === selectedRoomId)
+                        ?.pic
+                        ? `${IMAGE_BASE_URL}${chatRooms.find(item => item.roomId === selectedRoomId)?.pic}`
+                        : "/default-profile.png"
+                    }
                     alt="업체 이미지"
-                    className="w-[40px] h-[40px] rounded-full"
+                    className="w-[40px] h-[40px] rounded-full object-cover"
                   />
                   <span className="text-[24px] font-semibold pl-[10px]">
-                    {selectedRoom.resultData[0].companyName}
+                    {
+                      chatRooms.find(item => item.roomId === selectedRoomId)
+                        ?.companyName
+                    }
                   </span>
                 </div>
                 {/* 채팅내용 */}
                 <div className="flex flex-col items-center w-full p-[20px] flex-grow overflow-y-auto">
-                  <div>
+                  <div className="w-full">
                     <div className="flex justify-center items-center border rounded-full w-full h-[24px] bg-[#ECEDF0] text-[12px] text-[#A2A2A2]">
                       <span className="text-center m-3">
-                        {selectedRoom.resultData[0].roomCreatedAt}
+                        {
+                          chatRooms.find(item => item.roomId === selectedRoomId)
+                            ?.roomCreatedAt
+                        }
                       </span>
                     </div>
                   </div>
@@ -200,32 +214,38 @@ function MyMessage() {
                     >
                       {chat.flag === 0 && (
                         <img
-                          src={chat.logo}
+                          src={
+                            chat.logo
+                              ? `${IMAGE_BASE_URL}${chat.logo}`
+                              : "/default-profile.png"
+                          }
                           alt="프로필 이미지"
-                          className="w-[40px] h-[40px] rounded-full"
+                          className="w-[40px] h-[40px] rounded-full object-cover"
                         />
                       )}
                       <span
-                        className={`flex justify-center items-center max-w-[240px] h-full ${
+                        className={`flex flex-col justify-center items-start max-w-[240px] ${
                           chat.flag === 1
                             ? "bg-[#34C5F0] text-white rounded-tl-[8px]"
                             : "bg-white rounded-tr-[8px]"
                         } rounded-bl-[8px] rounded-br-[8px] shadow-[0_4px_5px_-6px_rgba(0,0,0,0.2)]`}
                       >
-                        <div className="m-4">{chat.contents}</div>
-                      </span>
-                      {chat.pics && chat.pics.length > 0 && (
-                        <div className="flex gap-1">
-                          {chat.pics.map((pic, index) => (
-                            <img
-                              key={index}
-                              src={pic}
-                              alt="첨부 이미지"
-                              className="max-w-[100px] rounded"
-                            />
-                          ))}
+                        <div className="m-4 break-all whitespace-pre-wrap">
+                          {chat.contents}
                         </div>
-                      )}
+                        {chat.pics && chat.pics.length > 0 && (
+                          <div className="flex flex-col gap-2 mx-4 mb-4">
+                            {chat.pics.map((pic, index) => (
+                              <img
+                                key={index}
+                                src={`${IMAGE_BASE_URL}${pic}`}
+                                alt="첨부 이미지"
+                                className="max-w-[200px] rounded"
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </span>
                     </div>
                   ))}
                 </div>

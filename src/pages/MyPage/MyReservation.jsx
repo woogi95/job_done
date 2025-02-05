@@ -1,10 +1,11 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 import { statusText } from "../../components/ServiceIcon";
 
 function MyReservation() {
   const [reservation, setReservation] = useState([]);
+  const [resState, setResState] = useState([]);
 
   useEffect(() => {
     reservationData();
@@ -12,16 +13,33 @@ function MyReservation() {
 
   const reservationData = async () => {
     try {
-      const res = await axios.get("/api/service", {
+      const res = await loginApi.get("/api/service", {
         params: {
-          userId: 1,
-          status: 1,
+          status: 3,
           page: 1,
           size: 10,
         },
       });
-      console.log(res.data.resultData);
+      console.log("너 맞니? : ", res.data.resultData);
       setReservation(res.data.resultData);
+      setResState(res.data.resultData);
+      console.log("잘 담김? : ", resState);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const reviewWrite = async serviceId => {
+    try {
+      const res = await loginApi.post("/api/review", {
+        pics: [""],
+        p: {
+          serviceId: serviceId,
+          contents: "",
+          score: 0,
+        },
+      });
+      console.log("리뷰 쓰기 결과 : ", res);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +74,8 @@ function MyReservation() {
                     disabled={[0, 1, 6].includes(item.completed)}
                     onClick={() =>
                       ![0, 1, 6].includes(item.completed) &&
-                      [7, 8, 9].includes(item.completed)
+                      [7, 8, 9].includes(item.completed) &&
+                      reviewWrite(item.id)
                     }
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${

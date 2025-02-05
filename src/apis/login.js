@@ -23,13 +23,13 @@ loginApi.interceptors.response.use(
     const originalRequest = error.config;
 
     // AccessToken 만료로 401 오류 발생 시
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // ✅ RefreshToken을 사용하여 새로운 AccessToken 요청
+        // RefreshToken을 사용하여 새로운 AccessToken 요청
         const res = await axios.post(
-          "/api/user/access-token",
+          `api/user/access-token`,
           {},
           { withCredentials: true },
         );
@@ -38,9 +38,11 @@ loginApi.interceptors.response.use(
           const newAccessToken = res.data.accessToken;
           localStorage.setItem("accessToken", newAccessToken);
 
-          // ✅ 원래 요청에 새로운 AccessToken을 추가하여 재시도
-          originalRequest.headers = originalRequest.headers || {};
+          // 새로운 AccessToken으로 헤더 업데이트
+          loginApi.defaults.headers.common["Authorization"] =
+            `Bearer ${newAccessToken}`;
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
           return loginApi(originalRequest);
         }
       } catch (err) {
