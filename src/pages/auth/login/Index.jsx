@@ -22,16 +22,13 @@ function LoginPage() {
     console.log("로그인 요청:", data);
     try {
       const res = await axios.post("/api/user/sign-in", data, {
-
         withCredentials: true,
-
       });
       console.log("서버 응답:", res.data);
 
       if (res.data.resultData && res.data.resultData.accessToken) {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
-
 
         // accessToken을 쿠키에 직접 저장
 

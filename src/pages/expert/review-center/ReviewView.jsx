@@ -15,8 +15,9 @@ const ReviewView = () => {
   const [reviewComment, setReviewComment] = useState(false);
   const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
   const busiId = Number(localStorage.getItem("businessId"));
-  console.log(localStorage.getItem("businessId"));
+  // console.log(localStorage.getItem("businessId"));
   // 리뷰 댓글 삭제
+  // console.log(reviewIds);
   const deleteComment = async () => {
     try {
       const res = await loginApi.delete(
@@ -46,29 +47,23 @@ const ReviewView = () => {
         `/api/review?businessId=${busiId}&page=1&size=30`,
         // `/api/review?businessId=2&page=1&size=30`,
       );
-      console.log(res);
+      // console.log(res);
       if (res) {
-        const formattedData = res.data.resultData.map((item, index) => ({
-          reviewId: item.reviewId,
-          id: index + 1, // 행 번호 추가 (1부터 시작)
-          userName: item.name,
-          contents: item.contents, // 예시 내용
-          createdAt: item.createdAt,
-          score: item.score,
-          comment: item.comment.contents,
-          replyStatus: item.comment,
-        }));
+        const formattedData = res.data.resultData;
         // console.log(formattedData);
+        // console.log(reviewIds);
         const oneData = formattedData.find(item => item.reviewId === reviewIds);
+        // console.log(oneData);
         setReviewDatas(oneData);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(reviewDatas);
   const initData = {
     reviewId: reviewIds,
-    contents: reviewDatas.comment,
+    contents: reviewDatas.comment === "" ? "" : reviewDatas.comment,
   };
   // console.log(reviewDatas);
   const isComments = reviewDatas.comment === "" ? false : true;
@@ -78,6 +73,7 @@ const ReviewView = () => {
   };
   useEffect(() => {
     const busiId = Number(localStorage.getItem("businessId"));
+
     reviewData(busiId);
   });
   return (
