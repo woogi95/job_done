@@ -17,6 +17,7 @@ export const categoriesStateS = atom({
 export const detailTypesStateS = atom({
   key: "detailTypesStateS",
   default: [],
+
 });
 
 // 카테고리 찍을 때 나오는 숫자

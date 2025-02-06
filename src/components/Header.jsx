@@ -189,7 +189,10 @@ function Header() {
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
+
               {getBusinessId == 0 ? (
+
+              
                 <Link
                   to="/business"
                   className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"

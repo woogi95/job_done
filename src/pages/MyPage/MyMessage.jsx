@@ -2,6 +2,23 @@ import axios from "axios";
 import { FiSend } from "react-icons/fi";
 import MyPageLayout from "../../components/MyPageLayout";
 import { useState, useEffect } from "react";
+import { loginApi } from "../../apis/login";
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+
+const socket = new SockJS("http://112.222.157.156:5224/chat");
+const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 전달
+
+export const runSocket = () => {
+  stompClient.reconnectDelay = 5000; // 자동 재연결 설정
+  stompClient.onConnect = frame => {
+    console.log("Connected: " + frame);
+  };
+  stompClient.onError = frame => {
+    console.log("Connected: " + frame);
+  };
+  stompClient.activate();
+};
 
 function MyMessage() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -11,17 +28,13 @@ function MyMessage() {
   const [message, setMessage] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const IMAGE_BASE_URL = "http://112.222.157.156:5224/images/";
+  const IMAGE_BASE_URL = "http://112.222.157.156:5224";
 
   // 방 리스트
   const chatRoomList = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/api/room", {
-        params: {
-          userId: localStorage.getItem("userId"),
-        },
-      });
+      const res = await loginApi.get("/api/room");
       console.log("API 리스폰스:", res.data);
       if (res.data && Array.isArray(res.data.resultData)) {
         setChatRooms(res.data.resultData);
@@ -40,7 +53,7 @@ function MyMessage() {
   // 채팅 조회
   const fetchChatMessages = async roomId => {
     try {
-      const res = await axios.get("/api/chat", {
+      const res = await loginApi.get("/api/chat", {
         params: { roomId },
       });
       console.log("채팅 메시지:", res.data);

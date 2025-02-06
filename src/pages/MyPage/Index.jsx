@@ -70,7 +70,6 @@ function MyPage() {
         ? `http://112.222.157.156:5224${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
-      // localStorage.setItem("userProfileImg", profileImgUrl);
       console.log("프로필 이미지 경로:", userData.pic);
     } catch (error) {
       console.error("API 에러:", error);

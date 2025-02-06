@@ -1,35 +1,37 @@
-import React from "react";
-import MyPageLayout from "../../components/MyPageLayout";
-import { UsageTest } from "../../components/ServiceIcon";
+import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import { loginApi } from "../../apis/login";
+import MyPageLayout from "../../components/MyPageLayout";
 
 function Wishlist() {
+  const ImgURL = "http://112.222.157.156:5224";
+  const [wishlist, setWishlist] = useState([]);
   const getWishlist = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      const res = await axios.get("/api/like", {
-        params: { userId: userId },
-      });
-      console.log(res);
+      const res = await loginApi.get("/api/like");
+      setWishlist(res.data.resultData);
     } catch (error) {
       console.error(error);
     }
   };
+  useEffect(() => {
+    getWishlist();
+  }, []);
   return (
     <MyPageLayout>
       <div className="flex justify-center items-center pb-[50px]">
         <span className="text-[24px] font-normal">찜목록</span>
       </div>
       <div className="flex flex-wrap gap-[30px]">
-        {UsageTest.map(item => (
+        {wishlist.map(item => (
           <a
             href="/"
             key={item.businessId}
             className="flex flex-col rounded-lg w-[calc(33.333%-20px)] gap-[10px] relative group overflow-hidden"
           >
-            <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
+            <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-100 group-hover:scale-[0.97]">
               <img
-                src={item.pic}
+                src={`${ImgURL}${item.pic}`}
                 alt="사진"
                 className="w-full h-full object-cover"
               />
