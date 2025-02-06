@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import Cookies from "js-cookie";
 import {
   categoriesState,
   detailTypesState,
@@ -9,6 +10,7 @@ import {
   selectedDetailTypeState,
 } from "../atoms/categoryAtom";
 import { loginUser } from "../atoms/loginAtom";
+import { loginApi } from "../apis/login";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -26,6 +28,27 @@ function Header() {
   const [profileImg, setProfileImg] = useState(
     "/images/order/default_profile.jpg",
   );
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const getUserInfo = async () => {
+    try {
+      const res = await loginApi.get(`/api/user`);
+
+      const userData = res.data.resultData;
+      setUserName(userData.name);
+      setUserEmail(userData.email);
+      setPhoneNumber(userData.phone);
+      const profileImgUrl = userData.pic
+        ? `http://112.222.157.156:5224${userData.pic}`
+        : "/images/order/default_profile.jpg";
+      setProfileImg(profileImgUrl);
+      console.log("프로필 이미지 경로:", userData.pic);
+    } catch (error) {
+      console.error("API 에러:", error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -53,7 +76,7 @@ function Header() {
   // 로그아웃 관련
   const handleLogout = () => {
     localStorage.clear();
-
+    Cookies.remove("accessToken");
     document.cookie.split(";").forEach(cookie => {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
@@ -80,6 +103,30 @@ function Header() {
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
   };
 
+  const getBusinessId = Number(localStorage.getItem("businessId"));
+  console.log("비즈니스 여부? : ", getBusinessId);
+
+  useEffect(() => {
+    const getCookie = name => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    };
+
+    const storedToken =
+      getCookie("accessToken") || localStorage.getItem("accessToken");
+
+    if (storedToken) {
+      setUserInfo(prev => ({
+        ...prev,
+        accessToken: storedToken,
+        isLogind: true,
+      }));
+
+      getUserInfo();
+    }
+  }, []);
+
   useEffect(() => {
     console.log("선택된 카테고리:", selectedCategory);
     setSelectedCategory(selectedCategory);
@@ -89,26 +136,6 @@ function Header() {
     console.log("선택된 디테일 타입:", selectedDetailType);
     setSelectedDetailType(selectedDetailType);
   }, [selectedDetailType]);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("accessToken");
-    const storedUserId = localStorage.getItem("userId");
-    const storedProfileImg = localStorage.getItem("userPic");
-
-    if (storedToken) {
-      setUserInfo(prev => ({
-        ...prev,
-        accessToken: storedToken,
-        isLogind: true,
-        userId: storedUserId,
-      }));
-
-      // userPic이 있으면 프로필 이미지 업데이트
-      if (storedProfileImg) {
-        setProfileImg(`http://112.222.157.156:5224${storedProfileImg}`);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     fetchCategories();
@@ -162,12 +189,22 @@ function Header() {
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
-              <Link
-                to="/business"
-                className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"
-              >
-                업체 등록
-              </Link>
+              {getBusinessId == 0 ? (
+                <Link
+                  to="/business"
+                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"
+                >
+                  업체 등록
+                </Link>
+              ) : (
+                <Link
+                  to="/expert"
+                  className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"
+                >
+                  비즈니스
+                </Link>
+              )}
+
               <Link
                 to="/mypage/reservation"
                 className="flex items-center justify-center"
