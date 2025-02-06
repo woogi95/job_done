@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 // styled
 import { SideMenuDiv } from "./sideMenu";
 // icon
 import { IoIosArrowDown } from "react-icons/io";
+import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { statusAtom } from "../../atoms/statusAtom";
 
 const ExpertSideMenu = () => {
   const [isSubMenuOpen, setSubMenuOpen] = useState(false);
   const [isActiveMenu, setIsActiveMenu] = useState(false);
+  const navigate = useNavigate();
+  const setStatus = useSetRecoilState(statusAtom);
 
   const toggleSubMenu = () => {
     setSubMenuOpen(prev => !prev);
@@ -20,6 +25,15 @@ const ExpertSideMenu = () => {
       setIsActiveMenu(false);
     }
   }, [location.pathname]);
+
+  // -----
+  // 메뉴 클릭 시 상태 변경 및 URL 변경
+  const handleMenuClick = (newState, menuName) => {
+    setStatus(newState); // Recoil 상태에 상태 값 저장
+    navigate(`/expert/${menuName}`);
+    console.log(navigate);
+  };
+
   return (
     <SideMenuDiv>
       <ul>
@@ -64,7 +78,8 @@ const ExpertSideMenu = () => {
         </li>
         <li>
           <NavLink
-            to={"/expert/reservation-management"}
+            to={`/expert/reservation-management`}
+            onClick={() => handleMenuClick(0, "reservation-management")}
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             예약관리
@@ -73,6 +88,7 @@ const ExpertSideMenu = () => {
         <li>
           <NavLink
             to={"/expert/quote-management"}
+            onClick={() => handleMenuClick(1, "quote-management")}
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             견적관리
@@ -81,6 +97,7 @@ const ExpertSideMenu = () => {
         <li>
           <NavLink
             to={"/expert/payment-management"}
+            onClick={() => handleMenuClick(2, "payment-management")}
             className={({ isActive }) => (isActive ? "active" : "")}
           >
             결제관리

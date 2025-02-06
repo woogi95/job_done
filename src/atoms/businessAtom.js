@@ -31,7 +31,7 @@ export const businessDetailState = atom({
       logo: null,
       detailTypeId: 0,
       detailTypeName: null,
-      businessId: 0,
+      businessId: 2,
       businessName: null,
       title: null,
       scoreAvg: 0,

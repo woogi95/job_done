@@ -15,20 +15,25 @@ import { PortfolioListItem, PortfolioSwiperDiv } from "./serviceDetail";
 // import required modules
 import { Navigation } from "swiper/modules";
 import { useParams } from "react-router-dom";
+import { businessDetailState } from "../../atoms/businessAtom";
+import axios from "axios";
 
-const ContPortfolioList = ({ setIsPfDetailPop }) => {
+const ContPortfolioList = ({ handleImageClick }) => {
   const { id } = useParams();
-  const categoryId = useRecoilValue(selectedCategoryState);
-  const detailTypeId = useRecoilValue(selectedDetailTypeState);
+  // const { categoryId } = useRecoilValue(selectedCategoryState);
+  // const { detailTypeId } = useRecoilValue(selectedDetailTypeState);
+  // const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
+  const businessDetail = useRecoilValue(businessDetailState);
+  const businessId = businessDetail.businessId;
+
   const [portfolioListState, setPortfolioListState] =
     useRecoilState(PortfolioListState);
-  const portfolioList = useRecoilValue(PortfolioListState);
-  const getPortFolioList = async (categoryId, detailTypeId, businessId) => {
+  const portfolioList = useRecoilState(PortfolioListState);
+  const getPortFolioList = async businessId => {
+    console.log("이거", businessId);
     try {
       // /api/portfolio?categoryId=1&detailTypeId=1&businessId=1
-      const res = await axios.get(
-        `/api/portfolio?categoryId=${categoryId}&detailTypeId=${detailTypeId}&businessId=${businessId}`,
-      );
+      const res = await axios.get(`/api/portfolio?businessId=${businessId}`);
       console.log(res.data.resultData);
       setPortfolioListState(res.data.resultData);
     } catch (error) {
@@ -36,10 +41,16 @@ const ContPortfolioList = ({ setIsPfDetailPop }) => {
     }
   };
 
+  // const handleImageClick = portfolioId => {
+  //   setSelectedPortfolioId(portfolioId);
+  //   setIsPfDetailPop(true);
+  // };
+
   useEffect(() => {
-    getPortFolioList(categoryId, detailTypeId, id);
-  }, [categoryId, detailTypeId, id]);
-  console.log("portfolioList", portfolioList);
+    getPortFolioList(businessId);
+    console.log("portfolioList", portfolioList);
+  }, [businessId]);
+
   // swiper
   const swiperRef = useRef(null);
   const handleNext = () => {
@@ -63,83 +74,19 @@ const ContPortfolioList = ({ setIsPfDetailPop }) => {
         modules={[Navigation]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <PortfolioListItem>
-            <div
-              className="imgbox"
-              onClick={() => {
-                setIsPfDetailPop(true);
-              }}
-            >
-              <img src={portfolioList.isThumnail} alt="포트폴리오" />
-            </div>
-            <h3>{portfolioList.title}</h3>
-          </PortfolioListItem>
-        </SwiperSlide>
-        <SwiperSlide>
-          <PortfolioListItem>
-            <div
-              className="imgbox"
-              onClick={() => {
-                setIsPfDetailPop(true);
-              }}
-            >
-              <img
-                src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
-                alt=""
-              />
-            </div>
-            <h3>포트폴리오 타이틀2</h3>
-          </PortfolioListItem>
-        </SwiperSlide>
-        <SwiperSlide>
-          <PortfolioListItem>
-            <div
-              className="imgbox"
-              onClick={() => {
-                setIsPfDetailPop(true);
-              }}
-            >
-              <img
-                src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
-                alt=""
-              />
-            </div>
-            <h3>포트폴리오 타이틀3</h3>
-          </PortfolioListItem>
-        </SwiperSlide>
-        <SwiperSlide>
-          <PortfolioListItem>
-            <div
-              className="imgbox"
-              onClick={() => {
-                setIsPfDetailPop(true);
-              }}
-            >
-              <img
-                src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
-                alt=""
-              />
-            </div>
-            <h3>포트폴리오 타이틀4</h3>
-          </PortfolioListItem>
-        </SwiperSlide>
-        <SwiperSlide>
-          <PortfolioListItem>
-            <div
-              className="imgbox"
-              onClick={() => {
-                setIsPfDetailPop(true);
-              }}
-            >
-              <img
-                src="https://static.cdn.soomgo.com/upload/portfolio/697dffc1-fc73-4761-8e3d-c4d3c2fc5513.png?h=320&w=320&webp=1"
-                alt=""
-              />
-            </div>
-            <h3>포트폴리오 타이틀5</h3>
-          </PortfolioListItem>
-        </SwiperSlide>
+        {portfolioListState.map(portfolio => (
+          <SwiperSlide key={portfolio.portfolioId}>
+            <PortfolioListItem>
+              <div
+                className="imgbox"
+                onClick={() => handleImageClick(portfolio.portfolioId)}
+              >
+                <img src={portfolio.isThumnail} alt={portfolio.title} />
+              </div>
+              <h3>{portfolio.title}</h3>
+            </PortfolioListItem>
+          </SwiperSlide>
+        ))}
       </Swiper>
       <div className="btn-area">
         <button className="prev" onClick={handlePrev}>

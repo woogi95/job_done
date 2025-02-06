@@ -6,8 +6,11 @@ import { businessDetailState } from "../../atoms/businessAtom";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import axios from "axios";
 
+// parser
+import parse from "html-react-parser";
+
 const ContReview = () => {
-  const [rating, setRating] = useState(4.2); // 별점
+  const [rating, setRating] = useState(0); // 별점
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
   const businessDetail = useRecoilValue(businessDetailState);
 
@@ -26,10 +29,11 @@ const ContReview = () => {
       console.log(error);
     }
   };
+  console.log("dighdkfoasdas", reviewList[0].averageScore);
   // 별점
   const renderStars = score => {
     const fullStars = Math.floor(score); // 채워진 별 개수
-    const halfStar = rating % 1 >= 0.5; // 반쪽 별 여부
+    const halfStar = score % 1 >= 0.5; // 반쪽 별 여부
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // 비어 있는 별 개수
 
     return (
@@ -55,8 +59,10 @@ const ContReview = () => {
       <StarTotalDiv>
         <h4>{businessDetail.businessName}</h4>
         <div className="star-container">
-          <p className="star">{renderStars()}</p>
-          <span className="star-grade"> {rating.toFixed(1)}</span>
+          <p className="star"> {renderStars(reviewList[0].averageScore)}</p>
+          <span className="star-grade">
+            {reviewList.length > 0 && reviewList[0].averageScore.toFixed(1)}
+          </span>
         </div>
       </StarTotalDiv>
       <ReviewDiv>
@@ -104,11 +110,35 @@ const ContReview = () => {
               {/* 사장님댓글 */}
               <div className="reply">
                 <div className="info">
-                  <h4>{businessDetail.businessName}</h4>
-                  <b>{reviewList.createdAt}</b>
+                  <div className="logo-container">
+                    {/* 로고 */}
+                    {item.comment && item.comment.logo ? (
+                      <img
+                        src={item.comment.logo}
+                        alt="logo"
+                        className="logo"
+                      />
+                    ) : (
+                      <div className="logo-placeholder">👤</div>
+                    )}
+                  </div>
+                  {/* 업체이름 , 작성일 */}
+                  {item.comment && item.comment.name ? (
+                    <h4>{item.comment.name}</h4>
+                  ) : (
+                    <h4>사장님</h4>
+                  )}
+                  <b>
+                    {item.comment
+                      ? item.comment.createdAt.slice(0, 10)
+                      : "없음"}
+                  </b>
                 </div>
                 <div className="comment">
-                  <span>{reviewList.writerUserId}</span>
+                  {/* 업체 댓글 내용 */}
+                  <span>
+                    {item.comment ? parse(item.comment.contents) : <></>}
+                  </span>
                 </div>
               </div>
             </div>
