@@ -29,7 +29,7 @@ export const businessDetailState = atom({
   default: [
     {
       logo: null,
-      detailTypeId: 0,
+      detailTypeId: 2,
       detailTypeName: null,
       businessId: 0,
       businessName: null,

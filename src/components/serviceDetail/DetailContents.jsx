@@ -32,21 +32,21 @@ const DetailContents = () => {
 
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
-
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
   const businessDetail = useRecoilValue(businessDetailState);
   const loginUserState = useRecoilValue(loginUser);
   const userId = loginUserState.userId;
   const businessId = businessDetail.businessId;
-  // console.log("`~~~~~~~~~~~~userId", userId);
-  console.log("`~~~~~~~~~~~~businessId", businessDetail.businessId);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const ToggleLike = async e => {
     e.preventDefault();
+
+    const newLikeStatus = !likeStatus[businessId]?.isLiked; // 현재 businessId에 대한 찜 상태 반전
     setLikeStatus({
       ...likeStatus,
-      isLiked: !likeStatus.isLiked,
-      businessId,
+      [businessId]: { isLiked: newLikeStatus },
     });
 
     try {
@@ -67,22 +67,7 @@ const DetailContents = () => {
   };
 
   // 상세설명 사진들
-  const [detailPicList, setDetailPicList] = useState([
-    // {
-    //   businessId: 0,
-    //   pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
-    // }
-  ]);
-
-  useEffect(() => {
-    if (likeStatus.businessId) {
-      setLikeStatus({
-        ...likeStatus,
-        isLiked: likeStatus.isLiked,
-        businessId,
-      });
-    }
-  }, [businessId, setLikeStatus]);
+  const [detailPicList, setDetailPicList] = useState([]);
 
   const getDetailPagePic = async businessId => {
     try {
@@ -122,37 +107,24 @@ const DetailContents = () => {
   const handleLinkClick = id => {
     setActiveLink(id);
   };
+  const handleImageClick = portfolioId => {
+    console.log("portfolioId", portfolioId);
+    setSelectedPortfolioId(portfolioId);
+    setIsPfDetailPop(true);
+  };
 
-  // 문의하기 기능 (채팅방)
-  const openWindow = async () => {
-    if (!userId) {
-      alert("로그인이 필요한 서비스입니다.");
-      return;
-    }
+  // 문의하기
+  const openWindow = () => {
+    const width = 410;
+    const height = 570;
+    const left = (screen.width - width) / 2;
+    const top = (screen.height - height) / 2;
 
-    try {
-      const response = await axios.post("/api/room", {
-        serviceId: businessDetail.serviceId,
-        userId: userId,
-        businessId: businessId,
-      });
-
-      if (response.status === 200) {
-        const width = 410;
-        const height = 570;
-        const left = (screen.width - width) / 2;
-        const top = (screen.height - height) / 2;
-
-        window.open(
-          "/service/contactus",
-          "_blank",
-          `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
-        );
-      }
-    } catch (error) {
-      console.error("문의하기 요청 실패:", error.response?.data || error);
-      alert("문의하기 요청에 실패했습니다. 다시 시도해주세요.");
-    }
+    window.open(
+      "/service/contactus",
+      "_blank",
+      `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
+    );
   };
   return (
     <DetailLayout>
@@ -217,7 +189,7 @@ const DetailContents = () => {
           </div>
           <div className="box" id="portfolio">
             <h2>포트폴리오</h2>
-            <ContPortfolioList setIsPfDetailPop={setIsPfDetailPop} />
+            <ContPortfolioList handleImageClick={handleImageClick} />
           </div>
           <div className="box" id="reviews">
             <h2>리뷰</h2>
@@ -241,7 +213,7 @@ const DetailContents = () => {
                 ToggleLike(e);
               }}
             >
-              {likeStatus.isLiked ? (
+              {likeStatus[businessId]?.isLiked ? (
                 <BsHeartFill />
               ) : (
                 <BsHeart style={{ color: "gray" }} />
@@ -277,6 +249,7 @@ const DetailContents = () => {
         </div>
       </SummaryDiv>
       <PfPopup
+        portfolioId={selectedPortfolioId}
         setIsPfDetailPop={setIsPfDetailPop}
         isPfDetailPop={isPfDetailPop}
       />
