@@ -11,46 +11,54 @@ import { EventBanner, serviceIcons } from "../components/ServiceIcon";
 const Index = () => {
   const [categories, setCategories] = useState({});
   const [companies, setCompanies] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState(1);
+  const regionNames = {
+    1: "대구",
+    2: "구미",
+    3: "경주",
+    4: "포항",
+    5: "부산",
+  };
+  const [regions] = useState(
+    Array.from({ length: 5 }, (_, i) => ({
+      regionId: i + 1,
+      region: regionNames[i + 1],
+    })),
+  );
   const BASE_URL = "http://112.222.157.156:5224";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 인기 글 데이터 가져오기
-        const categoryIds = [1, 2, 3, 4];
+        // 선택된 지역의 데이터만 가져오기
+        const categoryIds = [1, 2, 3];
         const categoryRequests = categoryIds.map(id =>
           axios.get("/api/business", {
             params: {
               categoryId: id,
+              regionId: selectedRegion,
             },
           }),
         );
 
-        // 추천 글 데이터 가져오기 (categoryId 1로 임시 설정)
         const recommendedRequest = axios.get("/api/business", {
           params: {
             categoryId: 1,
+            regionId: selectedRegion,
           },
         });
 
-        // 모든 요청을 병렬로 처리
         const responses = await Promise.all([
           ...categoryRequests,
           recommendedRequest,
         ]);
-        console.log("모든 응답:", responses);
 
-        // 카테고리별 데이터 정리
         const companiesData = {};
         categoryIds.forEach((id, index) => {
           companiesData[id] = responses[index].data.resultData;
         });
 
-        // 마지막 응답을 추천 글로 사용
         const recommendedData = responses[responses.length - 1].data.resultData;
-
-        console.log("카테고리별 데이터:", companiesData);
-        console.log("추천 글 데이터:", recommendedData);
 
         setCategories(companiesData);
         setCompanies(recommendedData);
@@ -62,17 +70,28 @@ const Index = () => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedRegion]); // 변경될 때마다 데이터 다시 부르기
 
-  // 상태 변경 확인을 위한 useEffect
   useEffect(() => {
     console.log("추천 글 상태 업데이트:", companies);
   }, [companies]);
   return (
-    <div className="pt-[80px]">
+    <div className="pt-[80px] min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
+      {/* 배경 패턴 */}
+      <div
+        className="absolute inset-0 opacity-5 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(#000 0.5px, transparent 0.5px),
+            linear-gradient(to right, #000 0.5px, transparent 0.5px)
+          `,
+          backgroundSize: "50px 50px",
+        }}
+      ></div>
+
       <div>
-        {/* 이벤트 배너 */}
-        <div className="w-full overflow-hidden">
+        {/* 이벤트 배너 섹션 */}
+        <div className="w-full overflow-hidden shadow-lg">
           <Swiper
             modules={[Pagination, Autoplay]}
             pagination={{
@@ -83,44 +102,54 @@ const Index = () => {
               disableOnInteraction: false,
             }}
             loop={true}
-            className="h-[200px]"
+            className="h-[250px]"
           >
             {EventBanner.map(item => (
               <SwiperSlide key={item.id}>
                 <Link
                   to="/"
-                  className="flex h-[200px] max-w-[1280px] m-auto relative"
+                  className="flex h-[250px] max-w-[1280px] m-auto relative group"
                 >
                   <img
                     src={item.image}
                     alt="이벤트배너"
                     className="w-full object-cover"
                   />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis">
-                    {item.title}
-                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/50">
+                    <span className="absolute left-[10%] top-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
+                      {item.title}
+                    </span>
+                  </div>
                 </Link>
               </SwiperSlide>
             ))}
           </Swiper>
         </div>
-        {/* 서비스 아이콘 */}
-        <div>
-          <div className="flex justify-center items-center pt-[100px] pb-[100px]">
-            <div className="flex gap-6">
-              {serviceIcons.map(item => (
+
+        {/* 지역 아이콘 섹션 */}
+        <div className="bg-white/50 backdrop-blur-sm">
+          <div className="flex justify-center items-center py-[80px]">
+            <div className="flex gap-8">
+              {regions.map(region => (
                 <a
-                  key={item.id}
-                  href={item.link}
-                  className="h-[100px] w-[100px] rounded-lg relative group overflow-hidden"
+                  key={region.regionId}
+                  onClick={e => {
+                    e.preventDefault();
+                    setSelectedRegion(region.regionId);
+                  }}
+                  href={`/?region=${region.regionId}`}
+                  className={`h-[120px] w-[120px] rounded-2xl relative group overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-2
+                    ${
+                      selectedRegion === region.regionId
+                        ? "bg-gradient-to-br from-blue-500 to-blue-700 shadow-lg shadow-blue-500/30"
+                        : "bg-white shadow-lg hover:shadow-xl"
+                    }`}
                 >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="object-cover rounded-lg transition-transform duration-200 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/25 rounded-lg text-white text-[20px]">
-                    {item.title}
+                  <div
+                    className={`absolute inset-0 flex items-center justify-center rounded-2xl text-[22px] font-bold transition-colors
+                    ${selectedRegion === region.regionId ? "text-white" : "text-gray-700"}`}
+                  >
+                    {region.region}
                   </div>
                 </a>
               ))}
@@ -128,112 +157,130 @@ const Index = () => {
           </div>
         </div>
       </div>
-      <div>
+
+      {/* 컨텐츠 섹션 */}
+      <div className="bg-white/30 backdrop-blur-sm py-10">
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          <span className="flex pb-[10px]">인기 글</span>
-          <div className="flex gap-4">
+          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+            인기 글
+          </span>
+          <div className="flex gap-[15px]">
             {categories[1] && categories[1].length > 0 ? (
               categories[1].slice(0, 4).map(item => (
                 <Link
                   to="/"
                   key={item.categoryId}
-                  className="flex flex-col rounded-lg w-1/3 gap-[10px] relative group overflow-hidden"
+                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1"
                 >
-                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
+                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
                     <img
                       src={`${BASE_URL}${item.pic}`}
                       alt="사진"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <span className="block w-full overflow-hidden">
+                  <span className="block w-full overflow-hidden font-medium text-lg">
                     {item.title}
                   </span>
-                  <span className="text-[18px]">
-                    {item.price.toLocaleString()}~
+                  <span className="text-[20px] font-bold text-blue-600">
+                    {item.price.toLocaleString()}원~
                   </span>
-                  <div className="flex justify-between text-[14px]">
-                    <span>{item.businessName}</span>
-                    <span className="flex justify-center items-center gap-[3px]">
-                      <FaStar className="text-[#FF9D00] translate-y-[-2px]" />
-                      {item.scoreAvg}
+                  <div className="flex justify-between text-[15px] items-center">
+                    <span className="text-gray-600">{item.businessName}</span>
+                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                      <FaStar className="text-[#FF9D00]" />
+                      <span className="font-medium">{item.scoreAvg}</span>
                       <span className="text-gray-400">{`(${item.serviceCount})`}</span>
                     </span>
                   </div>
                 </Link>
               ))
             ) : (
-              <div>데이터를 불러오는 중입니다...</div>
+              <div className="w-full text-center py-10 text-gray-500">
+                데이터를 불러오는 중입니다...
+              </div>
             )}
           </div>
-          <div className="max-w-[1280px] m-auto pt-[100px] pb-[100px]">
+
+          {/* 중간 배너 */}
+          <div className="max-w-[1280px] m-auto py-[80px]">
             <a
               href="/"
-              className="flex h-[200px] max-w-[1280px] m-auto relative"
+              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
                 src="./images/event/event_banner_1.png"
                 alt="이벤트배너"
-                className="w-full object-cover"
+                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
               />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis">
-                청소하기 힘드신가요?!
-              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
+                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
+                  청소하기 힘드신가요?!
+                </span>
+              </div>
             </a>
           </div>
-        </div>
-        <div className="max-w-[1280px] m-auto">
-          {/* 추천 글 */}
-          <span className="flex pb-[10px]">추천 글</span>
-          <div className="flex gap-4">
+
+          {/* 최신 글 */}
+          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+            최신 글
+          </span>
+          <div className="flex gap-[15px]">
             {companies && companies.length > 0 ? (
               companies.slice(0, 4).map(item => (
                 <Link
                   to="/"
                   key={item.businessId}
-                  className="flex flex-col rounded-lg w-1/3 gap-[10px] relative group overflow-hidden"
+                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
                 >
-                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-200 group-hover:scale-[0.97]">
+                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
                     <img
                       src={`${BASE_URL}${item.pic}`}
                       alt="사진"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
-                  <span className="block w-full overflow-hidden">
+                  <span className="block w-full overflow-hidden font-medium text-lg">
                     {item.title}
                   </span>
-                  <span className="text-[18px]">
-                    {item.price.toLocaleString()}~
+                  <span className="text-[20px] font-bold text-blue-600">
+                    {item.price.toLocaleString()}원~
                   </span>
-                  <div className="flex justify-between text-[14px]">
-                    <span>{item.businessName}</span>
-                    <span className="flex justify-center items-center gap-[3px]">
-                      <FaStar className="text-[#FF9D00] translate-y-[-2px]" />
-                      {item.scoreAvg}
+                  <div className="flex justify-between text-[15px] items-center">
+                    <span className="text-gray-600">{item.businessName}</span>
+                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                      <FaStar className="text-[#FF9D00]" />
+                      <span className="font-medium">{item.scoreAvg}</span>
                       <span className="text-gray-400">{`(${item.serviceCount})`}</span>
                     </span>
                   </div>
                 </Link>
               ))
             ) : (
-              <div>데이터를 불러오는 중입니다...</div>
+              <div className="w-full text-center py-10 text-gray-500">
+                데이터를 불러오는 중입니다...
+              </div>
             )}
           </div>
-          <div className="max-w-[1280px] m-auto pt-[100px] pb-[50px]">
+          <div className="max-w-[1280px] m-auto py-[80px]">
             <a
               href="/"
-              className="flex h-[200px] max-w-[1280px] m-auto relative"
+              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
                 src="./images/event/event_banner_1.png"
                 alt="이벤트배너"
-                className="w-full object-cover"
+                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
               />
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis">
-                청소하기 정말 힘들다!
-              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
+                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
+                  잡던과 함께!{" "}
+                  <p className="text-5xl py-[10px]">
+                    당신의 비즈니스를 성장시키세요!
+                  </p>
+                </span>
+              </div>
             </a>
           </div>
         </div>

@@ -8,7 +8,9 @@ function ReviewPage() {
     try {
       const res = await loginApi.get("/api/review", {
         params: {
-          businessId: 2,
+          state: 0,
+          page: 1,
+          size: 15,
         },
       });
       setReview(res.data);
@@ -19,8 +21,12 @@ function ReviewPage() {
   };
 
   useEffect(() => {
-    console.log("리뷰 목록 조회 성공:", review);
+    reviewList();
   }, []);
+
+  useEffect(() => {
+    console.log("현재 리뷰 데이터:", review);
+  }, [review]);
 
   return (
     <MyPageLayout>
