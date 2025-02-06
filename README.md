@@ -33,5 +33,3 @@
 - hotfix : 버그를 수정용
 
 ## 폴더구조
-
-GGWPfdfsdfsd
