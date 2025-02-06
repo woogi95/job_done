@@ -1,18 +1,13 @@
 import { FaStar } from "react-icons/fa";
 import { BsHeartFill, BsHeart } from "react-icons/bs";
 import { ListItemDiv } from "./service";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { businessDetailState } from "../../atoms/businessAtom";
+import { loginUser } from "../../atoms/loginAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { likeStatusState } from "../../atoms/like";
-
-
-const ServiceListItem = ({ business, onClick }) => {
-  const [likeStatus] = useRecoilState(likeStatusState);
-  const currentLikeStatus = likeStatus[business.businessId] || {
-    isLiked: false,
-
 import axios from "axios";
-import { loginApi } from "../../apis/login";
 const ServiceListItem = ({ business }) => {
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   const businessDetail = useRecoilValue(businessDetailState);
@@ -31,7 +26,8 @@ const ServiceListItem = ({ business }) => {
 
     try {
       // POST 요청 보내기
-      const response = await loginApi.post("/api/like", {
+      const response = await axios.post("/api/like", {
+        userId,
         businessId,
       });
 
@@ -43,23 +39,30 @@ const ServiceListItem = ({ business }) => {
     } catch (error) {
       console.error(error);
     }
-
   };
+  useEffect(() => {
+    if (likeStatus.businessId) {
+      setLikeStatus({
+        ...likeStatus,
+        isLiked: likeStatus.isLiked,
+        businessId,
+      });
+    }
+  }, [businessId, setLikeStatus]);
   console.log("!! business", business);
   return (
     <ListItemDiv>
       {/* /service/detail?serviceId=1 */}
       <Link to={`/service/${business.businessId}`}>
         <div className="thum">
-          <img src={business.pic} alt={business.businessName} />
+          <img src={business.pic} alt="" />
           <div
             className="like"
             onClick={e => {
-              e.preventDefault();
-              onClick();
+              ToggleLike(e);
             }}
           >
-            {currentLikeStatus.isLiked ? (
+            {likeStatus.isLiked ? (
               <BsHeartFill />
             ) : (
               <BsHeart style={{ color: "gray" }} />

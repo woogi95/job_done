@@ -5,12 +5,10 @@ import {
   numDubCheck,
 } from "../../../atoms/businessAtom";
 import { useRecoilState } from "recoil";
-import dayjs from "dayjs";
+
 import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
 import { useNavigate } from "react-router-dom";
-import { loginApi } from "../../../apis/login";
-import axios from "axios";
 function BusinessNumber() {
   const [form] = Form.useForm();
   const [result, setResult] = useState(null); // 결과를 저장할 상태
@@ -26,8 +24,6 @@ function BusinessNumber() {
     setNumMOdal(false);
     navigate("/");
   };
-  console.log(busiInfo);
-
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
 
@@ -64,19 +60,17 @@ function BusinessNumber() {
   };
   // 업체 최종 등록
   const onSubmit = async data => {
-    console.log(busiInfo);
     try {
       const formData = new FormData();
 
       const requestData = {
-        businessNum: data.businessNum,
-        businessName: busiInfo.businessName,
-        address: busiInfo.address,
-        detailTypeId: busiInfo.detailTypeId,
-        busiCreatedAt: dayjs(busiInfo.busiCreatedAt).format("YYYY/MM/DD"),
-        tel: busiInfo.tel,
-        tel2: "",
-        tel3: "",
+        userId: data.userId,
+        businessNum: "",
+        businessName: data.businessName,
+        address: data.address,
+        serviceTypeId: data.serviceTypeId,
+        busiCreatedAt: data.busiCreatedAt,
+        tel: data.tel,
       };
 
       // JSON 데이터를 FormData에 추가
@@ -89,17 +83,15 @@ function BusinessNumber() {
 
       // 파일 추가 (data.pic이 있는 경우)
       if (data.paper) {
-        formData.append("paper", data.pic);
+        formData.append("pic", data.pic);
       }
 
-      console.log(requestData);
       // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
       const res = await axios.post("/api/business/sign-up", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
       if (res) {
         setNumMOdal(true);
       }
@@ -184,7 +176,7 @@ function BusinessNumber() {
           </div>
         )}
         <Form.Item className="clickbuttons">
-          <button type="button" className="cancle" onClick={() => goCancle()}>
+          <button className="cancle" onClick={() => goCancle()}>
             취소
           </button>
           <Button htmlType="submit" className="nextButton">
@@ -206,7 +198,7 @@ function BusinessNumber() {
               <h1>등록이 완료되었습니다.</h1>
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <button onClick={e => sucess(e)}>확인</button>
+              <button onClick={() => sucess}>확인</button>
             </div>
           </div>
         </div>

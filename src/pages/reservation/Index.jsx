@@ -18,6 +18,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ko } from "date-fns/locale";
 import moment from "moment";
+// console.log(moment(startDate).format("YYYY-MM-DD"));
 // yup
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -27,12 +28,6 @@ const schema = yup.object({
     .string()
     .email("올바른 이메일 형식이 아닙니다.")
     .required("이메일은 필수입니다."),
-  address: yup.string().required("주소는 필수입니다."),
-  time: yup.string().required("예약 시간을 선택해주세요."),
-  pyeong: yup
-    .number()
-    .required("평수를 입력해주세요.")
-    .positive("0보다 큰 값이어야 합니다."),
 });
 // icon
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
@@ -43,7 +38,6 @@ import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 // 다음포스트
 // import { useDaumPostcodePopup } from "react-daum-postcode";
-
 function Index() {
   const initData = {
     userId: 0,
@@ -64,16 +58,18 @@ function Index() {
   };
   const [formData, setFormData] = useState(initData);
   const [startDate, setStartDate] = useState(new Date());
+  // 주소
   const [address, setAddress] = useState("");
   const [detailAddress, setDetailAddress] = useState("");
-  const [optionList, setOptionList] = useState([]);
+  // 옵션 선택
   const [selectOptions, setSelectOptions] = useState({});
-  const [productPrice, setProductPrice] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
+  // console.log(selectOptions);
+  // 예약상태
   const [reservationSubmitted, setReservationSubmitted] = useState(false);
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
-
+  const [optionList, setOptionList] = useState([]);
+  // 옵션가져오기
   const getOptionList = async businessId => {
     try {
       const res = await axios.get(`/api/product?businessId=${businessId}`, {
@@ -81,90 +77,72 @@ function Index() {
       });
       console.log("여기", res.data.resultData.optionList);
       setOptionList(res.data.resultData.optionList);
-      setProductPrice(res.data.resultData.productPrice);
-      setTotalPrice(res.data.resultData.productPrice);
     } catch (error) {
       console.log(error);
     }
   };
-
   useEffect(() => {
     getOptionList(businessId);
-  }, [businessId]);
-
-  const handleOptionChange = (
-    productOptionId,
-    optionDetailId,
-    optionDetailPrice,
-  ) => {
-    // 선택된 옵션을 저장
-    const updatedSelectOptions = {
+  }, []);
+  console.log("optionList!!!", optionList);
+  // console.log("optionList[0]!!!", optionList[0]);
+  const onSubmit = data => {
+    console.log(data);
+    console.log("눌림");
+    e.preventDefault();
+    setReservationSubmitted(true);
+  };
+  // const options = [
+  //   {
+  //     productOptionId: "option1",
+  //     optionName: "방개수",
+  //     optionDetails: [
+  //       { optionDetailId: "op1-1", detailName: "방 1", detailPrice: 20000 },
+  //       { optionDetailId: "op1-2", detailName: "방 2", detailPrice: 40000 },
+  //       { optionDetailId: "op1-3", detailName: "방 3", detailPrice: 60000 },
+  //       { optionDetailId: "op1-4", detailName: "방 4", detailPrice: 80000 },
+  //     ],
+  //   },
+  //   {
+  //     productOptionId: "option2",
+  //     optionName: "엘리베이터 여부",
+  //     optionDetails: [
+  //       { optionDetailId: "op2-1", detailName: "있음", detailPrice: 0 },
+  //       { optionDetailId: "op2-2", detailName: "없음", detailPrice: 20000 },
+  //     ],
+  //   },
+  //   {
+  //     productOptionId: "option3",
+  //     optionName: "반려동물 여부",
+  //     optionDetails: [
+  //       { optionDetailId: "op3-1", detailName: "있음", detailPrice: 0 },
+  //       { optionDetailId: "op3-2", detailName: "없음", detailPrice: 20000 },
+  //     ],
+  //   },
+  // ];
+  const handleOptionChange = (productOptionId, optionDetailId) => {
+    setSelectOptions({
       ...selectOptions,
       [productOptionId]: optionDetailId,
-    };
-
-    setTotalPrice(updatedTotalPrice);
-    setSelectOptions(updatedSelectOptions); // selectOptions를 업데이트
-    console.log(selectOptions);
-
-    // 금액 계산 함수 호출
-    updateTotalPrice(updatedSelectOptions);
-  };
-
-  const handlePyeongChange = e => {
-    const pyeong = parseFloat(e.target.value) || 0;
-    setFormData({
-      ...formData,
-      pyeong: e.target.value,
     });
-    updateTotalPrice(selectOptions, pyeong);
   };
-
-  const updateTotalPrice = (
-    updatedSelectOptions = selectOptions,
-    pyeong = formData.pyeong,
-  ) => {
-    let updatedTotalPrice = productPrice;
-
-    // 평수 금액 계산 (평수에 따른 추가 금액)
-    const roomPrice = pyeong * 10000; // 평수 * 10,000원
-    updatedTotalPrice += roomPrice;
-
-    // 옵션 금액 추가
-    Object.keys(updatedSelectOptions).forEach(optionId => {
-      const selectedOption = optionList.find(
-        option => option.productOptionId === optionId,
-      );
-
-      // selectedOption과 optionDetailList가 존재하는지 체크
-      if (selectedOption && selectedOption.optionDetailList) {
-        selectedOption.optionDetailList.forEach(item => {
-          if (item.optionDetailId === updatedSelectOptions[optionId]) {
-            updatedTotalPrice += item.optionDetailPrice;
-          }
-        });
-      }
-    });
-
-    // totalPrice 상태 업데이트
-    setTotalPrice(updatedTotalPrice);
-  };
-
   const handlePostcodeSearch = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        let addr = "";
+        let addr = ""; // 주소 변수
+        // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
         if (data.userSelectedType === "R") {
           addr = data.roadAddress;
         } else {
           addr = data.jibunAddress;
         }
+        // 상태 업데이트
         setAddress(addr);
+        // 상세주소 입력 필드에 포커스
         document.getElementById("detailAddress").focus();
       },
     }).open();
   };
-
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -172,14 +150,13 @@ function Index() {
     script.async = true;
     document.head.appendChild(script);
     return () => {
-      document.head.removeChild(script);
+      document.head.removeChild(script); // 컴포넌트가 언마운트 될 때 스크립트 제거
     };
   }, []);
-
+  useEffect(() => {}, []);
   if (reservationSubmitted) {
     return <UserReservation />;
   }
-
   const rsvTime = [
     "08:00",
     "09:00",
@@ -190,32 +167,26 @@ function Index() {
     "14:00",
     "15:00",
   ];
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      address: "",
-      time: "",
-      pyeong: "",
+      address: {
+        basic: "",
+        detail: "",
+      },
     },
     mode: "all",
     resolver: yupResolver(schema),
   });
-
-  const onSubmit = data => {
-    console.log(data);
-    setReservationSubmitted(true);
-  };
-
   return (
     <ReservationDiv>
       <LayoutDiv>
         <h2 className="tit">예약하기</h2>
         <ReserVationContDiv>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit}>
             <LeftContDiv>
               <DateDiv>
                 <h3>날짜선택</h3>
@@ -225,11 +196,11 @@ function Index() {
                 <DatePicker
                   selected={startDate}
                   onChange={date => {
-                    setStartDate(moment(date).format("YYYY-MM-DD"));
-
+                    setStartDate(date);
                     console.log(moment(date).format("YYYY-MM-DD"));
                   }}
                   locale={ko}
+                  format="yyyy/MM"
                   dateFormat="yyyy-MM-dd"
                   inline
                 />
@@ -237,27 +208,29 @@ function Index() {
               <TimeDiv>
                 <h3>시간 선택</h3>
                 <div>
-                  {rsvTime.map((item, index) => (
-                    <div key={index}>
-                      <input
-                        {...register("time")}
-                        type="radio"
-                        name="mstartTime"
-                        id={`mstartTime-${index}`}
-                        value={item}
-                      />
-                      <label htmlFor={`mstartTime-${index}`}>{item}</label>
-                    </div>
-                  ))}
+                  {/* <h4>오전</h4> */}
+                  {rsvTime.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        <input
+                          {...register("time")}
+                          type="radio"
+                          name="mstartTime"
+                          id={`mstartTime-${index}`}
+                          value={item}
+                        />
+                        <label for={`mstartTime-${index}`}>{item}</label>
+                      </div>
+                    );
+                  })}
                 </div>
-                {errors.time && <p>{errors.time.message}</p>}
               </TimeDiv>
               <ReservationInfoDiv>
                 <h3>예약자 정보</h3>
                 <label htmlFor="address">
                   <h4>주소</h4>
                   <input
-                    {...register("address")}
+                    {...register("addr")}
                     type="text"
                     className="addr"
                     id="address"
@@ -268,11 +241,10 @@ function Index() {
                     주소검색
                   </button>
                 </label>
-                {errors.address && <p>{errors.address.message}</p>}
                 <label htmlFor="detailAddress">
                   <h4>상세주소</h4>
                   <input
-                    {...register("detailAddress")}
+                    {...register("addr-detail")}
                     type="text"
                     id="detailAddress"
                     placeholder="상세 주소를 입력해주세요"
@@ -288,14 +260,10 @@ function Index() {
                   <label>
                     <h4>평수</h4>
                     <input
-                      {...register("pyeong")}
                       type="text"
                       placeholder="평수를 숫자로 입력해주세요."
-                      value={formData.pyeong}
-                      onChange={handlePyeongChange}
                     />
                   </label>
-                  {errors.pyeong && <p>{errors.pyeong.message}</p>}
                 </RoomSizeDiv>
               </ReservationInfoDiv>
             </LeftContDiv>
@@ -303,8 +271,8 @@ function Index() {
               <SelectOptionDiv>
                 <h3>옵션선택</h3>
                 <div>
-                  {optionList.map(option => (
-                    <div key={option.productOptionId}>
+                  {optionList.map((option, index) => (
+                    <div key={index}>
                       <h4>{option.optionName}</h4>
                       <div className="option-list">
                         {option.optionDetailList.map(item => (
@@ -315,14 +283,12 @@ function Index() {
                             <input
                               {...register("option")}
                               type="radio"
-                              name={option.productOptionId}
+                              name={`option-${option.productOptionId}`}
                               id={item.optionDetailId}
-                              value={item.optionDetailId}
                               onChange={() =>
                                 handleOptionChange(
                                   option.productOptionId,
                                   item.optionDetailId,
-                                  item.optionDetailPrice,
                                 )
                               }
                               checked={
@@ -355,7 +321,7 @@ function Index() {
                 <h3>예상금액</h3>
                 <div>
                   <h4>총금액</h4>
-                  <p>{totalPrice.toLocaleString()}원</p>
+                  <p>50,000</p>
                 </div>
               </TotalPriceDiv>
             </RightContDiv>
@@ -383,5 +349,4 @@ function Index() {
     </ReservationDiv>
   );
 }
-
 export default Index;

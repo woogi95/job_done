@@ -6,7 +6,7 @@ export const PageTopDiv = styled.div`
   background-color: rgb(245, 245, 245);
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-item: center;
 
   .inner {
     text-align: center;
@@ -35,7 +35,7 @@ export const PageTopDiv = styled.div`
       justify-content: center;
       gap: 10px;
       margin: 28px 0 14px;
-      button {
+      a {
         background-color: #eee;
         padding: 10px 12px;
         min-width: 100px;
@@ -43,7 +43,7 @@ export const PageTopDiv = styled.div`
         border-radius: 20px;
         color: #555;
       }
-      li button.active {
+      li a.active {
         background-color: #35c5f0;
         color: #fff;
         font-weight: 700;
@@ -52,7 +52,7 @@ export const PageTopDiv = styled.div`
     }
     .search {
       /* border: 1px solid #000; */
-      width: 100%;
+      width: 420px;
       position: relative;
       height: 40px;
       em {
@@ -71,14 +71,14 @@ export const PageTopDiv = styled.div`
         z-index: 2;
       }
       input {
-        width: calc(100% - 120px);
+        width: calc(100% - 82px);
         height: 40px;
         position: absolute;
         left: -1px;
         text-indent: 50px;
         border-radius: 4px;
-        color: #555;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.03);
+        /* border: 1px solid #000; */
       }
       input::placeholder {
         color: #bbb;
@@ -88,7 +88,7 @@ export const PageTopDiv = styled.div`
         right: 0;
         top: 50%;
         transform: translateY(-50%);
-        padding: 0 40px;
+        padding: 0 20px;
         height: 40px;
         background-color: #3887ff;
         color: #fff;

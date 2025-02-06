@@ -11,39 +11,28 @@ import { useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
 
 const UserReservation = () => {
-  const [papers, setPapers] = useRecoilState(papersState);
-  const papersInfo = useRecoilValue(papersState);
-  const serviceId = papers.serviceId;
-  const getEstimate = async serviceId => {
+  // const [estimateInfo, setEstimateInfo] = useState({});
+  const [estimateInfo, setEstimateInfo] = useRecoilValue(papersState);
+  const getEstimate = async () => {
     try {
-      ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
+      const res = await axios.get("/api/service/detail?serviceId=1");
       // console.log(res.data.resultData);
-      setPapers(res.data.resultData);
+      setEstimateInfo(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(papers);
-
-  const formatPhoneNumber = phone => {
-    if (!phone) return "-";
-    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-  };
-  const formatBusinessNumber = number => {
-    if (!number) return "사업자 번호 없음";
-    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
-  };
   useEffect(() => {
-    getEstimate(serviceId);
-  }, [serviceId]);
+    getEstimate();
+  }, []);
+  console.log(estimateInfo);
   return (
     <PapersDiv>
       <div className="inner">
         <div className="logo"></div>
         <ReservationPaperContDiv>
           <h2 className="tit">
-            {papersInfo.businessName}에서
+            업체명에서
             <strong>
               견적·예약 신청이
               <br />
@@ -65,19 +54,19 @@ const UserReservation = () => {
           </span>
           <FormDiv>
             <div className="company-info">
-              <h3>예약업체 정보</h3>
+              <h3>예약업체정보</h3>
               <ul>
                 <li>
                   <p>상호명</p>
-                  <span>{papersInfo.businessName}</span>
+                  <span>{estimateInfo.businessName}</span>
                 </li>
                 <li>
                   <p>분류</p>
-                  <span>{papersInfo.categoryName}</span>
+                  <span>{estimateInfo.categoryName}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{papersInfo.businessAddress}</span>
+                  <span>----</span>
                 </li>
               </ul>
             </div>
@@ -86,15 +75,15 @@ const UserReservation = () => {
               <ul>
                 <li>
                   <p>예약자</p>
-                  <span>{papersInfo.userName}</span>
+                  <span>{estimateInfo.reservedName}</span>
                 </li>
                 <li>
                   <p>연락처</p>
-                  <span>{formatPhoneNumber(papersInfo.userPhone)}</span>
+                  <span>{estimateInfo.userPhone}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{papersInfo.address}</span>
+                  <span>{estimateInfo.address}</span>
                 </li>
               </ul>
             </div>
@@ -103,44 +92,47 @@ const UserReservation = () => {
               <ul>
                 <li>
                   <p>신청일</p>
-                  <span>{papersInfo.createdAt}</span>
+                  <span>{estimateInfo.createdAt}</span>
                 </li>
                 <li>
                   <p>예약방문날짜</p>
-                  <span>
-                    {papersInfo.startDate} ~ {papersInfo.endDate}
-                  </span>
+                  <span>----</span>
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>{papersInfo.pyeong}</span>
+                  <span>----</span>
                 </li>
-                {papersInfo.options && papersInfo.options.length > 0 && (
-                  <li className="option">
-                    <p>옵션</p>
-                    <ul>
-                      {papersInfo.options.map((option, index) => (
-                        <li key={index}>
-                          <p>
-                            {option.optionName}{" "}
-                            <em>({option.optionDetailName})</em>
-                          </p>
-                          <span>
-                            {option.optionDetailPrice.toLocaleString()}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
+                <li className="option">
+                  <p>옵션</p>
+                  <ul>
+                    <li>
+                      <p>
+                        항목명1 - <em>옵션명1</em>
+                      </p>
+                      <span>20,000</span>
+                    </li>
+                    <li>
+                      <p>
+                        항목명2 - <em>옵션명2</em>
+                      </p>
+                      <span>40,000</span>
+                    </li>
+                    <li>
+                      <p>
+                        항목명3 - <em>옵션명3</em>
+                      </p>
+                      <span>40,000</span>
+                    </li>
+                  </ul>
+                </li>
 
                 <li>
                   <p>예상비용</p>
-                  <span>{papersInfo.price.toLocaleString()}</span>
+                  <span>------</span>
                 </li>
                 <li>
                   <p>문의사항</p>
-                  <span>{papersInfo.comment}</span>
+                  <span>----</span>
                 </li>
               </ul>
             </div>
