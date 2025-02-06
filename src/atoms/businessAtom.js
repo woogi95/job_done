@@ -3,12 +3,12 @@ import { atom } from "recoil";
 export const businessInfo = atom({
   key: "businessInfo",
   default: {
-    userId: 0,
+    userId: "",
     businessNum: "",
     businessName: "",
     address: "",
     detailTypeId: "",
-    busiCreatedAt: "2019.06.08",
+    busiCreatedAt: "2019/06/08",
     tel: "0533836669",
     paper: "",
   },

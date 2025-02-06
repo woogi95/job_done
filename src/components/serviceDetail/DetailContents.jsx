@@ -113,18 +113,36 @@ const DetailContents = () => {
     setIsPfDetailPop(true);
   };
 
-  // 문의하기
-  const openWindow = () => {
-    const width = 410;
-    const height = 570;
-    const left = (screen.width - width) / 2;
-    const top = (screen.height - height) / 2;
+  // 문의하기 기능 (채팅방)
+  const openWindow = async () => {
+    if (!userId) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
 
-    window.open(
-      "/service/contactus",
-      "_blank",
-      `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
-    );
+    try {
+      const response = await axios.post("/api/room", {
+        serviceId: businessDetail.serviceId,
+        userId: userId,
+        businessId: businessId,
+      });
+
+      if (response.status === 200) {
+        const width = 410;
+        const height = 570;
+        const left = (screen.width - width) / 2;
+        const top = (screen.height - height) / 2;
+
+        window.open(
+          "/service/contactus",
+          "_blank",
+          `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
+        );
+      }
+    } catch (error) {
+      console.error("문의하기 요청 실패:", error.response?.data || error);
+      alert("문의하기 요청에 실패했습니다. 다시 시도해주세요.");
+    }
   };
   return (
     <DetailLayout>
@@ -239,7 +257,7 @@ const DetailContents = () => {
           <div className="btn-area">
             <button
               onClick={() => {
-                navigate(`/reservation/?businessId=${businessId}`);
+                navigate("/reservation");
               }}
             >
               예약하기
