@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 import { FiSend } from "react-icons/fi";
 import { MessageBoxDiv } from "./servicepage";
@@ -8,10 +9,52 @@ import { CiImageOn } from "react-icons/ci";
 
 function ContactUs() {
   const [message, setMessage] = useState("");
+  const [roomId, setRoomId] = useState(null);
 
-  const handleSendMessage = () => {
-    console.log("Sending message:", message);
+  //메시지 전송
+  const handleSendMessage = async () => {
+    try {
+      const res = await axios.post("/api/chat", {
+        pics: [],
+        p: {
+          roomId: roomId,
+          contents: message,
+          flag: 1,
+        },
+      });
+      console.log("메시지 전송 성공?:", res.data);
+      setMessage("");
+    } catch (error) {
+      console.error("메시지 전송 실패:", error);
+    }
   };
+
+  //채팅방 조회
+  useEffect(() => {
+    const fetchChatRooms = async () => {
+      const storedUserId = localStorage.getItem("userId");
+
+      // if (!storedUserId) {
+      //   console.error("userId가 localStorage에 없습니다.");
+      //   return;
+      // }
+
+      try {
+        const res = await axios.get("/api/room", {
+          params: {
+            userId: storedUserId,
+          },
+        });
+        console.log("채팅방 데이터?:", res.data);
+        if (res.data && res.data.resultData && res.data.resultData.length > 0) {
+          setRoomId(res.data.resultData[0].roomId);
+        }
+      } catch (error) {
+        console.error("채팅방 조회 실패:", error);
+      }
+    };
+    fetchChatRooms();
+  }, []);
 
   return (
     <MessageBoxDiv>
