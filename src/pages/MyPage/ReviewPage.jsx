@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MyPageLayout from "../../components/MyPageLayout";
 import { FaStar } from "react-icons/fa";
 
 function ReviewPage() {
   const [review, setReview] = useState([]);
+  const reviewList = async () => {
+    try {
+      const res = await loginApi.get("/api/review", {
+        params: {
+          businessId: 2,
+        },
+      });
+      setReview(res.data);
+      console.log("API 리스폰스???:", res.data);
+    } catch (error) {
+      console.error("리뷰 목록 조회 실패:", error.response || error);
+    }
+  };
+
+  useEffect(() => {
+    console.log("리뷰 목록 조회 성공:", review);
+  }, []);
+
   return (
     <MyPageLayout>
       <div className="flex flex-col justify-center items-center gap-y-[20px]">
         <span className="flex justify-center items-center text-[24px] font-normal">
-          예약현황
+          작성한 리뷰
         </span>
         <div className="w-full max-w-[700px] h-[130px]">
           <div className="flex justify-between items-center">
