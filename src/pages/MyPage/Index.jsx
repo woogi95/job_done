@@ -4,7 +4,6 @@ import { IoIosCamera } from "react-icons/io";
 import { HiOutlinePencilAlt, HiEye, HiEyeOff } from "react-icons/hi";
 import axios from "axios";
 import * as yup from "yup";
-import { loginApi } from "../../apis/login";
 
 function MyPage() {
   const [isPhoneEdit, setIsPhoneEdit] = useState(false);
@@ -17,9 +16,7 @@ function MyPage() {
   const [showConfirmPw, setShowConfirmPw] = useState(false);
   const [isDeleteModal, setIsDeleteModal] = useState(false);
   const [deletePw, setDeletePw] = useState(false);
-  const [profileImg, setProfileImg] = useState(
-    "/images/order/default_profile.jpg",
-  );
+  const [profileImg, setProfileImg] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -64,25 +61,24 @@ function MyPage() {
   const getUserInfo = async () => {
     try {
       const userId = localStorage.getItem("userId");
-
-      const res = await loginApi.get(`/api/user`, {
+      const res = await axios.get(`/api/user`, {
         params: {
           userId: userId,
         },
       });
-      console.log("API:", res);
-      console.log("유저 데이터:", res.data.resultData);
 
       const userData = res.data.resultData;
       setUserName(userData.name);
       setUserEmail(userData.email);
       setPhoneNumber(userData.phone);
-      if (userData.profileImage) {
-        setProfileImg(userData.profileImage);
-      }
+      const profileImgUrl = userData.pic
+        ? `http://112.222.157.156:5224${userData.pic}`
+        : "/images/order/default_profile.jpg";
+      setProfileImg(profileImgUrl);
+      // localStorage.setItem("userProfileImg", profileImgUrl);
+      console.log("프로필 이미지 경로:", userData.pic);
     } catch (error) {
-      console.log("API:", error);
-      console.log("유저 데이터:", res.data);
+      console.error("API 에러:", error);
     }
   };
 
@@ -131,7 +127,6 @@ function MyPage() {
 
         const formData = new FormData();
 
-        // p 객체를 FormData에 추가
         formData.append(
           "p",
           new Blob([JSON.stringify(requestData.p)], {
@@ -139,7 +134,6 @@ function MyPage() {
           }),
         );
 
-        // 프로필 이미지가 변경된 경우에만 이미지 추가
         if (profileImg && profileImg.startsWith("data:image")) {
           const response = await fetch(profileImg);
           const blob = await response.blob();
@@ -153,8 +147,10 @@ function MyPage() {
         });
 
         if (response.status === 200) {
+          // localStorage.setItem("userPic", profileImg);
           alert("회원정보가 수정되었습니다.");
           setIsEdit(false);
+          getUserInfo();
         }
       } catch (error) {
         console.error("회원정보 수정 실패:", error);

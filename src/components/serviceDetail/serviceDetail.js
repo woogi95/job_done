@@ -313,7 +313,7 @@ export const StarTotalDiv = styled.div`
 // 오른쪽
 export const SummaryDiv = styled.div`
   top: 0;
-  z-index: 99;
+  z-index: 3;
   position: absolute;
   margin: 0 auto;
   max-width: 1280px;

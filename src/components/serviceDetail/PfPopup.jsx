@@ -10,56 +10,8 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Pagination } from "swiper/modules";
-import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  PortfolioDetailImgState,
-  PortfolioDetailInfoState,
-} from "../../atoms/portfolioAtom";
-import { useEffect } from "react";
-import { businessDetailState } from "../../atoms/businessAtom";
-import { useNavigate } from "react-router-dom";
 
-const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
-  const [pfDetailImgList, setPfDetailImgList] = useRecoilState(
-    PortfolioDetailImgState,
-  );
-  const [pfDetailInfoList, setPfDetailInfoList] = useRecoilState(
-    PortfolioDetailInfoState,
-  );
-  const businessDetail = useRecoilValue(businessDetailState);
-  const businessId = businessDetail.businessId;
-  const navigate = useNavigate();
-  // 이미지리스트
-  const getPfDetailImgList = async portfolioId => {
-    try {
-      const res = await axios.get(
-        `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
-      );
-      console.log("깡총", res.data.resultData);
-      setPfDetailImgList(res.data.resultData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // 정보
-  const getPfDetailInfoList = async portfolioId => {
-    try {
-      // /api/portfolio/%7BportfolioId%7D?portfolioId=3
-      const res = await axios.get(
-        `/api/portfolio/%7BportfolioId%7D?portfolioId=${portfolioId}`,
-      );
-      console.log("깡총22", res.data.resultData);
-      setPfDetailInfoList(res.data.resultData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getPfDetailImgList(portfolioId);
-    getPfDetailInfoList(portfolioId);
-  }, [portfolioId]);
-
+const PfPopup = ({ isPfDetailPop, setIsPfDetailPop }) => {
   return isPfDetailPop ? (
     <PfModalDiv>
       <PfLayerDiv>
@@ -69,39 +21,44 @@ const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
             modules={[Pagination]}
             className="pfdetail-img"
           >
-            {pfDetailImgList.map((image, index) => (
-              <SwiperSlide key={index}>
-                <img src={image.pic} alt={`portfolio-image-${index}`} />
-              </SwiperSlide>
-            ))}
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="" alt="" />
+            </SwiperSlide>
           </Swiper>
         </PhotoAreaDiv>
         <div className="txt-area">
-          <h3>{pfDetailInfoList.title}</h3>
+          <h3>타이틀</h3>
           <ul>
             <li>
               <b>서비스 종류</b>
-              <p>
-                {pfDetailInfoList.category}/{pfDetailInfoList.detailType}
-              </p>
+              <p>청소/투룸</p>
             </li>
             <li>
               <b>가격대</b>
-              <p>{pfDetailInfoList.price.toLocaleString()}원대</p>
+              <p>370,000원대</p>
             </li>
             <li>
               <b>소요시간</b>
-              <p>{pfDetailInfoList.takingTime}시간</p>
+              <p>5시간</p>
             </li>
           </ul>
-          <span>{pfDetailInfoList.contents}</span>
-          <button
-            onClick={() => {
-              navigate(`/reservation/?businessId=${businessId}`);
-            }}
-          >
-            견적 요청하기
-          </button>
+          <span>
+            신축 입주 청소는 그 무엇보다 공사후 잔해, 분진들이 얼마나 전문적으로
+            제거하냐에 따라 청소의 완성도가 결정됩니다.
+          </span>
+          <button>견적 요청하기</button>
         </div>
         <button
           onClick={() => {
