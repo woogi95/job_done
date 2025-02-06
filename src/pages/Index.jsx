@@ -9,7 +9,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner, serviceIcons } from "../components/ServiceIcon";
 
 const Index = () => {
-
   const [categories, setCategories] = useState({});
   const [companies, setCompanies] = useState([]);
   const BASE_URL = "http://112.222.157.156:5224";
@@ -30,7 +29,7 @@ const Index = () => {
         // 추천 글 데이터 가져오기 (categoryId 1로 임시 설정)
         const recommendedRequest = axios.get("/api/business", {
           params: {
-            categoryId: 1, // 임시로 1번 카테고리 사용
+            categoryId: 1,
           },
         });
 
@@ -39,8 +38,6 @@ const Index = () => {
           ...categoryRequests,
           recommendedRequest,
         ]);
-
-        // 응답 확인을 위한 로그
         console.log("모든 응답:", responses);
 
         // 카테고리별 데이터 정리
@@ -135,7 +132,7 @@ const Index = () => {
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
           <span className="flex pb-[10px]">인기 글</span>
-          <div className="flex gap-4 justify-center items-center">
+          <div className="flex gap-4">
             {categories[1] && categories[1].length > 0 ? (
               categories[1].slice(0, 4).map(item => (
                 <Link

@@ -1,9 +1,10 @@
 import { Button, Form, Input } from "antd";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { loginUser } from "../../../atoms/loginAtom";
 import UserLayout from "../../../components/UserLayout";
 import "./Index.css";
@@ -11,6 +12,7 @@ import "./Index.css";
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
   const navigate = useNavigate();
+  const userInfoValue = useRecoilValue(loginUser);
 
   const initData = {
     email: "",
@@ -19,29 +21,34 @@ function LoginPage() {
   const loginTry = async data => {
     console.log("로그인 요청:", data);
     try {
-      const res = await axios.post("/api/user/sign-in", data);
+      const res = await axios.post("/api/user/sign-in", data, {
+        withCredentials: true, // ✅ 요청마다 쿠키 포함
+      });
       console.log("서버 응답:", res.data);
 
       if (res.data.resultData && res.data.resultData.accessToken) {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
 
-        const newUserInfo = {
-          userId,
-          name,
-          email,
-          pic,
-          accessToken,
-          businessId,
+        // ✅ accessToken을 쿠키에 직접 저장
+        Cookies.set("accessToken", accessToken, {
+          expires: 1, // 1일 후 만료
+          secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
+          sameSite: "Strict",
+        });
+        // ✅ 사용자 상태 업데이트
+        setUserInfo({
+          userId: userId,
+          name: name,
+          email: email,
+          pic: pic,
+          accessToken: accessToken,
+          businessId: businessId,
           isLogind: true,
-        };
+        });
 
-        setUserInfo(newUserInfo);
-        console.log("업데이트될 유저 정보:", newUserInfo);
-
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("userId", userId);
-        localStorage.setItem("userPic", pic);
+        // localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("businessId", businessId);
 
         navigate("/");
       } else {
@@ -76,7 +83,7 @@ function LoginPage() {
           ]}
         >
           <Input
-            style={{ alignItems: "center", height: "40px" }}
+            style={{ alignItems: "center" }}
             placeholder="이메일을 입력하세요."
           />
         </Form.Item>
@@ -84,17 +91,14 @@ function LoginPage() {
           name={"upw"}
           rules={[
             { required: true, message: "비밀번호는 필수 항목입니다." },
-            {
-              // pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
-              message:
-                "비밀번호는 최소 8자 이상이며, 대소문자와 숫자를 포함해야 합니다.",
-            },
+            // {
+            //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
+            //   message:
+            //     "비밀번호는 최소 8자 이상이며, 대소문자와 숫자를 포함해야 합니다.",
+            // },
           ]}
         >
-          <Input.Password
-            placeholder="비밀번호를 입력하세요"
-            style={{ alignItems: "center", height: "40px" }}
-          />
+          <Input.Password placeholder="비밀번호를 입력하세요" />
         </Form.Item>
         <Button
           className="bg-blue-500 border border-gray-400 w-80 h-11 rounded-lg mb-2"
