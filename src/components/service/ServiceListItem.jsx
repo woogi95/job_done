@@ -8,6 +8,7 @@ import { loginUser } from "../../atoms/loginAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { likeStatusState } from "../../atoms/like";
 import axios from "axios";
+import { loginApi } from "../../apis/login";
 const ServiceListItem = ({ business }) => {
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
   const businessDetail = useRecoilValue(businessDetailState);
@@ -26,8 +27,7 @@ const ServiceListItem = ({ business }) => {
 
     try {
       // POST 요청 보내기
-      const response = await axios.post("/api/like", {
-        userId,
+      const response = await loginApi.post("/api/like", {
         businessId,
       });
 
