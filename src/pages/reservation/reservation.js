@@ -35,7 +35,7 @@ export const ReserVationContDiv = styled.div`
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 829px;
+    height: 910px;
     background-color: #eee;
   }
   h3 {
@@ -204,28 +204,26 @@ export const TimeDiv = styled.div`
       width: 100%;
     }
   }
-  div {
-    input {
-      display: none;
-      + label {
-        border: 1px solid #ccc;
-        padding: 9px;
-        text-align: center;
-        border-radius: 5px;
-        min-width: 76px;
-        font-size: 13px;
-        color: #333;
-        font-family: "Roboto", sans-serif;
-        display: inline-block;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
+  input {
+    display: none;
+    + label {
+      border: 1px solid #ccc;
+      padding: 9px;
+      text-align: center;
+      border-radius: 5px;
+      min-width: 76px;
+      font-size: 13px;
+      color: #333;
+      font-family: "Roboto", sans-serif;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.3s;
     }
-    input:checked + label {
-      background-color: #34c5f0;
-      border: 1px solid #34c5f0;
-      color: #fff;
-    }
+  }
+  input:checked + label {
+    background-color: #34c5f0;
+    border: 1px solid #34c5f0;
+    color: #fff;
   }
 `;
 export const ReservationInfoDiv = styled.div`
@@ -288,7 +286,7 @@ export const SelectOptionDiv = styled.div`
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fdfdfd;
-    height: 690px;
+    height: 652px;
     overflow-y: auto;
     h4 {
       font-size: 16px;
@@ -335,7 +333,6 @@ export const SelectOptionDiv = styled.div`
 `;
 // 평수입력
 export const RoomSizeDiv = styled.div`
-  margin-top: 35px;
   label {
     display: flex;
     border: 1px solid #ccc;
@@ -401,7 +398,7 @@ export const BottomContDiv = styled.div`
   textarea {
     width: 100%;
     border: 1px solid #ccc;
-    height: 220px;
+    height: 300px;
     resize: none;
     box-sizing: border-box;
     background-color: #fdfdfd;

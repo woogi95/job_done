@@ -1,34 +1,82 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { reviewListState } from "../../../atoms/reviewAtom";
+import {
+  commentModals,
+  commentsBox,
+  reviewIdState,
+  reviewListState,
+} from "../../../atoms/reviewAtom";
 import "./index.css";
+import { useNavigate } from "react-router-dom";
 
 function Index() {
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
+  const [commentModal, setCommentModal] = useRecoilState(commentModals);
+  const [commentBox, setCommentBox] = useRecoilState(commentsBox);
+  const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
+  const [commentData, setCommentData] = useState();
   const [isSorted, setIsSorted] = useState(false);
   const [isScored, setIsScored] = useState(false);
+  const navigate = useNavigate();
+  // const busiId = localStorage.getItem(businessId);
 
-  useEffect(() => {
-    const reviewData = async () => {
-      try {
-        const res = await axios.get(`/api/review?businessId=2&page=1&size=30`);
-        if (res) {
-          const formattedData = res.data.resultData.map((item, index) => ({
-            reviewId: item.reviewId,
-            id: index + 1, // 행 번호 추가 (1부터 시작)
-            userName: item.name,
-            contents: item.contents, // 예시 내용
-            createdAt: item.createdAt,
-            score: item.score,
-            replyStatus: item.comment ? "🔵" : <button>🔴</button>,
-          }));
-          setReviewDatas(formattedData);
-        }
-      } catch (error) {
-        console.log(error);
+  // 리뷰데이터 불러오기
+  const reviewData = async () => {
+    try {
+      const res = await axios.get(
+        // `/api/review?businessId=${busiId}&page=1&size=30`,
+        `/api/review?businessId=2&page=1&size=30`,
+      );
+      if (res) {
+        const formattedData = res.data.resultData.map((item, index) => ({
+          reviewId: item.reviewId,
+          id: index + 1, // 행 번호 추가 (1부터 시작)
+          userName: item.name,
+          contents: item.contents, // 예시 내용
+          createdAt: item.createdAt,
+          score: item.score,
+          replyStatus: item.comment,
+          comment: item.comment.contents,
+        }));
+        setReviewDatas(formattedData);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const openCommentModal = () => {
+    setCommentModal(true);
+  };
+  // const commentBoxs = () => {
+  //   console.log(commentBox);
+  //   if (commentBox === false) {
+  //     setCommentBox(true);
+
+  //     // getComment(item.id);
+  //   } else {
+  //     setCommentBox(false);
+  //   }
+  // };
+  const commentBoxs = reviewId => {
+    setCommentBox(prev => ({
+      ...prev,
+      [reviewId]: !prev[reviewId], // 해당 reviewId의 상태만 변경
+    }));
+    setReviewIds(reviewId);
+    navigate("/expert/review-center/reviewview");
+  };
+
+  const getComment = async () => {
+    try {
+      const res = await axios.get(`/api/review/commnet?reviewId=${reviewId}`);
+      setCommentData(res.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
     reviewData();
   }, []);
   const toggleSort = () => {
@@ -87,7 +135,36 @@ function Index() {
                 <td>{item.contents}</td>
                 <td>{item.createdAt}</td>
                 <td>{item.score}</td>
-                <td>{item.replyStatus}</td>
+                <td>
+                  {item.replyStatus === null ? (
+                    <button
+                      onClick={() => {
+                        openCommentModal();
+                      }}
+                    >
+                      🔴
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        commentBoxs(item.reviewId);
+                      }}
+                    >
+                      🔵
+                    </button>
+                  )}
+                </td>
+                {/* {commentBox[item.reviewId] && (
+                  <tr>
+                    <td colSpan="6" style={{ backgroundColor: "#f9f9f9" }}>
+                      <div
+                        style={{ padding: "10px", border: "1px solid #ddd" }}
+                      >
+                        {item.comment}
+                      </div>
+                    </td>
+                  </tr>
+                )} */}
               </tr>
             ))}
           </tbody>

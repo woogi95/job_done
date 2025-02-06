@@ -32,12 +32,17 @@ function Service() {
         `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
       );
       console.log("res", res.data.resultData);
+      const resItem = res.data.resultData.map(({ businessId }) => ({
+        businessId,
+        isLiked: false,
+      }));
       setBusinessList(res.data.resultData);
+      setLikeStatus({ ...resItem });
     } catch (error) {
       console.error(error);
     }
   };
-  // console.log("!! =>", businessList);
+  console.log("!! =>", likeStatus);
 
   const handleClickBusiness = businessId => {
     if (businessId === businessList.businessId) {
