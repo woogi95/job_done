@@ -15,14 +15,18 @@ function MyPageLayout({ children }) {
           </div>
           <div className="flex justify-center items-center">
             <img
-              src="/images/order/default_profile.jpg"
-              alt="로고"
+              src={
+                userInfo?.pic
+                  ? `http://112.222.157.156:5224${userInfo?.pic}`
+                  : "/images/order/default_profile.jpg"
+              }
+              alt="프로필"
               className="w-[100px] h-[100px] rounded-full"
             />
           </div>
           <div className="flex flex-col justify-center items-center gap-[10px]">
-            <span>이메일</span>
-            <span>전화번호</span>
+            <span>{userInfo?.email || "이메일"}</span>
+            <span>{userInfo?.phone || "전화번호"}</span>
           </div>
           <ul className="flex flex-col justify-center items-center gap-[40px] text-[24px]">
             <li>

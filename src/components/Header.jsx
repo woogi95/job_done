@@ -1,14 +1,14 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { loginUser } from "../atoms/loginAtom";
 import {
   categoriesState,
   detailTypesState,
   selectedCategoryState,
   selectedDetailTypeState,
 } from "../atoms/categoryAtom";
-import axios from "axios";
+import { loginUser } from "../atoms/loginAtom";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -23,11 +23,13 @@ function Header() {
   );
   const menuRef = useRef();
   const navigate = useNavigate();
+  const [profileImg, setProfileImg] = useState(
+    "/images/order/default_profile.jpg",
+  );
 
   const fetchCategories = async () => {
     try {
       const res = await axios.get(`/api/category`);
-      // console.log("카테고리는 뭐 오는데? : ", res);
       setCategories(res.data.resultData);
     } catch (error) {
       console.error("Categories error:", error.response || error);
@@ -39,7 +41,6 @@ function Header() {
       const res = await axios.get(`/api/category/detail`, {
         params: { categoryId: categoryId },
       });
-      // console.log("디테일은 뭐 오는데? : ", res);
       setDetailTypes(prev => ({
         ...prev,
         [categoryId]: res.data.resultData,
@@ -49,6 +50,7 @@ function Header() {
     }
   };
 
+  // 로그아웃 관련
   const handleLogout = () => {
     localStorage.clear();
 
@@ -76,7 +78,6 @@ function Header() {
     setSelectedCategory(categoryId);
     setSelectedDetailType(detailTypeId);
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
-
   };
 
   useEffect(() => {
@@ -92,6 +93,7 @@ function Header() {
   useEffect(() => {
     const storedToken = localStorage.getItem("accessToken");
     const storedUserId = localStorage.getItem("userId");
+    const storedProfileImg = localStorage.getItem("userPic");
 
     if (storedToken) {
       setUserInfo(prev => ({
@@ -100,6 +102,11 @@ function Header() {
         isLogind: true,
         userId: storedUserId,
       }));
+
+      // userPic이 있으면 프로필 이미지 업데이트
+      if (storedProfileImg) {
+        setProfileImg(`http://112.222.157.156:5224${storedProfileImg}`);
+      }
     }
   }, []);
 
@@ -113,24 +120,13 @@ function Header() {
     });
   }, [categories]);
 
-
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
     <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
         <div className="flex gap-10">
-          <a href="/">
+          <Link to="/">
             <img src="/images/logo.svg" alt="logo" />
-          </a>
+          </Link>
           <ul className="flex gap-10 text-[20px] items-center text-[#1E1E1E]">
             {categories.map(category => (
               <li key={category.categoryId} className="relative group">
@@ -196,7 +192,7 @@ function Header() {
                   className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
                 >
                   <img
-                    src="/images/order/default_profile.jpg"
+                    src={profileImg}
                     alt="프로필이미지"
                     className="w-full h-full rounded-full object-cover"
                   />

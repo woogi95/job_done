@@ -4,7 +4,7 @@
 // import Filter from "../../../components/service/Filter";
 // import ServiceListItem from "../../../components/service/ServiceListItem";
 
-// import axios from "axios";
+import axios from "axios";
 import Filter from "../../components/service/Filter";
 import ServiceListItem from "../../components/service/ServiceListItem";
 import ServiceListTop from "../../components/service/ServiceListTop";
@@ -17,14 +17,13 @@ import {
   selectedDetailTypeState,
 } from "../../atoms/categoryAtom";
 import { likeStatusState } from "../../atoms/like";
-// import { loginApi } from "../../apis/login";
-import axios from "axios";
-import { loginApi } from "../../apis/login";
 
 function Service() {
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  // console.log("----->", categoryId, detailTypeId);
+  // const [businessId, setBusinessId] = useState(0);
   const [businessList, setBusinessList] = useState([]);
 
   const getBusinessList = async (categoryId, detailTypeId) => {
@@ -32,57 +31,22 @@ function Service() {
       const res = await axios.get(
         `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
       );
-      // console.log(res.data.resultData);
+      console.log("res", res.data.resultData);
       setBusinessList(res.data.resultData);
     } catch (error) {
       console.error(error);
     }
   };
-  const handleClickBusiness = async businessId => {
-    // const userId = localStorage.getItem("userId");
-    // if (!userId) {
-    //   alert("로그인 후 찜할 수 있습니다.");
-    //   return;
-    // }
+  // console.log("!! =>", businessList);
 
-    try {
-      console.log(userId, businessId);
-      const response = await loginApi.post(
-        "/api/like",
-        {
-          // userId: userId,
-          businessId: businessId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      // 응답 데이터 처리
-      console.log("찜 상태가 성공적으로 업데이트되었습니다:", response.data);
-
-      // 찜 상태 업데이트
-      const currentLikeStatus = likeStatus[businessId] || { isLiked: false };
-      const newLikeStatus = !currentLikeStatus.isLiked;
-
-      // 상태 업데이트
-      setLikeStatus(prevState => {
-        const updatedState = { ...prevState };
-        updatedState[businessId] = { isLiked: newLikeStatus };
-        return updatedState;
-      });
-    } catch (error) {
-      console.error(
-        "찜 상태 업데이트에 실패했습니다:",
-        error.response?.data || error.message,
-      );
-      alert("찜 상태 업데이트에 실패했습니다.");
+  const handleClickBusiness = businessId => {
+    if (businessId === businessList.businessId) {
+      setLikeStatus(!isLiked, businessId);
     }
   };
-
   useEffect(() => {
+    console.log("categoryId", categoryId);
+    console.log("detailTypeId", detailTypeId);
     if (categoryId && detailTypeId) {
       getBusinessList(categoryId, detailTypeId);
     }
@@ -90,22 +54,23 @@ function Service() {
 
   return (
     <>
-      <ServiceListTop setBusinessList={setBusinessList} />
+      <ServiceListTop />
       <ServiceContentDiv>
         <LayoutDiv>
-          <Filter
-            setBusinessList={setBusinessList}
-            businessList={businessList}
-          />
+          <Filter />
           <div className="list">
             {businessList.map(item => (
               <ServiceListItem
-                key={item.businessId}
+                key={businessList.businessId}
+                // key={index}
                 business={item}
-                onClick={() => handleClickBusiness(item.businessId)}
+                onClick={() => {
+                  handleClickBusiness(businessList.businessId);
+                }}
               />
             ))}
           </div>
+
           {/* 페이지네이션 넣어야함 */}
         </LayoutDiv>
       </ServiceContentDiv>
