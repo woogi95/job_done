@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { likeStatusState } from "../../atoms/like";
 
 const ServiceListItem = ({ business, onClick }) => {
+  const BASE_URL = "http://112.222.157.156:5224";
   const [likeStatus] = useRecoilState(likeStatusState);
   const currentLikeStatus = likeStatus[business.businessId] || {
     isLiked: false,
@@ -16,7 +17,7 @@ const ServiceListItem = ({ business, onClick }) => {
       {/* /service/detail?serviceId=1 */}
       <Link to={`/service/${business.businessId}`}>
         <div className="thum">
-          <img src={business.pic} alt={business.businessName} />
+          <img src={`${BASE_URL}${business.pic}`} alt={business.businessName} />
           <div
             className="like"
             onClick={e => {

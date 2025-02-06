@@ -465,6 +465,7 @@ export const ReviewDiv = styled.div`
             height: 50px;
             border-radius: 100%;
             background-color: #eee;
+            overflow: hidden;
           }
           .desc {
             display: flex;
@@ -506,6 +507,11 @@ export const ReviewDiv = styled.div`
             margin-left: 6px;
             font-size: 12px;
           }
+        }
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 100%;
         }
       }
 

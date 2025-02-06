@@ -8,20 +8,27 @@ import axios from "axios";
 
 // parser
 import parse from "html-react-parser";
+import { FilterDiv } from "../service/service";
+import { IoIosArrowDown } from "react-icons/io";
 
 const ContReview = () => {
+  const BASE_URL = "http://112.222.157.156:5224";
   const [rating, setRating] = useState(0); // 별점
   const [reviewList, setReviewList] = useRecoilState(reviewListState);
   const businessDetail = useRecoilValue(businessDetailState);
-
+  const options = ["최신순", "높은별점순", "낮은별점순"];
+  const [optionOpen, setOptionOpen] = useState(false);
+  const [status, setStatus] = useState(0); // 리뷰 정렬 상태
+  const [selectedOption, setSelectedOption] = useState("최신순"); // Default selected option
   const businessId = businessDetail.businessId;
   const page = 1;
   const size = 5;
-  // 리뷰
-  const getReviewList = async businessId => {
+
+  // 리뷰 목록 가져오기
+  const getReviewList = async (businessId, status) => {
     try {
       const res = await axios.get(
-        `/api/review?businessId=${businessId}&page=${page}&size=${size}`,
+        `/api/review?businessId=${businessId}&status=${status}&page=${page}&size=${size}&sortType=${sortType}`,
       );
       console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
@@ -29,8 +36,20 @@ const ContReview = () => {
       console.log(error);
     }
   };
-  // console.log("dighdkfoasdas", reviewList[0].averageScore);
-  // 별점
+
+  // 정렬 방식에 따른 API 호출
+  const handleSortTypeClick = (businessId, status, option) => {
+    setOptionOpen(!optionOpen);
+    setStatus(status);
+    setSelectedOption(option); // Update the selected option text
+    getReviewList(businessId, status);
+  };
+
+  useEffect(() => {
+    getReviewList(businessId, status);
+  }, [businessId, status]);
+
+  // 별점 렌더링
   const renderStars = score => {
     const fullStars = Math.floor(score); // 채워진 별 개수
     const halfStar = score % 1 >= 0.5; // 반쪽 별 여부
@@ -49,11 +68,6 @@ const ContReview = () => {
     );
   };
 
-  // console.log("reviewList--", reviewList);
-  useEffect(() => {
-    getReviewList(businessId);
-  }, [businessId]);
-
   return (
     <>
       <StarTotalDiv>
@@ -68,9 +82,25 @@ const ContReview = () => {
       <ReviewDiv>
         <div className="rv-top">
           <h3>서비스 리뷰 {businessDetail.reviewCount}</h3>
-          <div className="filter">별점 낮은순 +</div>
+          <FilterDiv>
+            <div className="select" onClick={() => setOptionOpen(!optionOpen)}>
+              <p>{selectedOption}</p>
+              <IoIosArrowDown />
+            </div>
+            {optionOpen && (
+              <div className="options">
+                {options.map((item, index) => (
+                  <div
+                    key={item}
+                    onClick={() => handleSortTypeClick(businessId, index, item)}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            )}
+          </FilterDiv>
         </div>
-        {/* 리뷰리스트 */}
         <div className="rv-list">
           {reviewList?.map((item, index) => (
             <div className="rv-item" key={index}>
@@ -79,7 +109,10 @@ const ContReview = () => {
                 <div className="user-info">
                   <div className="user-photo">
                     {item.writerPic ? (
-                      <img src={`${item.writerPic}`} alt={item.name} />
+                      <img
+                        src={`${BASE_URL}${item.writerPic}`}
+                        alt={item.name}
+                      />
                     ) : (
                       <img style={{ backgroundColor: "#34c5f0" }}></img>
                     )}
@@ -101,7 +134,7 @@ const ContReview = () => {
                     {item.pics &&
                       item.pics.slice(0, 2).map((pic, index) => (
                         <div key={index}>
-                          <img src={`${pic}`} alt="review-img" />
+                          <img src={`${BASE_URL}${pic}`} alt="review-img" />
                         </div>
                       ))}
                   </div>
@@ -114,7 +147,7 @@ const ContReview = () => {
                     {/* 로고 */}
                     {item.comment && item.comment.logo ? (
                       <img
-                        src={item.comment.logo}
+                        src={`${BASE_URL}${item.comment.logo}`}
                         alt="logo"
                         className="logo"
                       />
@@ -143,7 +176,6 @@ const ContReview = () => {
               </div>
             </div>
           ))}
-          {/* 리뷰 */}
         </div>
       </ReviewDiv>
     </>
