@@ -26,7 +26,7 @@ function ExpertMain() {
         `/api/service?business_id=${busiId}&status=4&page=1&size=100`,
       );
 
-      console.log(res); // API 응답 확인
+      console.log(res); // API 응답 확인.
 
       let filteredData = []; // ✅ if 블록 바깥에서 선언 (초기값 빈 배열)
 
