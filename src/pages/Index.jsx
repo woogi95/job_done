@@ -23,6 +23,51 @@ const Index = () => {
       console.log(error);
     }
   };
+
+  const [categories, setCategories] = useState({});
+  const [companies, setCompanies] = useState([]);
+  const BASE_URL = "http://112.222.157.156:5224";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoryIds = [1, 2, 3, 4];
+        const categoryRequests = categoryIds.map(id =>
+          axios.get("/api/business", {
+            params: {
+              categoryId: id,
+            },
+          }),
+        );
+
+        // 병렬 처리 - 카테고리 요청만 처리
+        const responses = await Promise.all(categoryRequests);
+
+        const companiesData = {};
+        categoryIds.forEach((id, index) => {
+          companiesData[id] = responses[index].data.resultData;
+        });
+
+        // 모든 데이터를 하나의 배열로 합치고 businessId로 정렬
+        const allCompanies = Object.values(companiesData)
+          .flat()
+          .sort((a, b) => b.businessId - a.businessId);
+
+        console.log("카테고리별 데이터:", companiesData);
+        console.log("추천 글 데이터:", allCompanies);
+
+        setCategories(companiesData);
+        setCompanies(allCompanies);
+      } catch (error) {
+        console.log("데이터 조회 에러:", error);
+        setCategories({});
+        setCompanies([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="pt-[80px]">
       <div>
@@ -86,7 +131,7 @@ const Index = () => {
       <div>
         <div className="max-w-[1280px] m-auto">
           {/* 인기 글 */}
-          <span className="flex pb-[10px]">인기 글</span>
+          <span className="flex pb-[10px]">인기 업체</span>
           <div className="flex gap-4 justify-center items-center">
             {PopularPost.map(item => (
               <a
@@ -136,7 +181,7 @@ const Index = () => {
         </div>
         <div className="max-w-[1280px] m-auto">
           {/* 추천 글 */}
-          <span className="flex pb-[10px]">추천 글</span>
+          <span className="flex pb-[10px]">최근 등록 업체</span>
           <div className="flex gap-4">
             {PopularPost.map(item => (
               <a

@@ -53,7 +53,11 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
+
 import ReviewView from "./pages/expert/review-center/ReviewView";
+
+import ContactUs from "./pages/servicepage/ContactUs";
+
 
 function App() {
   return (
@@ -91,6 +95,7 @@ function App() {
           {/* 이사 페이지 */}
           <Route path="/service">
             <Route index element={<Service />} />
+            <Route path="contactus" element={<ContactUs />} />
             <Route path=":id" element={<Detail />} />
           </Route>
           {/* 마이페이지 */}

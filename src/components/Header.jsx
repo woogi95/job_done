@@ -113,6 +113,7 @@ function Header() {
     });
   }, [categories]);
 
+
   useEffect(() => {
     const handleClickOutside = e => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
-import axios from "axios";
 import { statusText } from "../../components/ServiceIcon";
 
 function UsageDetails() {
@@ -8,10 +8,9 @@ function UsageDetails() {
 
   const fetchUsageData = async () => {
     try {
-      const res = await axios.get("/api/service", {
+      const res = await loginApi.get("/api/service", {
         params: {
-          userId: 1,
-          status: 1,
+          status: 3,
           page: 1,
           size: 10,
         },
