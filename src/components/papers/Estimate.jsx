@@ -7,11 +7,11 @@ import { papersState } from "../../atoms/businessAtom";
 const Estimate = () => {
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const getEstimate = async () => {
+  const serviceId = papers.serviceId;
+  const getEstimate = async serviceId => {
     try {
-      const res = await axios.get(`/api/service/detail`, {
-        params: { serviceId: 28 },
-      });
+      ///api/service/detail?serviceId=28
+      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
       // console.log(res.data.resultData);
       setPapers(res.data.resultData);
     } catch (error) {
@@ -19,9 +19,18 @@ const Estimate = () => {
     }
   };
   console.log(papers);
+
+  const formatPhoneNumber = phone => {
+    if (!phone) return "-";
+    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  };
+  const formatBusinessNumber = number => {
+    if (!number) return "사업자 번호 없음";
+    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
+  };
   useEffect(() => {
-    getEstimate();
-  }, []);
+    getEstimate(serviceId);
+  }, [serviceId]);
   return (
     <PapersDiv>
       <div className="inner">
@@ -53,11 +62,11 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>등록번호</p>
-                  <span>{papersInfo.businessNum}</span>
+                  <span>{formatBusinessNumber(papersInfo.businessNum)}</span>
                 </li>
                 <li>
                   <p>업체번호</p>
-                  <span>{papersInfo.businessPhone}</span>
+                  <span>{formatPhoneNumber(papersInfo.businessPhone)}</span>
                 </li>
                 <li>
                   <p>상호명</p>
@@ -78,11 +87,11 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>예약자</p>
-                  <span>{papersInfo.reservedName}</span>
+                  <span>{papersInfo.userName}</span>
                 </li>
                 <li>
                   <p>연락처</p>
-                  <span>{papersInfo.userPhone}</span>
+                  <span>{formatPhoneNumber(papersInfo.userPhone)}</span>
                 </li>
                 <li>
                   <p>주소</p>
@@ -95,46 +104,64 @@ const Estimate = () => {
               <ul>
                 <li>
                   <p>견적일</p>
-                  <span>{papersInfo.createdAt}</span>
+                  <span>{papersInfo.updatedAt}</span>
                 </li>
                 <li>
                   <p>방문날짜</p>
-                  <span>----</span>
+                  <span>
+                    {papersInfo.startDate} ~ {papersInfo.endDate}
+                  </span>
+                </li>
+                <li>
+                  <p>예정시간</p>
+                  <span>
+                    {papersInfo.mstartTime} - {papersInfo.mendTime}
+                  </span>
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>----</span>
+                  <span>{papersInfo.pyeong}</span>
                 </li>
-                <li className="option">
-                  <p>옵션</p>
-                  <ul>
-                    <li>
-                      <p>
-                        항목명1 - <em>옵션명1</em>
-                      </p>
-                      <span>20,000</span>
-                    </li>
-                    <li>
-                      <p>
-                        항목명2 - <em>옵션명2</em>
-                      </p>
-                      <span>40,000</span>
-                    </li>
-                    <li>
-                      <p>
-                        항목명3 - <em>옵션명3</em>
-                      </p>
-                      <span>40,000</span>
-                    </li>
-                  </ul>
-                </li>
+                {papersInfo.options && papersInfo.options.length > 0 && (
+                  <li className="option">
+                    <p>옵션</p>
+                    <ul>
+                      {papersInfo.options.map((option, index) => (
+                        <li key={index}>
+                          <p>
+                            {option.optionName}{" "}
+                            <em>({option.optionDetailName})</em>
+                          </p>
+                          <span>
+                            {option.optionDetailPrice.toLocaleString()}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+                {papersInfo.etc && papersInfo.etc.length > 0 && (
+                  <li className="option">
+                    <p>추가견적</p>
+                    <ul>
+                      {papersInfo.etc.map((etcItem, index) => (
+                        <li key={index}>
+                          <p>
+                            {etcItem.etcComment} <em>({etcItem.etcId})</em>
+                          </p>
+                          <span>{etcItem.etcPrice.toLocaleString()}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
                 <li>
                   <p>견적비용</p>
-                  <span>{papersInfo.createdAt}</span>
+                  <span>{papersInfo.price.toLocaleString()}</span>
                 </li>
                 <li>
                   <p>특이사항</p>
-                  <span>----</span>
+                  <span>{papersInfo.addComment}</span>
                 </li>
               </ul>
             </div>

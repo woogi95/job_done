@@ -93,11 +93,14 @@ function LoginPage() {
           name={"upw"}
           rules={[
             { required: true, message: "비밀번호는 필수 항목입니다." },
+
+
             // {
             //   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
             //   message:
             //     "비밀번호는 최소 8자 이상이며, 대소문자와 숫자를 포함해야 합니다.",
             // },
+
           ]}
         >
           <Input.Password placeholder="비밀번호를 입력하세요" />

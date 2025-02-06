@@ -53,6 +53,7 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
+import ContactUs from "./pages/servicepage/ContactUs";
 
 import ReviewView from "./pages/expert/review-center/ReviewView";
 

@@ -10,30 +10,43 @@ import {
 } from "./papers";
 // icon
 import { CgClose } from "react-icons/cg";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { papersState } from "../../atoms/businessAtom";
 
 const ExpertReservation = ({ setIsReservationPop }) => {
-  const [estimateInfo, setEstimateInfo] = useState({});
-  const navigate = useNavigate();
-  const getEstimate = async () => {
+  const [papers, setPapers] = useRecoilState(papersState);
+  const papersInfo = useRecoilValue(papersState);
+  const serviceId = papers.serviceId;
+  const getEstimate = async serviceId => {
     try {
-      const res = await axios.get("/api/service/detail?serviceId=1");
+      ///api/service/detail?serviceId=28
+      const res = await axios.get(`/api/service/detail?serviceId=${28}`);
       // console.log(res.data.resultData);
-      setEstimateInfo(res.data.resultData);
+      setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(papers);
+  const formatPhoneNumber = phone => {
+    if (!phone) return "-";
+    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  };
+  const formatBusinessNumber = number => {
+    if (!number) return "사업자 번호 없음";
+    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
+  };
   useEffect(() => {
-    getEstimate();
-  }, []);
-  console.log(estimateInfo);
+    getEstimate(serviceId);
+  }, [serviceId]);
+  // console.log(estimateInfo);
   return (
     <PapersDiv>
       <div className="inner">
         <div className="logo"></div>
         <ReservationPaperContDiv>
           <h2 className="tit">
-            ooo님이
+            {papersInfo.userName}님이
             <strong>
               견적·예약 신청
               <br />
@@ -42,19 +55,19 @@ const ExpertReservation = ({ setIsReservationPop }) => {
           </h2>
           <FormDiv>
             <div className="company-info">
-              <h3>예약업체정보</h3>
+              <h3>예약업체 정보</h3>
               <ul>
                 <li>
                   <p>상호명</p>
-                  <span>{estimateInfo.businessName}</span>
+                  <span>{papersInfo.businessName}</span>
                 </li>
                 <li>
                   <p>분류</p>
-                  <span>{estimateInfo.categoryName}</span>
+                  <span>{papersInfo.categoryName}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>----</span>
+                  <span>{papersInfo.businessAddress}</span>
                 </li>
               </ul>
             </div>
@@ -63,15 +76,15 @@ const ExpertReservation = ({ setIsReservationPop }) => {
               <ul>
                 <li>
                   <p>예약자</p>
-                  <span>{estimateInfo.reservedName}</span>
+                  <span>{papersInfo.userName}</span>
                 </li>
                 <li>
                   <p>연락처</p>
-                  <span>{estimateInfo.userPhone}</span>
+                  <span>{formatPhoneNumber(papersInfo.userPhone)}</span>
                 </li>
                 <li>
                   <p>주소</p>
-                  <span>{estimateInfo.address}</span>
+                  <span>{papersInfo.address}</span>
                 </li>
               </ul>
             </div>
@@ -80,47 +93,44 @@ const ExpertReservation = ({ setIsReservationPop }) => {
               <ul>
                 <li>
                   <p>신청일</p>
-                  <span>{estimateInfo.createdAt}</span>
+                  <span>{papersInfo.createdAt}</span>
                 </li>
                 <li>
                   <p>예약방문날짜</p>
-                  <span>----</span>
+                  <span>
+                    {papersInfo.startDate} ~ {papersInfo.endDate}
+                  </span>
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>----</span>
+                  <span>{papersInfo.pyeong}</span>
                 </li>
-                <li className="option">
-                  <p>옵션</p>
-                  <ul>
-                    <li>
-                      <p>
-                        항목명1 - <em>옵션명1</em>
-                      </p>
-                      <span>20,000</span>
-                    </li>
-                    <li>
-                      <p>
-                        항목명2 - <em>옵션명2</em>
-                      </p>
-                      <span>40,000</span>
-                    </li>
-                    <li>
-                      <p>
-                        항목명3 - <em>옵션명3</em>
-                      </p>
-                      <span>40,000</span>
-                    </li>
-                  </ul>
-                </li>
+                {papersInfo.options && papersInfo.options.length > 0 && (
+                  <li className="option">
+                    <p>옵션</p>
+                    <ul>
+                      {papersInfo.options.map((option, index) => (
+                        <li key={index}>
+                          <p>
+                            {option.optionName}{" "}
+                            <em>({option.optionDetailName})</em>
+                          </p>
+                          <span>
+                            {option.optionDetailPrice.toLocaleString()}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
 
                 <li>
                   <p>예상비용</p>
-                  <span>------</span>
+                  <span>{papersInfo.price.toLocaleString()}</span>
                 </li>
                 <li>
                   <p>문의사항</p>
-                  <span>----</span>
+                  <span>{papersInfo.comment}</span>
                 </li>
               </ul>
             </div>

@@ -32,21 +32,21 @@ const DetailContents = () => {
 
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
-
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
   const businessDetail = useRecoilValue(businessDetailState);
   const loginUserState = useRecoilValue(loginUser);
   const userId = loginUserState.userId;
   const businessId = businessDetail.businessId;
-  // console.log("`~~~~~~~~~~~~userId", userId);
-  console.log("`~~~~~~~~~~~~businessId", businessDetail.businessId);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const ToggleLike = async e => {
     e.preventDefault();
+
+    const newLikeStatus = !likeStatus[businessId]?.isLiked; // 현재 businessId에 대한 찜 상태 반전
     setLikeStatus({
       ...likeStatus,
-      isLiked: !likeStatus.isLiked,
-      businessId,
+      [businessId]: { isLiked: newLikeStatus },
     });
 
     try {
@@ -67,22 +67,7 @@ const DetailContents = () => {
   };
 
   // 상세설명 사진들
-  const [detailPicList, setDetailPicList] = useState([
-    // {
-    //   businessId: 0,
-    //   pic: "https://static.cdn.soomgo.com/upload/media/275dc588-abb6-4bac-827f-7808219b4a6b.jpg?webp=1",
-    // }
-  ]);
-
-  useEffect(() => {
-    if (likeStatus.businessId) {
-      setLikeStatus({
-        ...likeStatus,
-        isLiked: likeStatus.isLiked,
-        businessId,
-      });
-    }
-  }, [businessId, setLikeStatus]);
+  const [detailPicList, setDetailPicList] = useState([]);
 
   const getDetailPagePic = async businessId => {
     try {
@@ -121,6 +106,11 @@ const DetailContents = () => {
 
   const handleLinkClick = id => {
     setActiveLink(id);
+  };
+  const handleImageClick = portfolioId => {
+    console.log("portfolioId", portfolioId);
+    setSelectedPortfolioId(portfolioId);
+    setIsPfDetailPop(true);
   };
 
   // 문의하기 기능 (채팅방)
@@ -217,7 +207,7 @@ const DetailContents = () => {
           </div>
           <div className="box" id="portfolio">
             <h2>포트폴리오</h2>
-            <ContPortfolioList setIsPfDetailPop={setIsPfDetailPop} />
+            <ContPortfolioList handleImageClick={handleImageClick} />
           </div>
           <div className="box" id="reviews">
             <h2>리뷰</h2>
@@ -241,7 +231,7 @@ const DetailContents = () => {
                 ToggleLike(e);
               }}
             >
-              {likeStatus.isLiked ? (
+              {likeStatus[businessId]?.isLiked ? (
                 <BsHeartFill />
               ) : (
                 <BsHeart style={{ color: "gray" }} />
@@ -277,6 +267,7 @@ const DetailContents = () => {
         </div>
       </SummaryDiv>
       <PfPopup
+        portfolioId={selectedPortfolioId}
         setIsPfDetailPop={setIsPfDetailPop}
         isPfDetailPop={isPfDetailPop}
       />

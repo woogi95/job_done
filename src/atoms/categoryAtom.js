@@ -23,8 +23,8 @@ export const detailTypesStateS = atom({
 export const selectedCategoryState = atom({
   key: "selectedCategoryState",
   default: {
-    detailTypeId: 1,
-    detailTypeName: "",
+    categoryId: 1,
+    categoryName: "",
   },
 });
 
@@ -34,4 +34,8 @@ export const selectedDetailTypeState = atom({
     detailTypeId: 1,
     detailTypeName: "",
   },
+});
+export const regionState = atom({
+  key: "regionState",
+  default: undefined,
 });

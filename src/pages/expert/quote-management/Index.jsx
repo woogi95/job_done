@@ -5,9 +5,37 @@ import {
   ExpertListPageDiv,
   ExportListDiv,
 } from "../reservation-management/reservationMangement";
+import { useRecoilValue } from "recoil";
+import { businessDetailState } from "../../../atoms/businessAtom";
+import { useEffect, useState } from "react";
+import { statusAtom } from "../../../atoms/statusAtom";
+import axios from "axios";
+import { loginApi } from "../../../apis/login";
 
 function Index() {
   const navigate = useNavigate();
+  const status = useRecoilValue(statusAtom);
+  const businessDetail = useRecoilValue(businessDetailState);
+  const [reservationData, setReservationData] = useState([]);
+  // const businessId = businessDetail[0]?.businessId;
+  const businessId = 2;
+  // console.log(businessDetail[0].businessId);
+  const getStatusList = async (businessId, status) => {
+    try {
+      const res = await loginApi.get(
+        `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
+      );
+      console.log("!@#!#!#!$!$@#$!%!", res.data);
+      setReservationData(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (businessId) {
+      getStatusList(businessId, status);
+    }
+  }, []);
   return (
     <ExpertListPageDiv>
       <h2 className="tit">견적관리</h2>
@@ -34,292 +62,48 @@ function Index() {
             <li className="th">접수일</li>
             <li className="th">예약날짜</li>
             <li className="th">서비스 종류</li>
-            <li className="th">회원명</li>
             <li className="th">예약자</li>
+            <li className="th">견적금액</li>
             <li className="th">견적현황</li>
             <li className="th">견적서</li>
           </ul>
 
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed3">작성대기</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed1">견적완료</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed3">작성대기</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed1">견적완료</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed3">작성대기</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed1">견적완료</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed3">작성대기</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed1">견적완료</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed3">작성대기</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
-          <ul className="tr ">
-            <li className="td">2025-01-16</li>
-            <li className="td black">2025-01-17</li>
-            <li className="td">음식점청소</li>
-            <li className="td">회원명</li>
-            <li className="td">예약자</li>
-            <li className="td">
-              <p className="completed1">견적완료</p>
-            </li>
-            <li className="td btn-area">
-              <button
-                className="blue"
-                onClick={() => {
-                  navigate("/expert/quote-management/quotation-form");
-                }}
-              >
-                작성하기
-              </button>
-              <button
-                className="green"
-                onClick={() => {
-                  navigate("/expert/quote-management/edit-quotation");
-                }}
-              >
-                수정하기
-              </button>
-            </li>
-          </ul>
+          {reservationData.map(reservation => (
+            <ul className="tr" key={reservation.serviceId}>
+              <li className="td">{reservation.createdAt.split(" ")[0]}</li>
+              <li className="td black">{reservation.startDate || "미정"}</li>
+              <li className="td">{reservation.detailTypeName}</li>
+              <li className="td">{reservation.userName}</li>
+              <li className="td">{reservation.price}</li>
+              <li className="td">
+                <p
+                  className={
+                    reservation.completed === 1 ? "completed1" : "completed3"
+                  }
+                >
+                  {reservation.completed === 1 ? "견적완료" : "작성대기"}
+                </p>
+              </li>
+              <li className="td btn-area">
+                <button
+                  className="blue"
+                  onClick={() => {
+                    navigate("/expert/quote-management/quotation-form");
+                  }}
+                >
+                  작성하기
+                </button>
+                <button
+                  className="green"
+                  onClick={() => {
+                    navigate("/expert/quote-management/edit-quotation");
+                  }}
+                >
+                  수정하기
+                </button>
+              </li>
+            </ul>
+          ))}
         </ExportListDiv>
       </EListContDiv>
     </ExpertListPageDiv>
