@@ -57,9 +57,6 @@ import ContactUs from "./pages/servicepage/ContactUs";
 
 import ReviewView from "./pages/expert/review-center/ReviewView";
 
-import ContactUs from "./pages/servicepage/ContactUs";
-
-
 function App() {
   return (
     <Router>
