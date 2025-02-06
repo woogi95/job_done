@@ -125,7 +125,7 @@ function ExpertMain() {
         {/*  예약 현황 */}
         <BigBox>
           <ul>
-            <h1>예약 현황</h1>
+            <h1>예약 현황.</h1>
             <li></li>
           </ul>
         </BigBox>
