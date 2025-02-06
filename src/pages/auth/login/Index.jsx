@@ -22,7 +22,9 @@ function LoginPage() {
     console.log("로그인 요청:", data);
     try {
       const res = await axios.post("/api/user/sign-in", data, {
-        withCredentials: true, // ✅ 요청마다 쿠키 포함
+
+        withCredentials: true,
+
       });
       console.log("서버 응답:", res.data);
 
@@ -30,7 +32,9 @@ function LoginPage() {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
 
-        // ✅ accessToken을 쿠키에 직접 저장
+
+        // accessToken을 쿠키에 직접 저장
+
         Cookies.set("accessToken", accessToken, {
           expires: 1, // 1일 후 만료
           secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장

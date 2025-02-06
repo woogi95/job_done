@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import Cookies from "js-cookie";
 import {
   categoriesState,
   detailTypesState,
@@ -75,7 +76,7 @@ function Header() {
   // 로그아웃 관련
   const handleLogout = () => {
     localStorage.clear();
-
+    Cookies.remove("accessToken");
     document.cookie.split(";").forEach(cookie => {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
@@ -188,7 +189,10 @@ function Header() {
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
-              {getBusinessId <= 1 ? (
+
+              {getBusinessId == 0 ? (
+
+              
                 <Link
                   to="/business"
                   className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"

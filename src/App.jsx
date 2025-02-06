@@ -53,6 +53,7 @@ import MessageCenter from "./pages/expert/message-center/Index";
 import ReviewCenter from "./pages/expert/review-center/Index";
 // 통계
 import Statistics from "./pages/expert/statistics/Index";
+import ReviewView from "./pages/expert/review-center/ReviewView";
 import ContactUs from "./pages/servicepage/ContactUs";
 
 function App() {
@@ -139,9 +140,10 @@ function App() {
             <Route path="/expert/message-center">
               <Route index element={<MessageCenter />} />
             </Route>
-            {/* 고객문의 */}
+            {/* 리뷰문의 */}
             <Route path="/expert/review-center">
               <Route index element={<ReviewCenter />} />
+              <Route path="reviewview" index element={<ReviewView />} />
             </Route>
             {/* 통계 */}
             <Route path="/expert/statistics">

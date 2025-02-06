@@ -9,13 +9,23 @@ export const detailTypesState = atom({
   key: "detailTypesState",
   default: [],
 });
+export const categoriesStateS = atom({
+  key: "categoriesStateS",
+  default: [],
+});
+
+export const detailTypesStateS = atom({
+  key: "detailTypesStateS",
+  default: [],
+
+});
 
 // 카테고리 찍을 때 나오는 숫자
 export const selectedCategoryState = atom({
   key: "selectedCategoryState",
   default: {
-    categoryId: 1,
-    categoryName: "",
+    detailTypeId: 1,
+    detailTypeName: "",
   },
 });
 
@@ -26,6 +36,7 @@ export const selectedDetailTypeState = atom({
     detailTypeName: "",
   },
 });
+
 export const regionState = atom({
   key: "regionState",
   default: undefined,
