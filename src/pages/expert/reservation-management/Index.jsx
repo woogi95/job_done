@@ -14,15 +14,20 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
+  const [seletedServiceId, setSeletedServiceId] = useState(null);
+
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
-  const businessId = businessDetail[0]?.businessId;
+  // 주석풀기
+  // const businessId = businessDetail[0]?.businessId;
   // console.log(businessDetail[0].businessId);
+  const businessId = 2;
   const getStatusList = async (businessId, status) => {
     try {
-      console.log(businessId, status);
+      console.log("이것무엇", businessId, status);
       const res = await axios.get(
+        // `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
       );
       console.log(res.data);
@@ -30,6 +35,12 @@ function Index() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleViewDetail = serviceId => {
+    setIsReservationPop(true);
+    setSeletedServiceId(serviceId);
+    console.log(seletedServiceId);
   };
   useEffect(() => {
     if (businessId) {
@@ -51,6 +62,7 @@ function Index() {
         return "미정"; // Undefined
     }
   };
+
   return (
     <ExpertListPageDiv>
       <h2 className="tit">예약리스트</h2>
@@ -103,7 +115,13 @@ function Index() {
                 </p>
               </li>
               <li className="td blue btn-area">
-                <button>신청서</button>
+                <button
+                  onClick={() => {
+                    handleViewDetail(reservation.serviceId);
+                  }}
+                >
+                  신청서
+                </button>
               </li>
             </ul>
           ))}

@@ -45,7 +45,7 @@ const ExpertSideMenu = () => {
               isActive || isActiveMenu ? "active" : ""
             }
           >
-            업체관리{" "}
+            업체관리
             <IoIosArrowDown
               style={{
                 transform: isSubMenuOpen ? "rotate(180deg)" : "rotate(0deg)",

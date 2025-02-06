@@ -10,20 +10,22 @@ import { businessDetailState } from "../../../atoms/businessAtom";
 import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
 import axios from "axios";
+import { loginApi } from "../../../apis/login";
 
 function Index() {
   const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
-  const businessId = businessDetail[0]?.businessId;
+  // const businessId = businessDetail[0]?.businessId;
+  const businessId = 2;
   // console.log(businessDetail[0].businessId);
   const getStatusList = async (businessId, status) => {
     try {
-      const res = await axios.get(
+      const res = await loginApi.get(
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
       );
-      console.log(res.data);
+      console.log("!@#!#!#!$!$@#$!%!", res.data);
       setReservationData(res.data.resultData);
     } catch (error) {
       console.log(error);

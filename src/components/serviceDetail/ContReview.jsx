@@ -29,7 +29,7 @@ const ContReview = () => {
       console.log(error);
     }
   };
-  console.log("dighdkfoasdas", reviewList[0].averageScore);
+  // console.log("dighdkfoasdas", reviewList[0].averageScore);
   // 별점
   const renderStars = score => {
     const fullStars = Math.floor(score); // 채워진 별 개수
@@ -59,9 +59,9 @@ const ContReview = () => {
       <StarTotalDiv>
         <h4>{businessDetail.businessName}</h4>
         <div className="star-container">
-          <p className="star"> {renderStars(reviewList[0].averageScore)}</p>
+          <p className="star"> {renderStars(reviewList[0]?.averageScore)}</p>
           <span className="star-grade">
-            {reviewList.length > 0 && reviewList[0].averageScore.toFixed(1)}
+            {reviewList.length > 0 && reviewList[0]?.averageScore.toFixed(1)}
           </span>
         </div>
       </StarTotalDiv>
@@ -72,7 +72,7 @@ const ContReview = () => {
         </div>
         {/* 리뷰리스트 */}
         <div className="rv-list">
-          {reviewList.map((item, index) => (
+          {reviewList?.map((item, index) => (
             <div className="rv-item" key={index}>
               {/* 유저리뷰 */}
               <div className="user-rv">

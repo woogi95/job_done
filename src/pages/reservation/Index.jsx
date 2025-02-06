@@ -102,7 +102,10 @@ function Index() {
       ...selectOptions,
       [productOptionId]: optionDetailId,
     };
+
+    setTotalPrice(updatedTotalPrice);
     setSelectOptions(updatedSelectOptions); // selectOptions를 업데이트
+    console.log(selectOptions);
 
     // 금액 계산 함수 호출
     updateTotalPrice(updatedSelectOptions);
