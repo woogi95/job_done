@@ -28,27 +28,6 @@ function Header() {
   const [profileImg, setProfileImg] = useState(
     "/images/order/default_profile.jpg",
   );
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-
-  const getUserInfo = async () => {
-    try {
-      const res = await loginApi.get(`/api/user`);
-
-      const userData = res.data.resultData;
-      setUserName(userData.name);
-      setUserEmail(userData.email);
-      setPhoneNumber(userData.phone);
-      const profileImgUrl = userData.pic
-        ? `http://112.222.157.156:5224${userData.pic}`
-        : "/images/order/default_profile.jpg";
-      setProfileImg(profileImgUrl);
-      console.log("프로필 이미지 경로:", userData.pic);
-    } catch (error) {
-      console.error("API 에러:", error);
-    }
-  };
 
   const getUserInfo = async () => {
     try {
