@@ -38,7 +38,7 @@ function ExpertMain() {
           startDate: item.startDate,
         }));
       }
-
+      console.log(filteredData);
       // ✅ if 문 밖에서 `setReserveInfo` 호출
       setReserveInfo(filteredData);
     } catch (error) {

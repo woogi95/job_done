@@ -6,6 +6,7 @@ import {
   commentsBox,
   reviewIdState,
   reviewListState,
+  reviewPicsList,
 } from "../../../atoms/reviewAtom";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import { loginApi } from "../../../apis/login";
 
 function Index() {
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
+  const [reviewPicsData, setReviewPicsData] = useRecoilState(reviewPicsList);
   const [commentModal, setCommentModal] = useRecoilState(commentModals);
   const [commentBox, setCommentBox] = useRecoilState(commentsBox);
   const [reviewIds, setReviewIds] = useRecoilState(reviewIdState);
@@ -41,6 +43,12 @@ function Index() {
           replyStatus: item.comment,
           comment: item.comment === null ? "" : item.comment.contents,
         }));
+        const reviewPics = res.data.resultData.map((item, index) => ({
+          reviewId: item.reviewId,
+          pic: [item.pics.filter((_, index) => index % 2 === 0)],
+        }));
+        console.log(reviewPics);
+        setReviewPicsData(reviewPics);
         setReviewDatas(formattedData);
       }
     } catch (error) {
