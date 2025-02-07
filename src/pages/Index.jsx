@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EventBanner } from "../components/ServiceIcon";
-import ServiceSkeleton from "../components/ServiceSkeleton";
+import { ServiceSkeleton } from "../components/ServiceSkeleton";
 
 const Index = () => {
   const [categories, setCategories] = useState({});

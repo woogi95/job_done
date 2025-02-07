@@ -131,6 +131,7 @@ function Header() {
 
   useEffect(() => {
     fetchCategories();
+    console.log("카테고리 데이터:", categories);
   }, []);
 
   useEffect(() => {
