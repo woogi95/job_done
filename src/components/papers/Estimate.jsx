@@ -12,13 +12,13 @@ const Estimate = () => {
     try {
       ///api/service/detail?serviceId=28
       const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
-      // console.log(res.data.resultData);
+
+      console.log("!!!!", res);
       setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(papers);
 
   const formatPhoneNumber = phone => {
     if (!phone) return "-";
@@ -30,6 +30,7 @@ const Estimate = () => {
   };
   useEffect(() => {
     getEstimate(serviceId);
+    console.log("==>", papersInfo);
   }, [serviceId]);
   return (
     <PapersDiv>

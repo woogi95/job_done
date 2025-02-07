@@ -1,30 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   BtnAreaDiv,
   FormDiv,
-  PaperContDiv,
   PapersDiv,
   ReservationPaperContDiv,
 } from "./papers";
-import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { papersState } from "../../atoms/businessAtom";
+import { papersState, serviceIdState } from "../../atoms/businessAtom";
+import { loginApi } from "../../apis/login";
+import { useNavigate } from "react-router-dom";
+import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
+  const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = papers.serviceId;
+  const [serviceId, setServiceId] = useRecoilState(serviceIdState);
+  console.log("serviceId:", serviceId);
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
-      // console.log(res.data.resultData);
+      console.log(serviceId);
+      const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}`,
+      );
+      console.log("견적서 정보", res.data.resultData);
       setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
-  console.log(papers);
 
   const formatPhoneNumber = phone => {
     if (!phone) return "-";
@@ -36,14 +41,29 @@ const UserReservation = () => {
   };
   useEffect(() => {
     getEstimate(serviceId);
-  }, [serviceId]);
+    console.log(papers);
+  }, []);
+
+  const patchServiceState = async (completed, serviceId) => {
+    try {
+      console.log(completed, serviceId);
+      const res = await loginApi.patch(`/api/service`, {
+        completed,
+        serviceId,
+      });
+      console.log(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <PapersDiv>
       <div className="inner">
         <div className="logo"></div>
         <ReservationPaperContDiv>
           <h2 className="tit">
-            {papersInfo.businessName}에서
+            {papersInfo?.businessName || "업체이름"}에서
             <strong>
               견적·예약 신청이
               <br />
@@ -126,7 +146,7 @@ const UserReservation = () => {
                             <em>({option.optionDetailName})</em>
                           </p>
                           <span>
-                            {option.optionDetailPrice.toLocaleString()}
+                            {option.optionDetailPrice.toLocaleString()}원
                           </span>
                         </li>
                       ))}
@@ -136,7 +156,7 @@ const UserReservation = () => {
 
                 <li>
                   <p>예상비용</p>
-                  <span>{papersInfo.price.toLocaleString()}</span>
+                  <span>{papersInfo.price.toLocaleString()}원</span>
                 </li>
                 <li>
                   <p>문의사항</p>
@@ -146,8 +166,22 @@ const UserReservation = () => {
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button className="cancel">예약취소</button>
-            <button className="okay">예약현황 보기</button>
+            <button
+              className="cancel"
+              onClick={() => {
+                patchServiceState(3, serviceId);
+              }}
+            >
+              예약취소
+            </button>
+            <button
+              className="okay"
+              onClick={() => {
+                navigate("/mypage/reservation");
+              }}
+            >
+              예약현황 보기
+            </button>
           </BtnAreaDiv>
         </ReservationPaperContDiv>
       </div>

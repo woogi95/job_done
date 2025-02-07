@@ -26,30 +26,45 @@ import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
 import UserReservation from "../../components/papers/UserReservation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { businessDetailState } from "../../atoms/businessAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { businessDetailState, serviceIdState } from "../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../apis/login";
 
 const schema = yup.object({
+  productId: yup.number(),
   startDate: yup.date().required("날짜를 선택해주세요."),
-  pyeong: yup
-    .number()
-    .required("평수를 입력해주세요.")
-    .min(1, "최소 1평 이상 입력해주세요."),
+  pyeong: yup.number().required("평수를 입력해주세요."),
   mstartTime: yup.string().required("시간을 선택해주세요."),
+  lat: yup.number(),
+  lng: yup.number(),
+  address: yup.string(),
+  comment: yup.string(),
+  totalPrice: yup.number(),
+  options: yup.array(),
 });
 
 function Index() {
   const [detailAddress, setDetailAddress] = useState("");
   const [address, setAddress] = useState("");
-  const [selectOptions, setSelectOptions] = useState({});
+  // const [selectOptions, setSelectOptions] = useState({});
   const [reservationSubmitted, setReservationSubmitted] = useState(false);
   const [optionList, setOptionList] = useState([]);
   const [basicPrice, setBasicPrice] = useState();
   const [selectedPrices, setSelectedPrices] = useState({});
-
+  const [productId, setProductId] = useState(1);
+  const [selectedOption, setSelectedOption] = useState([]);
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
+  // const [optionDetailIdList, setOptionDetailIdList] = useState()
+  const [isTest, setIsTest] = useState();
+  const [serviceId, setServiceId] = useRecoilState(serviceIdState);
+  useEffect(() => {
+    console.log("serviceId", serviceId);
+  }, [serviceId]);
+
+  // 최종 API 로 보낼 데이터 모양
+  const [sendAllData, setSendAllData] = useState([]);
 
   const navigate = useNavigate();
   const handleBack = () => navigate(-1);
@@ -62,7 +77,6 @@ function Index() {
     setValue,
   } = useForm({
     defaultValues: {
-      userId: 0,
       productId: 1,
       totalPrice: 0,
       lat: 0,
@@ -78,12 +92,24 @@ function Index() {
     resolver: yupResolver(schema),
   });
 
+  useEffect(() => {
+    console.log(
+      "===== 아래에서 원하는 옵션을 만들겠습니다. 하단 코드 복사해서 사용하세요. ======",
+    );
+    // console.log(sendAllData);
+    const sendOptionData = sendAllData.map(item => ({
+      optionDetailId: item.optionDetailId,
+    }));
+    console.log(sendOptionData);
+  }, [sendAllData]);
+
   // 옵션 목록 가져오기
   const getOptionList = async businessId => {
     try {
       const res = await axios.get(`/api/product?businessId=${businessId}`);
       setOptionList(res.data.resultData.optionList);
       setBasicPrice(res.data.resultData.productPrice);
+      setProductId(res.data.resultData.productId);
       if (res.data.resultData.optionList.length > 0) {
         const firstOption = res.data.resultData.optionList[0];
         setSelectedPrices({
@@ -91,6 +117,29 @@ function Index() {
             firstOption.optionDetailList[0].optionDetailPrice,
         });
       }
+
+      // console.log("너란다 : ", res.data.resultData.optionList);
+
+      const listTempArr = res.data.resultData.optionList.map(item => ({
+        productOptionId: item.productOptionId,
+        optionDetailId: item.optionDetailList[0].optionDetailId,
+      }));
+
+      setSendAllData(listTempArr);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const postReservation = async data => {
+    try {
+      const res = await loginApi.post(`/api/service`, data);
+      const resultData = res.data.resultData;
+
+      setIsTest(resultData);
+      console.log("서비스 아이디가 맞나요?", res.data.resultData.serviceId);
+      setServiceId(res.data.resultData.serviceId);
+      // console.log(resultData);
     } catch (error) {
       console.log(error);
     }
@@ -101,18 +150,30 @@ function Index() {
   }, [businessId]);
 
   const onSubmit = data => {
-    const formattedStartDate = moment(data.startDate).format("YYYY-MM-DD");
-    const fullAddress = `${address} ${detailAddress}`;
+    const sendOptionData = sendAllData.map(item => ({
+      optionDetailId: item.optionDetailId,
+    }));
+    const formattedStartDate = moment(data.startDate).format("YYYY/MM/DD");
+    // const fullAddress = `${address} ${detailAddress}`;
     // const { detailAddress, ...dataWithoutDetailAddress } = data;
+    // const options = sendOptionData;
     const updatedData = {
       ...data,
-      address: fullAddress,
+      // address: fullAddress,
       startDate: formattedStartDate,
       totalPrice: totalPrice,
+      productId: productId,
+      options: sendOptionData,
     };
-    console.log(updatedData);
+    console.log("!!!!", updatedData);
+    postReservation(updatedData);
     setReservationSubmitted(true);
   };
+
+  // useEffect(() => {
+  //   postReservation();
+  //   console.log("얼으으으으음!! : ", isTest);
+  // }, []);
 
   const pyeongVal = watch("pyeong");
 
@@ -123,7 +184,21 @@ function Index() {
     pyeongVal * 10000;
 
   // 옵션 변경 처리
-  const handleOptionChange = (productOptionId, optionPrice) => {
+  const handleOptionChange = (productOptionId, optionPrice, optionDetailId) => {
+    console.log("productOptionId : ", productOptionId);
+    console.log("optionPrice : ", optionPrice);
+    console.log("optionDetailId : ", optionDetailId);
+    console.log("----------");
+
+    const resultArr = sendAllData.map(item => {
+      if (productOptionId === item.productOptionId) {
+        item.optionDetailId = optionDetailId;
+      }
+      return item;
+    });
+    // 최종 선택된 데이터
+    setSendAllData(resultArr);
+
     setSelectedPrices(prev => {
       const updatedPrices = Object.keys(prev)
         .filter(key => key !== productOptionId)
@@ -135,6 +210,19 @@ function Index() {
       return {
         ...updatedPrices,
         [productOptionId]: optionPrice,
+      };
+    });
+    setSelectedOption(prev => {
+      const updatedOptionDetail = Object.keys(prev)
+        .filter(key => key !== productOptionId)
+        .reduce((obj, key) => {
+          obj[key] = prev[key];
+          return obj;
+        }, {});
+      // updatedOptionDetail.map(item => {});
+      return {
+        ...updatedOptionDetail,
+        [productOptionId]: optionDetailId, // ✅ 기존 구조 유지하면서 새로운 값 추가
       };
     });
   };
@@ -160,6 +248,12 @@ function Index() {
     document.head.appendChild(script);
     return () => document.head.removeChild(script);
   }, []);
+
+  useEffect(() => {
+    // setValue("address", `${address} ${detailAddress}`);
+    // console.log(watch("address"));
+    console.log("옵션 아이디", selectedOption);
+  }, [address, detailAddress, selectedOption]);
 
   if (reservationSubmitted) {
     return <UserReservation />;
@@ -224,11 +318,12 @@ function Index() {
                 <label htmlFor="address">
                   <h4>주소</h4>
                   <input
-                    {...register("address")}
+                    // {...register("address")}
                     type="text"
                     className="addr"
                     id="address"
                     value={address}
+                    onChange={e => setAddress(e.target.value)}
                     readOnly
                   />
                   <button type="button" onClick={handlePostcodeSearch}>
@@ -238,16 +333,16 @@ function Index() {
                 <label htmlFor="detailAddress">
                   <h4>상세주소</h4>
                   <input
-                    {...register("detailAddress")}
                     type="text"
                     id="detailAddress"
                     placeholder="상세 주소를 입력해주세요"
                     value={detailAddress}
+                    // {...register("detailAddress")}
                     onChange={e => setDetailAddress(e.target.value)}
                   />
-                  {errors.detailAddress && (
+                  {/* {errors.detailAddress && (
                     <p>{errors.detailAddress.message}</p>
-                  )}
+                  )} */}
                 </label>
                 <RoomSizeDiv>
                   <h3>평수입력</h3>
@@ -288,6 +383,7 @@ function Index() {
                                 handleOptionChange(
                                   option.productOptionId,
                                   item.optionDetailPrice,
+                                  item.optionDetailId,
                                 )
                               }
                               checked={
@@ -341,7 +437,11 @@ function Index() {
               <button className="cancel" type="button" onClick={handleBack}>
                 뒤로가기
               </button>
-              <button className="confirm" type="submit">
+              <button
+                className="confirm"
+                type="submit"
+                // onClick={setValue(sendOptionData)}
+              >
                 예약하기
               </button>
             </BtnAreaCustomDiv>

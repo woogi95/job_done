@@ -111,3 +111,8 @@ export const portfolioListState = atom({
     },
   ],
 });
+
+export const serviceIdState = atom({
+  key: "serviceIdState",
+  default: 0,
+});

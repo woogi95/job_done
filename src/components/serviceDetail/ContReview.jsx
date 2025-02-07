@@ -26,9 +26,10 @@ const ContReview = () => {
 
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, status) => {
+    console.log(businessId, status);
     try {
       const res = await axios.get(
-        `/api/review?businessId=${businessId}&status=${status}&page=${page}&size=${size}&sortType=${sortType}`,
+        `/api/review?businessId=${businessId}&status=${status}&page=${page}&size=${size}`,
       );
       console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
@@ -112,6 +113,11 @@ const ContReview = () => {
                       <img
                         src={`${BASE_URL}${item.writerPic}`}
                         alt={item.name}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
                       />
                     ) : (
                       <img style={{ backgroundColor: "#34c5f0" }}></img>
