@@ -1,30 +1,30 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { loginApi } from "../../apis/login";
+import { papersState, serviceIdState } from "../../atoms/businessAtom";
 import {
   BtnAreaDiv,
   FormDiv,
   PapersDiv,
   ReservationPaperContDiv,
 } from "./papers";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { papersState, serviceIdState } from "../../atoms/businessAtom";
-import { loginApi } from "../../apis/login";
-import { useNavigate } from "react-router-dom";
-import { Popup } from "../ui/Popup";
+// import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const [serviceId, setServiceId] = useRecoilState(serviceIdState);
+  const serviceId = useRecoilValue(serviceIdState);
   console.log("serviceId:", serviceId);
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      console.log(serviceId);
+      console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      console.log("견적서 정보", res.data.resultData);
+      console.log("견적서 정보", res);
       setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -56,6 +56,10 @@ const UserReservation = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log("중요!!!!!!", serviceId);
+  }, [serviceId]);
 
   return (
     <PapersDiv>
