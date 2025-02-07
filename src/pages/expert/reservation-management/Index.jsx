@@ -22,6 +22,7 @@ function Index() {
   const [reservationData, setReservationData] = useState([]);
 
   const getStatusList = async (businessId, status) => {
+    console.log("businessId, status", businessId, status);
     try {
       // console.log("이것무엇", businessId, status);
       const res = await loginApi.get(

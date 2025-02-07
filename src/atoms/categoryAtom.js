@@ -24,8 +24,8 @@ export const detailTypesStateS = atom({
 export const selectedCategoryState = atom({
   key: "selectedCategoryState",
   default: {
-    detailTypeId: 1,
-    detailTypeName: "",
+    CategoryId: 1,
+    CategoryName: "",
   },
 });
 
