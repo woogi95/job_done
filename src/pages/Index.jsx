@@ -6,7 +6,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EventBanner, serviceIcons } from "../components/ServiceIcon";
+import { EventBanner } from "../components/ServiceIcon";
+import ServiceSkeleton from "../components/ServiceSkeleton";
 
 const Index = () => {
   const [categories, setCategories] = useState({});
@@ -197,8 +198,10 @@ const Index = () => {
                 </Link>
               ))
             ) : (
-              <div className="w-full text-center py-10 text-gray-500">
-                데이터를 불러오는 중입니다...
+              <div className="flex w-full gap-[15px]">
+                {[...Array(4)].map((_, index) => (
+                  <ServiceSkeleton key={index} />
+                ))}
               </div>
             )}
           </div>
@@ -258,8 +261,10 @@ const Index = () => {
                 </Link>
               ))
             ) : (
-              <div className="w-full text-center py-10 text-gray-500">
-                데이터를 불러오는 중입니다...
+              <div className="flex w-full gap-[15px]">
+                {[...Array(4)].map((_, index) => (
+                  <ServiceSkeleton key={index} />
+                ))}
               </div>
             )}
           </div>
