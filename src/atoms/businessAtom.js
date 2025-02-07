@@ -11,15 +11,8 @@ export const businessInfo = atom({
     busiCreatedAt: "2019.06.08",
     tel: "0533836669",
     paper: "",
-    logo: "",
   },
 });
-// 기업 로고 폼
-export const busiFile = atom({
-  key: "busiFile",
-  default: null,
-});
-
 // 사업자 중복확인 모달창
 export const numDubCheck = atom({
   key: "numDubCheck",

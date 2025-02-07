@@ -45,7 +45,7 @@ function Header() {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`/api/category`);
+      const res = await loginApi.get(`/api/category`);
       setCategories(res.data.resultData);
     } catch (error) {
       console.error("Categories error:", error.response || error);
@@ -54,7 +54,7 @@ function Header() {
 
   const fetchDetailTypes = async categoryId => {
     try {
-      const res = await axios.get(`/api/category/detail`, {
+      const res = await loginApi.get(`/api/category/detail`, {
         params: { categoryId: categoryId },
       });
       setDetailTypes(prev => ({

@@ -23,6 +23,7 @@ const ContReview = () => {
   const businessId = businessDetail.businessId;
   const page = 1;
   const size = 5;
+
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, status) => {
     try {
