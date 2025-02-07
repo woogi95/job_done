@@ -16,17 +16,15 @@ function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
   const [seletedServiceId, setSeletedServiceId] = useState(null);
 
+  const businessId = localStorage.getItem("businessId");
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
-  // 주석풀기
-  // const businessId = businessDetail[0]?.businessId;
-  // console.log(businessDetail[0].businessId);
-  const businessId = 2;
+
   const getStatusList = async (businessId, status) => {
     try {
-      console.log("이것무엇", businessId, status);
-      const res = await axios.get(
+      // console.log("이것무엇", businessId, status);
+      const res = await loginApi.get(
         // `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
       );
@@ -46,7 +44,7 @@ function Index() {
     if (businessId) {
       getStatusList(businessId, status);
     }
-  }, [status]);
+  }, [businessId, status]);
 
   const getStatusText = completed => {
     switch (completed) {

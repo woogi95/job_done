@@ -8,32 +8,38 @@ import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../../atoms/businessAtom";
 import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../../apis/login";
 
 function Index() {
-  const navigate = useNavigate();
+  const businessId = localStorage.getItem("businessId");
+  // const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
   const businessDetail = useRecoilValue(businessDetailState);
   const [reservationData, setReservationData] = useState([]);
-  const businessId = businessDetail[0]?.businessId;
-  // console.log(businessDetail[0].businessId);
+
   const getStatusList = async (businessId, status) => {
+    console.log("businessId, status", businessId, status);
     try {
-      const res = await axios.get(
+      const res = await loginApi.get(
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
       );
-      console.log(res.data);
+
+      console.log("0000", res.data);
       setReservationData(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    if (businessId) {
+    if (businessDetail) {
       getStatusList(businessId, status);
     }
   }, []);
+  useEffect(() => {
+    console.log("businessDetail", businessDetail);
+    console.log("businessId", businessId);
+  }, [businessId]);
   return (
     <ExpertListPageDiv>
       <h2 className="tit">결제관리</h2>

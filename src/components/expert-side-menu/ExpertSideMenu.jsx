@@ -26,7 +26,6 @@ const ExpertSideMenu = () => {
     }
   }, [location.pathname]);
 
-  // -----
   // 메뉴 클릭 시 상태 변경 및 URL 변경
   const handleMenuClick = (newState, menuName) => {
     setStatus(newState); // Recoil 상태에 상태 값 저장

@@ -27,6 +27,7 @@ const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
   const [pfDetailInfoList, setPfDetailInfoList] = useRecoilState(
     PortfolioDetailInfoState,
   );
+  const BASE_URL = "http://112.222.157.156:5224";
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
   const navigate = useNavigate();
@@ -71,7 +72,10 @@ const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
           >
             {pfDetailImgList.map((image, index) => (
               <SwiperSlide key={index}>
-                <img src={image.pic} alt={`portfolio-image-${index}`} />
+                <img
+                  src={`${BASE_URL}${image.pic}`}
+                  alt={`portfolio-image-${index}`}
+                />
               </SwiperSlide>
             ))}
           </Swiper>

@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 
 const DetailTop = () => {
+  const BASE_URL = "http://112.222.157.156:5224";
   const businessDetail = useRecoilValue(businessDetailState);
   console.log(businessDetail);
   if (!businessDetail) {
@@ -18,7 +19,7 @@ const DetailTop = () => {
         <h1>{businessDetail.title}</h1>
         <div className="companyInfo">
           <div className="logo">
-            <img src={businessDetail.logo} alt="로고" />
+            <img src={`${BASE_URL}${businessDetail.logo}`} alt="로고" />
           </div>
           <div className="txt">
             <h3>
