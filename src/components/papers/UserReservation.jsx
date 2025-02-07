@@ -7,7 +7,7 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import axios from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
 
 const UserReservation = () => {
