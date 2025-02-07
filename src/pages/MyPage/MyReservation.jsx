@@ -12,9 +12,11 @@ function MyReservation() {
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [rating, setRating] = useState(5);
   const [previewImages, setPreviewImages] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [reviewContent, setReviewContent] = useState("");
 
   const handleReviewModalOpen = serviceId => {
+    console.log("리뷰 모달 열기 - serviceId:", serviceId);
     setSelectedServiceId(serviceId);
     setReviewModalOpen(true);
   };
@@ -27,11 +29,13 @@ function MyReservation() {
     const files = Array.from(e.target.files);
     const imageUrls = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prev => [...prev, ...imageUrls]);
+    setUploadedFiles(prev => [...prev, ...files]);
     e.target.value = "";
   };
 
   const handleRemoveImage = index => {
     setPreviewImages(prev => prev.filter((_, i) => i !== index));
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   const reservationData = async () => {
@@ -43,10 +47,10 @@ function MyReservation() {
           size: 10,
         },
       });
-      // console.log("너 맞니? : ", res.data.resultData);
+      console.log("너 맞니? : ", res.data.resultData);
       setReservation(res.data.resultData);
       setResState(res.data.resultData);
-      // console.log("잘 담김? : ", resState);
+      console.log("잘 담김? : ", resState);
     } catch (error) {
       console.log(error);
     }
@@ -54,40 +58,59 @@ function MyReservation() {
 
   const reviewWrite = async serviceId => {
     try {
-      const imagePromises = previewImages.map(async imageUrl => {
-        const response = await fetch(imageUrl);
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-      });
+      if (!serviceId || !reviewContent.trim()) {
+        alert("서비스 ID와 리뷰 내용은 필수입니다.");
+        return;
+      }
 
-      const base64Images = await Promise.all(imagePromises);
+      const formData = new FormData();
 
+      // JSON 데이터 추가
       const reviewData = {
-        pics: [base64Images],
-        p: {
-          serviceId: serviceId,
-          contents: reviewContent,
-          score: rating,
-        },
+        serviceId: serviceId,
+        contents: reviewContent.trim(),
+        score: rating,
       };
 
-      const res = await loginApi.post("/api/review", reviewData);
-      console.log("리뷰 쓰기 결과 : ", res);
+      formData.append(
+        "p",
+        new Blob([JSON.stringify(reviewData)], {
+          type: "application/json",
+        }),
+      );
 
-      setReviewContent("");
-      setPreviewImages([]);
-      setRating(5);
-      handleReviewModalClose();
+      // 이미지 파일들 추가
+      uploadedFiles.forEach((file, index) => {
+        formData.append("pics", file);
+      });
+
+      const res = await loginApi.post("/api/review", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (res.status === 200) {
+        alert("리뷰가 성공적으로 등록되었습니다.");
+        setReviewContent("");
+        setPreviewImages([]);
+        setUploadedFiles([]);
+        setRating(5);
+        handleReviewModalClose();
+        reservationData();
+      }
     } catch (error) {
-      console.log(error);
+      console.error("리뷰 등록 실패:", error);
+      alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.");
     }
   };
-
+  useEffect(() => {
+    console.log("예약 데이터:", reservation);
+    reservation.forEach(item => {
+      console.log("serviceId:", item.serviceId);
+      console.log("예약 항목 전체 데이터:", item);
+    });
+  }, [reservation]);
   useEffect(() => {
     reservationData();
   }, []);
@@ -103,7 +126,7 @@ function MyReservation() {
             <div key={item.id} className="mb-[15px]">
               <div className="flex flex-col gap-[10px] px-[55px]">
                 <div className="flex justify-between">
-                  <span>예약일 : {item.createdAt}</span>
+                  <span>예약일 : {item.createdAt.split(" ")[0]}</span>
                   <button onClick={() => window.open("", "_blank")}>
                     상세보기
                   </button>
@@ -119,11 +142,15 @@ function MyReservation() {
                 <div className="flex justify-center items-center gap-[15px]">
                   <button
                     disabled={[0, 1, 6].includes(item.completed)}
-                    onClick={() =>
-                      ![0, 1, 6].includes(item.completed) &&
-                      [7, 8, 9].includes(item.completed) &&
-                      handleReviewModalOpen(item.id)
-                    }
+                    onClick={() => {
+                      if (
+                        ![0, 1, 6].includes(item.completed) &&
+                        [7, 8, 9].includes(item.completed)
+                      ) {
+                        console.log("선택된 예약의 serviceId:", item.serviceId); // serviceId 확인
+                        handleReviewModalOpen(item.serviceId); // serviceId를 사용
+                      }
+                    }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${
                         [0, 1, 6].includes(item.completed)
@@ -217,7 +244,10 @@ function MyReservation() {
             </div>
             <div className="flex justify-center items-center gap-[10px]">
               <button
-                onClick={handleReviewModalClose}
+                onClick={() => {
+                  console.log("선택된 serviceId:", selectedServiceId); // 디버깅용
+                  reviewWrite(selectedServiceId);
+                }}
                 className="mt-4 px-4 py-2 bg-[#3887FF] rounded text-white gap-[10px]"
               >
                 보내기

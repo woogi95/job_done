@@ -48,8 +48,10 @@ function MyPage() {
   const handleImgUpload = e => {
     const file = e.target.files[0];
     if (file) {
+      console.log("Selected file:", file);
       const reader = new FileReader();
       reader.onloadend = () => {
+        console.log("Converted image to base64:", reader.result);
         setProfileImg(reader.result);
         setIsEdit(true);
       };
@@ -70,7 +72,6 @@ function MyPage() {
         ? `http://112.222.157.156:5224${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
-      console.log("프로필 이미지 경로:", userData.pic);
     } catch (error) {
       console.error("API 에러:", error);
     }
@@ -110,14 +111,13 @@ function MyPage() {
   const handleSubmit = async () => {
     if (isEdit) {
       try {
-        const userId = localStorage.getItem("userId");
         const requestData = {
           p: {
-            userId: parseInt(userId),
             phone: phoneNumber.replace(/-/g, ""),
             name: userName,
           },
         };
+        console.log("requestData:", requestData);
 
         const formData = new FormData();
 

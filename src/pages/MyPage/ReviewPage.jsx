@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
-import { Select } from "antd";
+import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
 
 function ReviewPage() {
@@ -16,6 +16,8 @@ function ReviewPage() {
   const [selectedReview, setSelectedReview] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const reviewsPerPage = 5;
 
   const reviewList = async () => {
     try {
@@ -37,10 +39,52 @@ function ReviewPage() {
   };
 
   const correctReview = async () => {
+    if (!selectedReview) return;
+
     try {
-      const res = await loginApi.put("/api/review/");
+      // 1. 리뷰 내용 수정
+      const reviewData = {
+        reviewId: selectedReview.reviewId,
+        contents: reviewContent,
+        score: rating,
+      };
+
+      const reviewRes = await loginApi.put(
+        `/api/review/${selectedReview.reviewId}`,
+        reviewData,
+      );
+      console.log("리뷰 수정 성공:", reviewRes);
+
+      // 2. 이미지 처리
+      if (selectedImages.length > 0) {
+        // 이미지 상태 업데이트
+        await loginApi.put("/api/review/state", {
+          reviewId: selectedReview.reviewId,
+        });
+
+        // 새로운 이미지 업로드
+        const formData = new FormData();
+        selectedImages.forEach(image => {
+          if (image instanceof File) {
+            formData.append("files", image);
+          }
+        });
+        formData.append("reviewId", selectedReview.reviewId);
+
+        const imageRes = await loginApi.post("/api/review/pics", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("이미지 업로드 성공:", imageRes);
+      }
+
+      alert("리뷰가 수정되었습니다.");
+      handleReviewModalClose();
+      reviewList();
     } catch (error) {
-      console.log(error);
+      console.error("리뷰 수정 실패:", error);
+      alert("리뷰 수정에 실패했습니다.");
     }
   };
 
@@ -54,12 +98,13 @@ function ReviewPage() {
 
   const deleteReview = async reviewId => {
     try {
-      const res = await loginApi.delete(`/api/review/${reviewId}`, {
+      const res = await loginApi.delete(`/api/review/`, {
+        reviewId: reviewId,
         withCredentials: true,
       });
       if (res.status === 200) {
         alert("리뷰가 삭제되었습니다.");
-        reviewList(); // 리뷰 목록 새로고침
+        reviewList();
         setDeleteModalOpen(false);
       }
     } catch (error) {
@@ -74,10 +119,10 @@ function ReviewPage() {
 
   const handleImageUpload = event => {
     const files = Array.from(event.target.files);
-    setSelectedImages(files);
+    setSelectedImages(prevImages => [...prevImages, ...files]);
 
-    const previews = files.map(file => URL.createObjectURL(file));
-    setPreviewImages(previews);
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
     console.log("선택된 이미지:", files);
   };
 
@@ -124,13 +169,23 @@ function ReviewPage() {
     setSelectedReviewId(null);
   };
 
+  // 페이지네이션을 위한 현재 페이지의 리뷰들을 계산
+  const indexOfLastReview = currentPage * reviewsPerPage;
+  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+  const currentReviews = review.slice(indexOfFirstReview, indexOfLastReview);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
   return (
     <MyPageLayout>
       <div className="flex flex-col justify-center items-center gap-y-[20px]">
         <span className="flex justify-center items-center text-[24px] font-normal pb-[20px]">
           작성한 리뷰
         </span>
-        {review.map((item, index) => (
+        {currentReviews.map((item, index) => (
           <div key={index} className="w-full max-w-[600px] h-[130px]">
             <div className="flex justify-between items-center">
               <div className="flex justify-center items-center gap-[5px]">
@@ -196,6 +251,17 @@ function ReviewPage() {
           </div>
         ))}
         <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] max-w-[600px] w-full"></div>
+
+        {/* 페이지네이션 컴포넌트 추가 */}
+        <div className="my-4">
+          <Pagination
+            current={currentPage}
+            total={review.length}
+            pageSize={reviewsPerPage}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
       </div>
 
       {correctModalOpen && (
@@ -267,7 +333,7 @@ function ReviewPage() {
             </div>
             <div className="flex justify-center items-center gap-[10px]">
               <button
-                onClick={handleReviewModalClose}
+                onClick={correctReview}
                 className="mt-4 px-4 py-2 bg-[#3887FF] rounded text-white gap-[10px]"
               >
                 수정하기
