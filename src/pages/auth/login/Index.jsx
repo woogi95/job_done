@@ -30,7 +30,8 @@ function LoginPage() {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
 
-        // ✅ accessToken을 쿠키에 직접 저장
+        // accessToken을 쿠키에 직접 저장
+
         Cookies.set("accessToken", accessToken, {
           expires: 1, // 1일 후 만료
           secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
@@ -46,7 +47,6 @@ function LoginPage() {
           businessId: businessId,
           isLogind: true,
         });
-
         // localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("businessId", businessId);
 

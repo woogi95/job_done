@@ -12,7 +12,6 @@ export const reviewListState = atom({
       name: "",
       writerPic: "",
       detailTypeName: "",
-      averageScore: 0,
       pics: [""],
       comment: {
         commentId: 0,
@@ -21,8 +20,28 @@ export const reviewListState = atom({
         updatedAt: "",
         writerUserId: 0,
         name: "",
-        logo: "",
+        writerPic: "",
       },
     },
   ],
+});
+
+export const commentState = atom({
+  key: "commentState",
+  default: false,
+});
+
+export const commentModals = atom({
+  key: "commentModals",
+  default: false,
+});
+
+export const commentsBox = atom({
+  key: "commentsBox",
+  default: {},
+});
+
+export const reviewIdState = atom({
+  key: "reviewIdState",
+  default: {},
 });

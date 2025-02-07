@@ -20,4 +20,8 @@ export default defineConfig({
       },
     },
   },
+  // webSocket 연결을 위한 설정
+  define: {
+    global: "window",
+  },
 });

@@ -4,6 +4,7 @@ import { IoIosCamera } from "react-icons/io";
 import { HiOutlinePencilAlt, HiEye, HiEyeOff } from "react-icons/hi";
 import axios from "axios";
 import * as yup from "yup";
+import { loginApi } from "../../apis/login";
 
 function MyPage() {
   const [isPhoneEdit, setIsPhoneEdit] = useState(false);
@@ -26,7 +27,6 @@ function MyPage() {
   const [deletePassword, setDeletePassword] = useState("");
   const [deleteError, setDeleteError] = useState("");
   const [isDeleteSuccessModal, setIsDeleteSuccessModal] = useState(false);
-
   // 유효성 검사
   const passwordSchema = yup.object().shape({
     currentPassword: yup.string().required("현재 비밀번호를 입력해주세요."),
@@ -60,12 +60,7 @@ function MyPage() {
   // 유저 정보 관련들
   const getUserInfo = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      const res = await axios.get(`/api/user`, {
-        params: {
-          userId: userId,
-        },
-      });
+      const res = await loginApi.get(`/api/user`);
 
       const userData = res.data.resultData;
       setUserName(userData.name);
@@ -75,7 +70,6 @@ function MyPage() {
         ? `http://112.222.157.156:5224${userData.pic}`
         : "/images/order/default_profile.jpg";
       setProfileImg(profileImgUrl);
-      // localStorage.setItem("userProfileImg", profileImgUrl);
       console.log("프로필 이미지 경로:", userData.pic);
     } catch (error) {
       console.error("API 에러:", error);
@@ -140,7 +134,7 @@ function MyPage() {
           formData.append("pic", blob, "profile.jpg");
         }
 
-        const response = await axios.patch("/api/user", formData, {
+        const response = await loginApi.patch("/api/user", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -173,9 +167,7 @@ function MyPage() {
 
       setError("");
 
-      const userId = localStorage.getItem("userId");
-      const res = await axios.patch("/api/user/password", {
-        userId: parseInt(userId),
+      const res = await loginApi.patch("/api/user/password", {
         currentPassword: currentPassword,
         newPassword: newPassword,
         email: userEmail,
@@ -289,8 +281,11 @@ function MyPage() {
                 value={phoneNumber}
                 onChange={handlePhoneChange}
                 readOnly={!isPhoneEdit}
-                className="w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 text-[#C3C3C3]"
+                className={`w-[300px] h-[40px] flex justify-center items-center rounded-[8px] border border-[#E4E5ED] px-3 
+                  ${isPhoneEdit ? "text-black" : "text-[#C3C3C3]"} 
+                  ${isPhoneEdit ? "bg-white" : "bg-gray-50"}`}
                 maxLength={13}
+                placeholder="010-0000-0000"
               />
               <button
                 onClick={() => setIsPhoneEdit(!isPhoneEdit)}

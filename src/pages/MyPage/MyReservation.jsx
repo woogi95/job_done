@@ -7,10 +7,6 @@ function MyReservation() {
   const [reservation, setReservation] = useState([]);
   const [resState, setResState] = useState([]);
 
-  useEffect(() => {
-    reservationData();
-  }, []);
-
   const reservationData = async () => {
     try {
       const res = await loginApi.get("/api/service", {
@@ -44,6 +40,10 @@ function MyReservation() {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    reservationData();
+  }, []);
 
   return (
     <MyPageLayout>

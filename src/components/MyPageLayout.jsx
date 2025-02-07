@@ -1,10 +1,39 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { loginUser } from "../atoms/loginAtom";
+import { loginApi } from "../apis/login";
 
 function MyPageLayout({ children }) {
-  const userInfo = useRecoilValue(loginUser);
+  const [profileImg, setProfileImg] = useState();
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const getUserInfo = async () => {
+    try {
+      const res = await loginApi.get(`/api/user`);
+
+      const userData = res.data.resultData;
+      setUserName(userData.name);
+      setUserEmail(userData.email);
+      setPhoneNumber(userData.phone);
+      const profileImgUrl = userData.pic
+        ? `http://112.222.157.156:5224${userData.pic}`
+        : "/images/order/default_profile.jpg";
+      setProfileImg(profileImgUrl);
+      console.log("프로필 이미지 경로:", userData.pic);
+    } catch (error) {
+      console.error("API 에러:", error);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
+  const formatPhoneNumber = phone => {
+    if (!phone) return "전화번호";
+    return phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+  };
 
   return (
     <div className="flex max-w-[1280px] m-auto pt-[80px]">
@@ -15,18 +44,14 @@ function MyPageLayout({ children }) {
           </div>
           <div className="flex justify-center items-center">
             <img
-              src={
-                userInfo?.pic
-                  ? `http://112.222.157.156:5224${userInfo?.pic}`
-                  : "/images/order/default_profile.jpg"
-              }
+              src={profileImg}
               alt="프로필"
               className="w-[100px] h-[100px] rounded-full"
             />
           </div>
           <div className="flex flex-col justify-center items-center gap-[10px]">
-            <span>{userInfo?.email || "이메일"}</span>
-            <span>{userInfo?.phone || "전화번호"}</span>
+            <span>{userEmail || "이메일"}</span>
+            <span>{formatPhoneNumber(phoneNumber)}</span>
           </div>
           <ul className="flex flex-col justify-center items-center gap-[40px] text-[24px]">
             <li>
