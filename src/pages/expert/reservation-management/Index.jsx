@@ -11,6 +11,7 @@ import { useRecoilValue } from "recoil";
 import { statusAtom } from "../../../atoms/statusAtom";
 import axios from "axios";
 import { businessDetailState } from "../../../atoms/businessAtom";
+import { loginApi } from "../../../apis/login";
 
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);

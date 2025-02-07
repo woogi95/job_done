@@ -5,6 +5,8 @@ import { useRecoilState } from "recoil";
 import Cookies from "js-cookie";
 import {
   categoriesState,
+  categoryList,
+  detailList,
   detailTypesState,
   selectedCategoryState,
   selectedDetailTypeState,
@@ -20,6 +22,8 @@ function Header() {
   const [selectedCategory, setSelectedCategory] = useRecoilState(
     selectedCategoryState,
   );
+  const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
+  const [detaileTypeDatas, setDetaileTypeDatas] = useRecoilState(detailList);
   const [selectedDetailType, setSelectedDetailType] = useRecoilState(
     selectedDetailTypeState,
   );
@@ -47,6 +51,7 @@ function Header() {
     try {
       const res = await loginApi.get(`/api/category`);
       setCategories(res.data.resultData);
+      setCategoryDatas(res.data.resultData);
     } catch (error) {
       console.error("Categories error:", error.response || error);
     }
@@ -58,6 +63,10 @@ function Header() {
         params: { categoryId: categoryId },
       });
       setDetailTypes(prev => ({
+        ...prev,
+        [categoryId]: res.data.resultData,
+      }));
+      setDetaileTypeDatas(prev => ({
         ...prev,
         [categoryId]: res.data.resultData,
       }));
@@ -91,6 +100,7 @@ function Header() {
 
   const handleDetailTypeClick = (categoryId, detailTypeId) => {
     setSelectedCategory(categoryId);
+
     setSelectedDetailType(detailTypeId);
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
   };
