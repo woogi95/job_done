@@ -11,6 +11,7 @@ import {
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../../apis/login";
+import { FaStar, FaStarHalf } from "react-icons/fa";
 
 function Index() {
   const [reviewDatas, setReviewDatas] = useRecoilState(reviewListState);
@@ -37,7 +38,7 @@ function Index() {
           reviewId: item.reviewId,
           id: index + 1, // 행 번호 추가 (1부터 시작)
           userName: item.name,
-          contents: item.contents, // 예시 내용
+          contents: item.detailTypeName, //  중분류 타입
           createdAt: item.createdAt,
           score: item.score,
           replyStatus: item.comment,
@@ -109,6 +110,25 @@ function Index() {
     setReviewDatas(scoredData);
     setIsScored(!isScored);
   };
+  // 별점
+  const renderStars = score => {
+    const fullStars = Math.floor(score); // 채워진 별 개수
+    const halfStar = score % 1 >= 0.5; // 반쪽 별 여부
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // 비어 있는 별 개수
+
+    return (
+      <>
+        {Array.from({ length: fullStars }, (_, i) => (
+          <FaStar key={`full-${i}`} color="#EAB838" />
+        ))}
+        {halfStar && <FaStarHalf key="half" color="#EAB838" />}
+        {Array.from({ length: emptyStars }, (_, i) => (
+          <FaStar key={`empty-${i}`} color="#E0E2E7" />
+        ))}
+      </>
+    );
+  };
+
   return (
     <div style={{ padding: 20 }}>
       <div style={{ marginBottom: 10 }}>
@@ -127,7 +147,7 @@ function Index() {
             <tr>
               <th>번호</th>
               <th>이름</th>
-              <th>내용</th>
+              <th>분류</th>
               <th>댓글 등록시간</th>
               <th>평점</th>
               <th>답글 여부</th>
@@ -142,7 +162,14 @@ function Index() {
                 <td>{item.userName}</td>
                 <td>{item.contents}</td>
                 <td>{item.createdAt}</td>
-                <td>{item.score}</td>
+                <td>
+                  <div className="star-div">
+                    <div className="star-container">
+                      <p className="star">{renderStars(item.score)}</p>
+                      <span className="star-grade"></span>
+                    </div>
+                  </div>
+                </td>
                 <td>
                   {item.replyStatus === null ? (
                     <button

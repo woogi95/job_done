@@ -21,6 +21,7 @@ function BusinessNumber() {
   const [fileList, setFileList] = useState([]); // 파일 상태
   const [previewImages, setPreviewImages] = useState([]); // 이미지 미리보기 상태
   const [checkMessage, setCheckMessage] = useRecoilState(checkMsg);
+  const [errorModal, setErrorModal] = useState(false);
   const navigate = useNavigate();
   const sucess = () => {
     setNumMOdal(false);
@@ -100,8 +101,12 @@ function BusinessNumber() {
         },
       });
       console.log(res);
-      if (res) {
+
+      if (res.status === 200) {
         setNumMOdal(true);
+        localStorage.setItem("businessId", JSON.stringify(res.data.resultData));
+      } else {
+        setErrorModal(true);
       }
     } catch (error) {
       console.log(error);
@@ -207,6 +212,25 @@ function BusinessNumber() {
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <button onClick={e => sucess(e)}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {errorModal && (
+        <div className="num-ModalFull items-center justify-center">
+          <div className="num-Modal">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>이미 등록된 사업자 번호 입니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => setErrorModal(false)}>확인</button>
             </div>
           </div>
         </div>
