@@ -74,14 +74,14 @@ export const EventBanner = [
   },
   {
     id: 2,
-    title: "즐거운 스와이퍼 테스트!",
-    image: "/images/event/event_banner_1.png",
+    title: "이사가 고민이라면?",
+    image: "/images/event/event_banner_2.jpg",
     link: "/",
   },
   {
     id: 3,
-    title: "즐거운 청소 이벤트를 만나보세요!",
-    image: "/images/event/event_banner_1.png",
+    title: "세차 이벤트를 만나보세요!",
+    image: "/images/event/event_banner_3.jpg",
     link: "/",
   },
 ];

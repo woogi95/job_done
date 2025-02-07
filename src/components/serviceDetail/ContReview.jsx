@@ -132,11 +132,19 @@ const ContReview = () => {
                   <span>{item.contents}</span>
                   <div className="photo">
                     {item.pics &&
-                      item.pics.slice(0, 2).map((pic, index) => (
-                        <div key={index}>
-                          <img src={`${BASE_URL}${pic}`} alt="review-img" />
-                        </div>
-                      ))}
+                      item.pics.length > 0 &&
+                      item.pics
+                        .filter(
+                          pic =>
+                            typeof pic === "string" &&
+                            pic.match(/\.(jpg|jpeg|png|gif)$/i),
+                        ) // 이미지 파일 확장자를 가진 문자열만 필터링
+                        .slice(0, 2)
+                        .map((pic, index) => (
+                          <div key={index}>
+                            <img src={`${BASE_URL}${pic}`} alt="review-img" />
+                          </div>
+                        ))}
                   </div>
                 </div>
               </div>
