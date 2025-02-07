@@ -26,3 +26,28 @@ export const reviewListState = atom({
     },
   ],
 });
+
+export const commentState = atom({
+  key: "commentState",
+  default: false,
+});
+
+export const commentModals = atom({
+  key: "commentModals",
+  default: false,
+});
+
+export const commentsBox = atom({
+  key: "commentsBox",
+  default: {},
+});
+
+export const reviewIdState = atom({
+  key: "reviewIdState",
+  default: {},
+});
+
+export const reviewPicsList = atom({
+  key: " reviewPicsList",
+  default: [],
+});
