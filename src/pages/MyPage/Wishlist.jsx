@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
+import { BsHeartFill } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 
@@ -14,27 +15,56 @@ function Wishlist() {
       console.error(error);
     }
   };
+
+  const handleLikeToggle = async (businessId, e) => {
+    e.preventDefault();
+    try {
+      const response = await loginApi.post("/api/like", { businessId });
+      if (response.data) {
+        getWishlist();
+      } else {
+        alert(
+          `찜 처리 실패: ${response.data.resultMessage || "알 수 없는 오류가 발생했습니다."}`,
+        );
+      }
+    } catch (error) {
+      console.error("상세 에러 정보:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
+      alert("찜 처리 중 오류가 발생했습니다.");
+    }
+  };
+
   useEffect(() => {
     getWishlist();
   }, []);
+
   return (
     <MyPageLayout>
       <div className="flex justify-center items-center pb-[50px]">
         <span className="text-[24px] font-normal">찜목록</span>
       </div>
-      <div className="flex flex-wrap gap-[30px]">
+      <div className="flex flex-wrap gap-[15px]">
         {wishlist.map(item => (
           <a
             href="/"
             key={item.businessId}
             className="flex flex-col rounded-lg w-[calc(33.333%-20px)] gap-[10px] relative group overflow-hidden"
           >
-            <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-100 group-hover:scale-[0.97]">
+            <div className="aspect-[4/3] w-full rounded-lg overflow-hidden transition-transform duration-100 group-hover:scale-[0.97] relative">
               <img
                 src={`${ImgURL}${item.pic}`}
                 alt="사진"
                 className="w-full h-full object-cover"
               />
+              <button
+                onClick={e => handleLikeToggle(item.businessId, e)}
+                className="absolute top-3 right-3 text-[24px] text-[#ff3131] cursor-pointer"
+              >
+                <BsHeartFill />
+              </button>
             </div>
             <span className="block w-full overflow-hidden">{item.title}</span>
             <span className="text-[18px]">{item.price.toLocaleString()}~</span>

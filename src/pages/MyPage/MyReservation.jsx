@@ -2,10 +2,22 @@ import { useEffect, useState } from "react";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 import { statusText } from "../../components/ServiceIcon";
+import { Select } from "antd";
 
 function MyReservation() {
   const [reservation, setReservation] = useState([]);
   const [resState, setResState] = useState([]);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
+
+  const handleReviewModalOpen = serviceId => {
+    setSelectedServiceId(serviceId);
+    setReviewModalOpen(true);
+  };
+
+  const handleReviewModalClose = () => {
+    setReviewModalOpen(false);
+  };
 
   const reservationData = async () => {
     try {
@@ -75,7 +87,7 @@ function MyReservation() {
                     onClick={() =>
                       ![0, 1, 6].includes(item.completed) &&
                       [7, 8, 9].includes(item.completed) &&
-                      reviewWrite(item.id)
+                      handleReviewModalOpen(item.id)
                     }
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${
@@ -100,6 +112,38 @@ function MyReservation() {
           ))}
         </div>
       </div>
+
+      {reviewModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
+            <span className="flex justify-center items-center text-[20px] mb-4">
+              리뷰 작성
+            </span>
+            <div className="flex justify-center items-center h-[1px] my-[10px] bg-[#DBDBDB] max-w-[200px]"></div>
+            <div className="flex justify-center items-center">
+              <span className="flex justify-center items-center">
+                솔직한 후기를 남겨보세요!
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex justify-center items-center">
+                <Select
+                  className="max-w-[100px] w-full"
+                  placeholder="별점"
+                  options={[{ value: 1, label: 1 }]}
+                />
+                <button>이미지 추가</button>
+              </div>
+            </div>
+            <button
+              onClick={handleReviewModalClose}
+              className="mt-4 px-4 py-2 bg-gray-200 rounded"
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      )}
     </MyPageLayout>
   );
 }
