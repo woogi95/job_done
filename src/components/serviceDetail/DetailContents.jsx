@@ -7,7 +7,6 @@ import { Link } from "react-scroll";
 import parse from "html-react-parser";
 // comp
 import ContPortfolioList from "./ContPortfolioList";
-import ContReview from "./Contreview";
 import PfPopup from "./PfPopup";
 //styled
 import {
@@ -23,39 +22,40 @@ import { FaStar } from "react-icons/fa";
 // recoil
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
-import { loginUser } from "../../atoms/loginAtom";
 import { likeStatusState } from "../../atoms/like";
+import { loginApi } from "../../apis/login";
+import ContReview from "./ContReview";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
-  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
-
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const BASE_URL = "http://112.222.157.156:5224";
   const [activeLink, setActiveLink] = useState("about"); //링크 active
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
   const businessDetail = useRecoilValue(businessDetailState);
-  const loginUserState = useRecoilValue(loginUser);
-  const userId = loginUserState.userId;
   const businessId = businessDetail.businessId;
+  const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
+  // const [likeStatus] = useRecoilState(likeStatusState);
+  const currentLikeStatus = likeStatus[businessId] || {
+    isLiked: false,
+  };
 
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const ToggleLike = async e => {
+  const handleClickBusiness = async e => {
     e.preventDefault();
-
-    const newLikeStatus = !likeStatus[businessId]?.isLiked; // 현재 businessId에 대한 찜 상태 반전
-    setLikeStatus({
-      ...likeStatus,
-      [businessId]: { isLiked: newLikeStatus },
-    });
 
     try {
       // POST 요청 보내기
-      const response = await axios.post("/api/like", {
-        userId,
-        businessId,
+      const response = await loginApi.post("/api/like", { businessId });
+      const currentLikeStatus = likeStatus[businessId] || { isLiked: false };
+      const newLikeStatus = !currentLikeStatus.isLiked;
+      // 상태 업데이트
+      setLikeStatus(prevState => {
+        const updatedState = { ...prevState };
+        updatedState[businessId] = { isLiked: newLikeStatus };
+        return updatedState;
       });
-
       if (response.status === 200) {
         console.log("success:", response.data);
       } else {
@@ -182,7 +182,7 @@ const DetailContents = () => {
             {detailPicList.map((item, index) => (
               <img
                 key={businessDetail.businessId}
-                src={detailPicList[index].pic}
+                src={`${BASE_URL}${detailPicList[index].pic}`}
                 alt="상품디테일사진"
               />
             ))}
@@ -210,10 +210,10 @@ const DetailContents = () => {
             <div
               className="like"
               onClick={e => {
-                ToggleLike(e);
+                handleClickBusiness(e);
               }}
             >
-              {likeStatus[businessId]?.isLiked ? (
+              {currentLikeStatus.isLiked ? (
                 <BsHeartFill />
               ) : (
                 <BsHeart style={{ color: "gray" }} />

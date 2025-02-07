@@ -79,7 +79,6 @@ function Header() {
     setUserInfo({
       accessToken: "",
       isLogind: false,
-      userId: null,
     });
     navigate("/");
   };

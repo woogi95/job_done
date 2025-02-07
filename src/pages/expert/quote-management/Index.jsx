@@ -6,21 +6,20 @@ import {
   ExportListDiv,
 } from "../reservation-management/reservationMangement";
 import { useRecoilValue } from "recoil";
-import { businessDetailState } from "../../../atoms/businessAtom";
+// import { businessDetailState } from "../../../atoms/businessAtom";
 import { useEffect, useState } from "react";
 import { statusAtom } from "../../../atoms/statusAtom";
-import axios from "axios";
 import { loginApi } from "../../../apis/login";
 
 function Index() {
+  const businessId = localStorage.getItem("businessId");
   const navigate = useNavigate();
   const status = useRecoilValue(statusAtom);
-  const businessDetail = useRecoilValue(businessDetailState);
+
   const [reservationData, setReservationData] = useState([]);
-  // const businessId = businessDetail[0]?.businessId;
-  const businessId = 2;
-  // console.log(businessDetail[0].businessId);
+
   const getStatusList = async (businessId, status) => {
+    console.log("businessId, status", businessId, status);
     try {
       const res = await loginApi.get(
         `/api/service?business_id=${businessId}&status=${status}&page=${1}&size=${10}`,
