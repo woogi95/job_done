@@ -24,7 +24,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { likeStatusState } from "../../atoms/like";
 import { loginApi } from "../../apis/login";
-import ContReview from "./ContReview";
+import ContReview from "../review/ContReview";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
