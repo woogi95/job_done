@@ -50,6 +50,20 @@ function Header() {
     }
   };
 
+  const getUserInfo = async () => {
+    try {
+      const res = await loginApi.get(`/api/user`);
+
+      const userData = res.data.resultData;
+      const profileImgUrl = userData.pic
+        ? `http://112.222.157.156:5224${userData.pic}`
+        : "/images/order/default_profile.jpg";
+      setProfileImg(profileImgUrl);
+    } catch (error) {
+      console.error("API 에러:", error);
+    }
+  };
+
   const fetchCategories = async () => {
     try {
       const res = await axios.get(`/api/category`);
@@ -86,7 +100,6 @@ function Header() {
     setUserInfo({
       accessToken: "",
       isLogind: false,
-      userId: null,
     });
     navigate("/");
   };
@@ -147,6 +160,19 @@ function Header() {
     });
   }, [categories]);
 
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
   return (
     <div className="bg-white z-10 fixed flex items-center h-[80px] w-[100%] m-auto border-b-[1px] border-solid border-[#eee]">
       <div className=" flex justify-between items-center h-20 max-w-[1280px] w-[100%] m-auto">
@@ -189,10 +215,7 @@ function Header() {
           {userInfo.isLogind ? (
             // 로그인 상태
             <>
-
               {getBusinessId == 0 ? (
-
-              
                 <Link
                   to="/business"
                   className="bg-[#C3EEFB] text-[#0B7493] w-20 h-7 flex items-center justify-center rounded-2xl"

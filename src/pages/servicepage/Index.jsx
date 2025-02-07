@@ -1,10 +1,3 @@
-// import ServiceListTop from "../../../components/service/ServiceListTop";
-// import { ServiceContentDiv } from "./cleaning";
-// import { LayoutDiv } from "../../page";
-// import Filter from "../../../components/service/Filter";
-// import ServiceListItem from "../../../components/service/ServiceListItem";
-
-// import axios from "axios";
 import Filter from "../../components/service/Filter";
 import ServiceListItem from "../../components/service/ServiceListItem";
 import ServiceListTop from "../../components/service/ServiceListTop";
@@ -17,7 +10,6 @@ import {
   selectedDetailTypeState,
 } from "../../atoms/categoryAtom";
 import { likeStatusState } from "../../atoms/like";
-// import { loginApi } from "../../apis/login";
 import axios from "axios";
 import { loginApi } from "../../apis/login";
 
@@ -39,26 +31,10 @@ function Service() {
     }
   };
   const handleClickBusiness = async businessId => {
-    // const userId = localStorage.getItem("userId");
-    // if (!userId) {
-    //   alert("로그인 후 찜할 수 있습니다.");
-    //   return;
-    // }
-
     try {
-      console.log(userId, businessId);
-      const response = await loginApi.post(
-        "/api/like",
-        {
-          // userId: userId,
-          businessId: businessId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
+      const response = await loginApi.post("/api/like", {
+        businessId: businessId,
+      });
 
       // 응답 데이터 처리
       console.log("찜 상태가 성공적으로 업데이트되었습니다:", response.data);

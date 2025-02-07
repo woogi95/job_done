@@ -47,7 +47,6 @@ function LoginPage() {
           businessId: businessId,
           isLogind: true,
         });
-
         // localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("businessId", businessId);
 

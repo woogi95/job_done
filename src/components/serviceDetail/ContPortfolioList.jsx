@@ -1,8 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  selectedCategoryState,
-  selectedDetailTypeState,
-} from "../../atoms/categoryAtom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { PortfolioListState } from "../../atoms/portfolioAtom";
 // 스와이퍼
@@ -20,9 +16,7 @@ import axios from "axios";
 
 const ContPortfolioList = ({ handleImageClick }) => {
   const { id } = useParams();
-  // const { categoryId } = useRecoilValue(selectedCategoryState);
-  // const { detailTypeId } = useRecoilValue(selectedDetailTypeState);
-  // const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
+  const BASE_URL = "http://112.222.157.156:5224";
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
 
@@ -34,7 +28,7 @@ const ContPortfolioList = ({ handleImageClick }) => {
     try {
       // /api/portfolio?categoryId=1&detailTypeId=1&businessId=1
       const res = await axios.get(`/api/portfolio?businessId=${businessId}`);
-      console.log(res.data.resultData);
+      console.log("===================", res.data.resultData);
       setPortfolioListState(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -81,7 +75,10 @@ const ContPortfolioList = ({ handleImageClick }) => {
                 className="imgbox"
                 onClick={() => handleImageClick(portfolio.portfolioId)}
               >
-                <img src={portfolio.isThumnail} alt={portfolio.title} />
+                <img
+                  src={`${BASE_URL}${portfolio.isThumnail}`}
+                  alt={portfolio.title}
+                />
               </div>
               <h3>{portfolio.title}</h3>
             </PortfolioListItem>

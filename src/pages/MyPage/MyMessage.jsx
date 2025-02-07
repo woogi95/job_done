@@ -6,7 +6,7 @@ import { loginApi } from "../../apis/login";
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-const socket = new SockJS("http://112.222.157.156:5224/chat");
+const socket = new SockJS("http://192.168.0.195:5173/chat");
 const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 전달
 
 export const runSocket = () => {
