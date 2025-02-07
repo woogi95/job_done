@@ -24,9 +24,13 @@ const ServiceListTop = ({
     setRegionId(regionId);
 
     try {
-      const url = regionId
-        ? `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}&regionId=${regionId}`
-        : `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}`;
+      let url = `/api/business?categoryId=${categoryId}`;
+      if (detailTypeId) {
+        url += `&detailTypeId=${detailTypeId}`;
+      }
+      if (regionId) {
+        url += `&regionId=${regionId}`;
+      }
       const res = await axios.get(url);
       console.log(res.data.resultData);
       setBusinessList(res.data.resultData);

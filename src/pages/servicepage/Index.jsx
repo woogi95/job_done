@@ -24,7 +24,7 @@ function Service() {
       const res = await axios.get(
         `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}`,
       );
-      // console.log(res.data.resultData);
+      console.log("aaaaaaaaaaaaaaaa", res);
       setBusinessList(res.data.resultData);
     } catch (error) {
       console.error(error);

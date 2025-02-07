@@ -76,7 +76,7 @@ const ContPortfolioList = ({ handleImageClick }) => {
                 onClick={() => handleImageClick(portfolio.portfolioId)}
               >
                 <img
-                  src={`${BASE_URL}${portfolio.isThumnail}`}
+                  src={`${BASE_URL}${portfolio.isThumbnail}`}
                   alt={portfolio.title}
                 />
               </div>
