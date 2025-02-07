@@ -22,7 +22,7 @@ function LoginPage() {
     console.log("로그인 요청:", data);
     try {
       const res = await axios.post("/api/user/sign-in", data, {
-        withCredentials: true, // ✅ 요청마다 쿠키 포함
+        withCredentials: true,
       });
       console.log("서버 응답:", res.data);
 

@@ -29,6 +29,7 @@ function Index() {
         `/api/review?businessId=${busiId}&state=0&page=1&size=30`,
         // `/api/review?businessId=2&page=1&size=30`,
       );
+      console.log(res);
       if (res) {
         const formattedData = res.data.resultData.map((item, index) => ({
           reviewId: item.reviewId,
@@ -38,7 +39,7 @@ function Index() {
           createdAt: item.createdAt,
           score: item.score,
           replyStatus: item.comment,
-          comment: item.comment.contents,
+          comment: item.comment === null ? "" : item.comment.contents,
         }));
         setReviewDatas(formattedData);
       }
@@ -47,8 +48,10 @@ function Index() {
     }
   };
 
-  const openCommentModal = () => {
+  const openCommentModal = reviewId => {
     setCommentModal(true);
+    setReviewIds(reviewId);
+    navigate("/expert/review-center/reviewview");
   };
   // const commentBoxs = () => {
   //   console.log(commentBox);
@@ -61,10 +64,6 @@ function Index() {
   //   }
   // };
   const commentBoxs = reviewId => {
-    setCommentBox(prev => ({
-      ...prev,
-      [reviewId]: !prev[reviewId], // 해당 reviewId의 상태만 변경
-    }));
     setReviewIds(reviewId);
     navigate("/expert/review-center/reviewview");
   };
@@ -140,7 +139,7 @@ function Index() {
                   {item.replyStatus === null ? (
                     <button
                       onClick={() => {
-                        openCommentModal();
+                        openCommentModal(item.reviewId);
                       }}
                     >
                       🔴
