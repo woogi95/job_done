@@ -55,12 +55,20 @@ import ReviewCenter from "./pages/expert/review-center/Index";
 import Statistics from "./pages/expert/statistics/Index";
 import ReviewView from "./pages/expert/review-center/ReviewView";
 import ContactUs from "./pages/servicepage/ContactUs";
+import Qna from "./pages/Qna";
+import PaymentSuccess from "./components/PaymentSuccess";
+import PaymentFailed from "./components/PaymentFailed";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route element={<Layout />}>
+          {/* 카카오페이 관련 */}
+          <Route path="/paySuccess" element={<PaymentSuccess />} />
+          <Route path="/payFailed" element={<PaymentFailed />} />
+          {/* QnA */}
+          <Route path="/qna" element={<Qna />} />
           {/* 메인 페이지 */}
           <Route path="/" element={<Index />} />
           {/* 로그인 및 회원가입 */}

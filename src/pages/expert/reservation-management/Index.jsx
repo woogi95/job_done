@@ -11,6 +11,7 @@ import { useRecoilValue } from "recoil";
 import { statusAtom } from "../../../atoms/statusAtom";
 import axios from "axios";
 import { businessDetailState } from "../../../atoms/businessAtom";
+import { loginApi } from "../../../apis/login";
 
 function Index() {
   const [isReservationPop, setIsReservationPop] = useState(false);
@@ -22,6 +23,7 @@ function Index() {
   const [reservationData, setReservationData] = useState([]);
 
   const getStatusList = async (businessId, status) => {
+    console.log("businessId, status", businessId, status);
     try {
       // console.log("이것무엇", businessId, status);
       const res = await loginApi.get(

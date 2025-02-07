@@ -40,3 +40,13 @@ export const regionState = atom({
   key: "regionState",
   default: undefined,
 });
+
+// 제목 카테고리 반영 스테이트
+export const categoryList = atom({
+  key: "categoryList",
+  default: [],
+});
+export const detailList = atom({
+  key: "detailList",
+  default: [],
+});
