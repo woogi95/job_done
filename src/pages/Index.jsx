@@ -35,22 +35,22 @@ const Index = () => {
         const requests = [
           axios.get("/api/business", {
             params: {
-              categoryId: 1,
-              regionId: selectedRegion,
+              // categoryId: 1,
+              // regionId: selectedRegion,
               sortType: "인기순",
             },
           }),
           axios.get("/api/business", {
             params: {
-              categoryId: 1,
-              regionId: selectedRegion,
+              // categoryId: 1,
+              // regionId: selectedRegion,
               sortType: "최신순",
             },
           }),
           axios.get("/api/business", {
             params: {
-              categoryId: 1,
-              regionId: selectedRegion,
+              // categoryId: 1,
+              // regionId: selectedRegion,
               sortType: "저가순",
             },
           }),
