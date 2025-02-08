@@ -10,15 +10,12 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
-// import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  // const serviceId = useRecoilValue(serviceIdState);
   const serviceId = getCookie("serviceId");
-  // console.log("serviceId:", serviceId);
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
