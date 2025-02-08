@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginApi } from "../../apis/login";
@@ -10,12 +10,16 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
+import { Pagination } from "antd";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   const serviceId = getCookie("serviceId");
+  // console.log("serviceId:", serviceId);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
@@ -60,6 +64,16 @@ const UserReservation = () => {
   useEffect(() => {
     console.log("중요!!!!!!", serviceId);
   }, [serviceId]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
+  // 현재 페이지에 해당하는 데이터 계산
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = papers.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
     <PapersDiv>
@@ -169,6 +183,15 @@ const UserReservation = () => {
               </ul>
             </div>
           </FormDiv>
+          <div className="my-4">
+            <Pagination
+              current={currentPage}
+              total={papers.length}
+              pageSize={itemsPerPage}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+            />
+          </div>
           <BtnAreaDiv>
             <button
               className="cancel"

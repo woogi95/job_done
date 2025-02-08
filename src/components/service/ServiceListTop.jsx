@@ -115,10 +115,10 @@ const ServiceListTop = ({ setBusinessList }) => {
   return (
     <PageTopDiv>
       <div className="inner">
-        <h1>청소</h1>
-        <span>
+        <h1>
           {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
-        </span>
+        </h1>
+        <span>{/* {cateName}  */}</span>
         <ul>
           <li>
             <button
