@@ -30,27 +30,30 @@ const Index = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // 새로운 지역 선택시 기존 데이터 초기화
+      setCategories({});
+
       try {
         // 각 섹션별로 다른 정렬 방식 적용
         const requests = [
           axios.get("/api/business", {
             params: {
               // categoryId: 1,
-              // regionId: selectedRegion,
+              regionId: selectedRegion,
               sortType: "인기순",
             },
           }),
           axios.get("/api/business", {
             params: {
               // categoryId: 1,
-              // regionId: selectedRegion,
+              regionId: selectedRegion,
               sortType: "최신순",
             },
           }),
           axios.get("/api/business", {
             params: {
               // categoryId: 1,
-              // regionId: selectedRegion,
+              regionId: selectedRegion,
               sortType: "저가순",
             },
           }),
@@ -113,7 +116,7 @@ const Index = () => {
                   <img
                     src={item.image}
                     alt="이벤트배너"
-                    className="w-full object-cover"
+                    className="w-full object-cover animate-kenburns"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50">
                     <span className="absolute left-[10%] top-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">

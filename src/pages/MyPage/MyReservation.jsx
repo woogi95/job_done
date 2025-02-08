@@ -14,11 +14,42 @@ function MyReservation() {
   const [previewImages, setPreviewImages] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [reviewContent, setReviewContent] = useState("");
+  const [qnaModal, setQnaModal] = useState(false);
+  const [cancelModal, setCancelModal] = useState(false);
+  const [cancelStatus, setCancelStatus] = useState({
+    show: false,
+    success: false,
+  });
+
+  const serviceChange = async serviceId => {
+    try {
+      const res = await loginApi.patch("/api/service", {
+        params: {
+          completed: 3,
+          serviceId: serviceId,
+        },
+      });
+      console.log("서비스 데이터:", res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleServiceChange = serviceId => {
+    serviceChange(serviceId);
+  };
 
   const handleReviewModalOpen = serviceId => {
-    console.log("리뷰 모달 열기 - serviceId:", serviceId);
     setSelectedServiceId(serviceId);
     setReviewModalOpen(true);
+  };
+
+  const handleInquiryModalOpen = serviceId => {
+    setSelectedServiceId(serviceId);
+    setQnaModal(true);
+  };
+  const handleInquiryModalClose = () => {
+    setQnaModal(false);
   };
 
   const handleReviewModalClose = () => {
@@ -47,10 +78,10 @@ function MyReservation() {
           size: 10,
         },
       });
-      console.log("너 맞니? : ", res.data.resultData);
+      // console.log("너 맞니? : ", res.data.resultData);
       setReservation(res.data.resultData);
       setResState(res.data.resultData);
-      console.log("잘 담김? : ", resState);
+      // console.log("잘 담김? : ", resState);
     } catch (error) {
       console.log(error);
     }
@@ -65,7 +96,6 @@ function MyReservation() {
 
       const formData = new FormData();
 
-      // JSON 데이터 추가
       const reviewData = {
         serviceId: serviceId,
         contents: reviewContent.trim(),
@@ -97,6 +127,7 @@ function MyReservation() {
         setUploadedFiles([]);
         setRating(5);
         handleReviewModalClose();
+        handleInquiryModalClose();
         reservationData();
       }
     } catch (error) {
@@ -104,9 +135,26 @@ function MyReservation() {
       alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.");
     }
   };
+
+  const handleReservationCancel = async serviceId => {
+    try {
+      const res = await loginApi.post(`/api/service/${serviceId}/cancel`);
+      if (res.status === 200) {
+        setCancelStatus({ show: true, success: true });
+        reservationData(); // 예약 목록 새로고침
+      }
+    } catch (error) {
+      console.error("예약 취소 실패:", error);
+      setCancelStatus({ show: true, success: false });
+    }
+  };
+
+  const handleCancelStatusClose = () => {
+    setCancelStatus({ show: false, success: false });
+  };
+
   useEffect(() => {
-    console.log("예약 데이터:", reservation);
-    reservation.forEach(item => {
+    reservation.map(item => {
       console.log("serviceId:", item.serviceId);
       console.log("예약 항목 전체 데이터:", item);
     });
@@ -147,8 +195,10 @@ function MyReservation() {
                         ![0, 1, 6].includes(item.completed) &&
                         [7, 8, 9].includes(item.completed)
                       ) {
-                        console.log("선택된 예약의 serviceId:", item.serviceId); // serviceId 확인
-                        handleReviewModalOpen(item.serviceId); // serviceId를 사용
+                        setSelectedServiceId(item.serviceId);
+                        handleReviewModalOpen(item.serviceId);
+                      } else if ([0, 1, 6].includes(item.completed)) {
+                        handleInquiryModalOpen(item.serviceId);
                       }
                     }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
@@ -162,7 +212,18 @@ function MyReservation() {
                       ? "리뷰쓰기"
                       : "결제하기"}
                   </button>
-                  <button className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]">
+                  <button
+                    onClick={() => {
+                      if ([7, 8, 9].includes(item.completed)) {
+                        handleInquiryModalOpen(item.serviceId);
+                      } else {
+                        handleReservationCancel(item.serviceId);
+                        handleServiceChange(item.serviceId);
+                        console.log("서비스 변경 호출", serviceChange);
+                      }
+                    }}
+                    className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]"
+                  >
                     {[7, 8, 9].includes(item.completed)
                       ? "문의하기"
                       : "예약취소"}
@@ -175,6 +236,7 @@ function MyReservation() {
         </div>
       </div>
 
+      {/* 리뷰 모달 */}
       {reviewModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
@@ -245,7 +307,6 @@ function MyReservation() {
             <div className="flex justify-center items-center gap-[10px]">
               <button
                 onClick={() => {
-                  console.log("선택된 serviceId:", selectedServiceId); // 디버깅용
                   reviewWrite(selectedServiceId);
                 }}
                 className="mt-4 px-4 py-2 bg-[#3887FF] rounded text-white gap-[10px]"
@@ -257,6 +318,53 @@ function MyReservation() {
                 className="mt-4 px-4 py-2 bg-gray-200 rounded"
               >
                 닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 문의하기 모달 - 별도로 분리 */}
+      {qnaModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+            <h2 className="flex justify-center items-center text-xl font-bold mb-4">
+              안내
+            </h2>
+            <p className="text-gray-600 mb-6">
+              죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일
+              내에 서비스를 제공해 드리도록 하겠습니다.
+            </p>
+            <div className="flex justify-center items-center">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                onClick={handleInquiryModalClose}
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 취소 상태 모달 추가 */}
+      {cancelStatus.show && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+            <h2 className="flex justify-center items-center text-xl font-bold mb-4">
+              {cancelStatus.success ? "예약 취소 완료" : "예약 취소 실패"}
+            </h2>
+            <p className="text-gray-600 mb-6 text-center">
+              {cancelStatus.success
+                ? "예약이 성공적으로 취소되었습니다."
+                : "예약 취소 처리 중 오류가 발생했습니다. 다시 시도해 주세요."}
+            </p>
+            <div className="flex justify-center items-center">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                onClick={handleCancelStatusClose}
+              >
+                확인
               </button>
             </div>
           </div>

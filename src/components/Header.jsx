@@ -1,8 +1,8 @@
-import axios from "axios";
+import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import Cookies from "js-cookie";
+import { loginApi } from "../apis/login";
 import {
   categoriesState,
   categoryList,
@@ -12,7 +12,6 @@ import {
   selectedDetailTypeState,
 } from "../atoms/categoryAtom";
 import { loginUser } from "../atoms/loginAtom";
-import { loginApi } from "../apis/login";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -106,7 +105,6 @@ function Header() {
   };
 
   const getBusinessId = Number(localStorage.getItem("businessId"));
-  console.log("비즈니스 여부? : ", getBusinessId);
 
   useEffect(() => {
     const getCookie = name => {
