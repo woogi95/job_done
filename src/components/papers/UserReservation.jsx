@@ -70,12 +70,12 @@ const UserReservation = () => {
         <div className="logo"></div>
         <ReservationPaperContDiv>
           <h2 className="tit">
-            {papersInfo?.businessName || "업체이름"}에서
+            {papersInfo?.businessName || "업체이름"} 에서
             <strong>
-              견적·예약 신청이
+              &nbsp;견적·예약 신청이
               <br />
             </strong>
-            접수 되었습니다.
+            접수되었습니다.
           </h2>
           <span className="description">
             잡던에서 예약 신청해 주셔서 감사 드립니다. <br />
