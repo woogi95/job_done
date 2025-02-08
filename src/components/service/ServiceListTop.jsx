@@ -17,7 +17,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   const regionIdVal = useRecoilValue(regionState);
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
-   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
+  const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
   const [detailDatas, setDetailDatas] = useRecoilState(detailList);
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryId,
@@ -115,10 +115,10 @@ const ServiceListTop = ({ setBusinessList }) => {
   return (
     <PageTopDiv>
       <div className="inner">
-        <h1>청소</h1>
-        <span>
+        <h1>
           {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
-        </span>
+        </h1>
+        <span>{/* {cateName}  */}</span>
         <ul>
           <li>
             <button

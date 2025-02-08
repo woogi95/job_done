@@ -172,7 +172,7 @@ const Index = () => {
             {categories.popular && categories.popular.length > 0 ? (
               categories.popular.slice(0, 4).map(item => (
                 <Link
-                  to="/"
+                  to={`/service/${item.businessId}`}
                   key={item.categoryId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1"
                 >
@@ -235,7 +235,7 @@ const Index = () => {
             {categories.latest && categories.latest.length > 0 ? (
               categories.latest.slice(0, 4).map(item => (
                 <Link
-                  to="/"
+                  to={`/service/${item.businessId}`}
                   key={item.businessId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
                 >
@@ -298,7 +298,7 @@ const Index = () => {
             {categories.cheapest && categories.cheapest.length > 0 ? (
               categories.cheapest.slice(0, 4).map(item => (
                 <Link
-                  to="/"
+                  to={`/service/${item.businessId}`}
                   key={item.businessId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
                 >

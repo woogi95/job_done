@@ -166,7 +166,6 @@ function ReviewPage() {
     setSelectedReviewId(null);
   };
 
-  // 페이지네이션을 위한 현재 페이지 리뷰들 계산
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews = review.slice(indexOfFirstReview, indexOfLastReview);
