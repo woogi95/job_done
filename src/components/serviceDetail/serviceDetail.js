@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { LayoutDiv } from "../../pages/page";
 import { LayerDiv, ModalDiv } from "../portfolio/portfolio";
+import { FilterDiv } from "../service/service";
 
 export const DetailLayout = styled(LayoutDiv)`
   display: flex;
@@ -24,7 +25,11 @@ export const DetailTopDiv = styled.div`
     h1 {
       font-size: 24px;
       font-weight: 700;
-      margin: 5px 0 16px;
+      margin: 12px 0 16px;
+      max-width: 780px;
+      line-height: 1.22em;
+      color: #333;
+      word-break: keep-all;
     }
 
     /* 회사 정보 */
@@ -270,7 +275,16 @@ export const PortfolioListItem = styled.div`
     position: absolute;
     bottom: 20px;
     left: 20px;
-    font-size: 18px;
+    font-size: 16px;
+    word-break: keep-all;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    max-height: 3em;
+    line-height: 1.18em;
   }
 `;
 
@@ -322,6 +336,7 @@ export const SummaryDiv = styled.div`
   .inner {
     width: 330px;
     min-height: 380px;
+    /* height: 100%; */
     padding: 40px 30px;
     position: absolute;
     right: 0;
@@ -354,9 +369,9 @@ export const SummaryDiv = styled.div`
     }
     .tit {
       word-break: break-all;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
-      line-height: 1.23em;
+      line-height: 1.3em;
       margin: 15px 0 8px;
     }
 
@@ -365,6 +380,7 @@ export const SummaryDiv = styled.div`
       display: flex;
       align-items: center;
       gap: 6px;
+      padding-bottom: 30px;
 
       .box {
         border-radius: 15px;
@@ -542,7 +558,21 @@ export const ReviewDiv = styled.div`
     }
   }
 `;
+export const ReviewFilterDiv = styled(FilterDiv)`
+  .select {
+    background-color: #eee;
 
+    min-width: 145px;
+    padding: 5px 20px;
+    p {
+      font-size: 14px;
+      padding: 10px;
+    }
+    svg {
+      color: #333;
+    }
+  }
+`;
 // 업체디테일 모달
 
 export const PfModalDiv = styled(ModalDiv)`

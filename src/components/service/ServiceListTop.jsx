@@ -10,17 +10,14 @@ import {
   categoryList,
   detailList,
 } from "../../atoms/categoryAtom";
-// import { NavLink } from "react-router-dom";
 
-const ServiceListTop = ({
-  businessList,
-  setBusinessList,
-  setFilteredBusinessList,
-}) => {
+const ServiceListTop = ({ setBusinessList }) => {
   const [regionId, setRegionId] = useRecoilState(regionState); // 전체 기본
+
+  const regionIdVal = useRecoilValue(regionState);
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
-  const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
+   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
   const [detailDatas, setDetailDatas] = useRecoilState(detailList);
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryId,
@@ -30,6 +27,66 @@ const ServiceListTop = ({
     Object.values(detailDatas)
       .flat()
       .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
+
+  // const [regionId] = useRecoilState(regionIdState)
+  const [searchTerm, setSearchTerm] = useState("");
+  const handleChange = e => {
+    setSearchTerm(e.target.value);
+  };
+  useEffect(() => {
+    console.log("검색어:", regionIdVal);
+  }, [searchTerm]);
+
+  const handleSearch = async (
+    categoryId,
+    detailTypeId,
+    regionIdVal,
+    searchTerm,
+  ) => {
+    console.log("검색어:", searchTerm);
+    console.log(
+      "categoryId",
+      categoryId,
+      detailTypeId,
+      regionIdVal,
+      searchTerm,
+    );
+    try {
+      let url = "/api/business?";
+
+      // categoryId가 있으면 추가
+      if (categoryId !== undefined && categoryId !== null) {
+        url += `categoryId=${categoryId}&`;
+      }
+
+      // detailTypeId가 있으면 추가
+      if (detailTypeId !== undefined && detailTypeId !== null) {
+        url += `detailTypeId=${detailTypeId}&`;
+      }
+
+      // regionIdVal가 있으면 추가
+      if (regionIdVal !== undefined && regionIdVal !== null) {
+        url += `regionId=${regionIdVal}&`;
+      }
+
+      // searchTerm이 있으면 추가
+      if (searchTerm !== undefined && searchTerm.trim() !== "") {
+        url += `searchTerm=${searchTerm}&`;
+      }
+
+      // 마지막 '&' 제거
+      url = url.endsWith("&") ? url.slice(0, -1) : url;
+
+      const res = await axios.get(url);
+      console.log("검색 결과:", res.data.resultData);
+
+      setBusinessList(res.data.resultData);
+      setFilteredBusinessList(res.data.resultData);
+    } catch (error) {
+      console.log("검색 요청 중 오류 발생:", error);
+    }
+  };
+
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
     console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
@@ -42,10 +99,11 @@ const ServiceListTop = ({
       if (regionId) {
         url += `&regionId=${regionId}`;
       }
+
       const res = await axios.get(url);
       console.log(res.data.resultData);
       setBusinessList(res.data.resultData);
-      setFilteredBusinessList(res.data.resultData);
+      // setFilteredBusinessList(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -119,9 +177,17 @@ const ServiceListTop = ({
           <input
             type="text"
             placeholder="검색어를 입력해주세요"
+            value={searchTerm}
+            onChange={handleChange}
             // onChange={handleSearchChange}
           />
-          <button>검색</button>
+          <button
+            onClick={() =>
+              handleSearch(categoryId, detailTypeId, regionId, searchTerm)
+            }
+          >
+            검색
+          </button>
         </div>
       </div>
     </PageTopDiv>

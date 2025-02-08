@@ -1,10 +1,15 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { loginApi } from "../../apis/login";
+import { papersState, serviceIdState } from "../../atoms/businessAtom";
 import {
   BtnAreaDiv,
   FormDiv,
   PapersDiv,
   ReservationPaperContDiv,
 } from "./papers";
+import { getCookie } from "../../apis/cookie";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState, serviceIdState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
@@ -15,16 +20,18 @@ const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const [serviceId, setServiceId] = useRecoilState(serviceIdState);
-  console.log("serviceId:", serviceId);
+  // const serviceId = useRecoilValue(serviceIdState);
+  const serviceId = getCookie("serviceId");
+  // console.log("serviceId:", serviceId);
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      console.log(serviceId);
+      console.log("이게 찍히니????", serviceId);
+
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      console.log("견적서 정보", res.data.resultData);
+      console.log("견적서 정보", res);
       setPapers(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -57,18 +64,22 @@ const UserReservation = () => {
     }
   };
 
+  useEffect(() => {
+    console.log("중요!!!!!!", serviceId);
+  }, [serviceId]);
+
   return (
     <PapersDiv>
       <div className="inner">
         <div className="logo"></div>
         <ReservationPaperContDiv>
           <h2 className="tit">
-            {papersInfo?.businessName || "업체이름"}에서
+            {papersInfo?.businessName || "업체이름"} 에서
             <strong>
-              견적·예약 신청이
+              &nbsp;견적·예약 신청이
               <br />
             </strong>
-            접수 되었습니다.
+            접수되었습니다.
           </h2>
           <span className="description">
             잡던에서 예약 신청해 주셔서 감사 드립니다. <br />

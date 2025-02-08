@@ -4,3 +4,7 @@ export const statusAtom = atom({
   key: "statusAtom",
   default: 0,
 });
+// export const regionIdState = atom({
+//   key: "regionIdState",
+//   default: 0,
+// });
