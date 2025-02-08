@@ -10,6 +10,15 @@ export default {
         btColor: "C3EEFB",
         btTextColor: "0B7493",
       },
+      keyframes: {
+        kenburns: {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.05)" },
+        },
+      },
+      animation: {
+        kenburns: "kenburns 10s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

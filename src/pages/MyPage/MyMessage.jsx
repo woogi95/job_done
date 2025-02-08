@@ -1,10 +1,10 @@
-import axios from "axios";
-import { FiSend } from "react-icons/fi";
-import MyPageLayout from "../../components/MyPageLayout";
-import { useState, useEffect } from "react";
-import { loginApi } from "../../apis/login";
 import { Stomp } from "@stomp/stompjs";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FiSend } from "react-icons/fi";
 import SockJS from "sockjs-client";
+import { loginApi } from "../../apis/login";
+import MyPageLayout from "../../components/MyPageLayout";
 
 const socket = new SockJS("http://192.168.0.195:5173/chat");
 const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 전달

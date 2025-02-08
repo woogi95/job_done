@@ -112,7 +112,7 @@ function LoginPage() {
             <label htmlFor="iogining">로그인 상태 유지</label>
           </div>
 
-          <Link to={"/email"} className="text-gray-500">
+          <Link to={"/login/epw"} className="text-gray-500">
             아이디•비밀번호 찾기
           </Link>
         </div>

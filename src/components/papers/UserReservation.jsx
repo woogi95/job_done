@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState, serviceIdState } from "../../atoms/businessAtom";
 import { loginApi } from "../../apis/login";
 import { useNavigate } from "react-router-dom";
-import { Popup } from "../ui/Popup";
+// import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();

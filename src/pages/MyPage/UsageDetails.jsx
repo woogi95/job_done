@@ -15,7 +15,7 @@ function UsageDetails() {
           size: 10,
         },
       });
-      console.log("API Response:", res.data.resultData);
+      console.log("무엇이 오나요?:", res.data.resultData);
       setUsage(res.data.resultData);
     } catch (error) {
       console.error("Error fetching usage data:", error);
@@ -49,7 +49,9 @@ function UsageDetails() {
               {item.createdAt ? item.createdAt.slice(0, 10) : ""}
             </div>
             <div className="text-center">{item.businessName || ""}</div>
-            <div className="text-center">{item.productName || "세차"}</div>
+            <div className="text-center">
+              {item.detailTypeName || "찾을 수 없음"}
+            </div>
             <div className="text-center">
               {item.price ? `${item.price.toLocaleString()}원` : "150,000원"}
             </div>

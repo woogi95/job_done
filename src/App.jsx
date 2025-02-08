@@ -6,6 +6,8 @@ import SignUpPage from "./pages/auth/login/SignUpPage";
 import EmailPage from "./pages/auth/login/EmailPage";
 import SignUpDone from "./pages/auth/login/SignUpDone";
 import PasswordEmail from "./pages/auth/login/PasswordEmail";
+import PasswordEmailCheck from "./pages/auth/login/PasswordEmailCheck";
+import PasswordEdit from "./pages/auth/login/PasswordEdit";
 import BusinessSignUp from "./pages/auth/business/Index";
 import BusinessNumber from "./pages/auth/business/BusinessNumber";
 
@@ -77,7 +79,9 @@ function App() {
             <Route path="signup" element={<SignUpPage />} />
             <Route path="email" element={<EmailPage />} />
             <Route path="signupdone" element={<SignUpDone />} />
-            <Route path="epw" element={<PasswordEmail />} />
+            <Route path="epwcheck" element={<PasswordEmail />} />
+            <Route path="epw" element={<PasswordEmailCheck />} />
+            <Route path="epwedit" element={<PasswordEdit />} />
           </Route>
           {/* 사업자 등록*/}
           <Route path="/business">
