@@ -195,3 +195,23 @@ export const MessageBoxDiv = styled.div`
     }
   }
 `;
+export const PageNavDiv = styled.div`
+  padding: 30px;
+  button {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    font-size: 18px;
+  }
+
+  button.active {
+    background-color: #3987fc;
+    color: white;
+    font-weight: bold;
+  }
+`;

@@ -29,6 +29,9 @@ const PasswordEmailCheck = () => {
       console.log(error);
     }
   };
+  const goCancle = () => {
+    navigate("/");
+  };
   return (
     <div className="passDiv">
       <div className="mb-10">
