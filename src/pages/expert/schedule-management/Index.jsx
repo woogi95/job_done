@@ -1,8 +1,11 @@
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import React from "react";
+import { reserveList } from "../../../atoms/reservationAtom";
+import { useRecoilState } from "recoil";
 
 function Index() {
+  const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
   return (
     <div>
       <FullCalendar
@@ -14,7 +17,7 @@ function Index() {
           right: "today",
         }}
         nowIndicator={true}
-        // events={events}
+        events={reserveInfo}
         locale="ko"
         height="100%"
         aspectRatio={1.8}

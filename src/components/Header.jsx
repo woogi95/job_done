@@ -1,16 +1,17 @@
-import axios from "axios";
+import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import Cookies from "js-cookie";
+import { loginApi } from "../apis/login";
 import {
   categoriesState,
+  categoryList,
+  detailList,
   detailTypesState,
   selectedCategoryState,
   selectedDetailTypeState,
 } from "../atoms/categoryAtom";
 import { loginUser } from "../atoms/loginAtom";
-import { loginApi } from "../apis/login";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -20,6 +21,8 @@ function Header() {
   const [selectedCategory, setSelectedCategory] = useRecoilState(
     selectedCategoryState,
   );
+  const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
+  const [detaileTypeDatas, setDetaileTypeDatas] = useRecoilState(detailList);
   const [selectedDetailType, setSelectedDetailType] = useRecoilState(
     selectedDetailTypeState,
   );
@@ -47,6 +50,7 @@ function Header() {
     try {
       const res = await loginApi.get(`/api/category`);
       setCategories(res.data.resultData);
+      setCategoryDatas(res.data.resultData);
     } catch (error) {
       console.error("Categories error:", error.response || error);
     }
@@ -58,6 +62,10 @@ function Header() {
         params: { categoryId: categoryId },
       });
       setDetailTypes(prev => ({
+        ...prev,
+        [categoryId]: res.data.resultData,
+      }));
+      setDetaileTypeDatas(prev => ({
         ...prev,
         [categoryId]: res.data.resultData,
       }));
@@ -91,12 +99,12 @@ function Header() {
 
   const handleDetailTypeClick = (categoryId, detailTypeId) => {
     setSelectedCategory(categoryId);
+
     setSelectedDetailType(detailTypeId);
     navigate(`/service?categoryId=${categoryId}&detailTypeId=${detailTypeId}`);
   };
 
   const getBusinessId = Number(localStorage.getItem("businessId"));
-  console.log("비즈니스 여부? : ", getBusinessId);
 
   useEffect(() => {
     const getCookie = name => {

@@ -30,48 +30,50 @@ const Index = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // 새로운 지역 선택시 기존 데이터 초기화
+      setCategories({});
+
       try {
-        // 선택된 지역의 데이터만 가져오기
-        const categoryIds = [1, 2, 3];
-        const categoryRequests = categoryIds.map(id =>
+        // 각 섹션별로 다른 정렬 방식 적용
+        const requests = [
           axios.get("/api/business", {
             params: {
-              categoryId: id,
+              // categoryId: 1,
               regionId: selectedRegion,
+              sortType: "인기순",
             },
           }),
-        );
+          axios.get("/api/business", {
+            params: {
+              // categoryId: 1,
+              regionId: selectedRegion,
+              sortType: "최신순",
+            },
+          }),
+          axios.get("/api/business", {
+            params: {
+              // categoryId: 1,
+              regionId: selectedRegion,
+              sortType: "저가순",
+            },
+          }),
+        ];
 
-        const recommendedRequest = axios.get("/api/business", {
-          params: {
-            categoryId: 1,
-            regionId: selectedRegion,
-          },
+        const responses = await Promise.all(requests);
+
+        setCategories({
+          popular: responses[0].data.resultData,
+          latest: responses[1].data.resultData,
+          cheapest: responses[2].data.resultData,
         });
-
-        const responses = await Promise.all([
-          ...categoryRequests,
-          recommendedRequest,
-        ]);
-
-        const companiesData = {};
-        categoryIds.forEach((id, index) => {
-          companiesData[id] = responses[index].data.resultData;
-        });
-
-        const recommendedData = responses[responses.length - 1].data.resultData;
-
-        setCategories(companiesData);
-        setCompanies(recommendedData);
       } catch (error) {
         console.log("데이터 조회 에러:", error);
         setCategories({});
-        setCompanies([]);
       }
     };
 
     fetchData();
-  }, [selectedRegion]); // 변경될 때마다 데이터 다시 부르기
+  }, [selectedRegion]);
 
   useEffect(() => {
     console.log("추천 글 상태 업데이트:", companies);
@@ -114,7 +116,7 @@ const Index = () => {
                   <img
                     src={item.image}
                     alt="이벤트배너"
-                    className="w-full object-cover"
+                    className="w-full object-cover animate-kenburns"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50">
                     <span className="absolute left-[10%] top-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
@@ -166,9 +168,9 @@ const Index = () => {
           <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             인기 글
           </span>
-          <div className="flex gap-[15px]">
-            {categories[1] && categories[1].length > 0 ? (
-              categories[1].slice(0, 4).map(item => (
+          <div className="flex gap-[15px] mb-[80px]">
+            {categories.popular && categories.popular.length > 0 ? (
+              categories.popular.slice(0, 4).map(item => (
                 <Link
                   to="/"
                   key={item.categoryId}
@@ -208,8 +210,8 @@ const Index = () => {
 
           {/* 중간 배너 */}
           <div className="max-w-[1280px] m-auto py-[80px]">
-            <a
-              href="/"
+            <Link
+              to="/qna"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
@@ -219,19 +221,19 @@ const Index = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
                 <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
-                  청소하기 힘드신가요?!
+                  서비스에 대해 궁금하다면?
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* 최신 글 */}
           <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최신 글
           </span>
-          <div className="flex gap-[15px]">
-            {companies && companies.length > 0 ? (
-              companies.slice(0, 4).map(item => (
+          <div className="flex gap-[15px] mb-[80px]">
+            {categories.latest && categories.latest.length > 0 ? (
+              categories.latest.slice(0, 4).map(item => (
                 <Link
                   to="/"
                   key={item.businessId}
@@ -268,9 +270,73 @@ const Index = () => {
               </div>
             )}
           </div>
+          {/* 중간 배너 */}
           <div className="max-w-[1280px] m-auto py-[80px]">
-            <a
-              href="/"
+            <Link
+              to="/login/signup"
+              className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
+            >
+              <img
+                src="./images/event/event_banner_1.png"
+                alt="이벤트배너"
+                className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center pl-[10%]">
+                <span className="text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
+                  회원가입 하고{" "}
+                  <p className="text-5xl py-[10px]">잡던을 이용해보세요!</p>
+                </span>
+              </div>
+            </Link>
+          </div>
+
+          {/* 최저가 글 */}
+          <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
+            최저가
+          </span>
+          <div className="flex gap-[15px]">
+            {categories.cheapest && categories.cheapest.length > 0 ? (
+              categories.cheapest.slice(0, 4).map(item => (
+                <Link
+                  to="/"
+                  key={item.businessId}
+                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
+                >
+                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
+                    <img
+                      src={`${BASE_URL}${item.pic}`}
+                      alt="사진"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="block w-full overflow-hidden font-medium text-lg">
+                    {item.title}
+                  </span>
+                  <span className="text-[20px] font-bold text-blue-600">
+                    {item.price.toLocaleString()}원~
+                  </span>
+                  <div className="flex justify-between text-[15px] items-center">
+                    <span className="text-gray-600">{item.businessName}</span>
+                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                      <FaStar className="text-[#FF9D00]" />
+                      <span className="font-medium">{item.scoreAvg}</span>
+                      <span className="text-gray-400">{`(${item.serviceCount})`}</span>
+                    </span>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="flex w-full gap-[15px]">
+                {[...Array(4)].map((_, index) => (
+                  <ServiceSkeleton key={index} />
+                ))}
+              </div>
+            )}
+          </div>
+          {/* 중간 배너 */}
+          <div className="max-w-[1280px] m-auto py-[80px]">
+            <Link
+              to="/business"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
@@ -286,7 +352,7 @@ const Index = () => {
                   </p>
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import {
   selectedCategoryState,
   selectedDetailTypeState,
   regionState,
+  categoryList,
+  detailList,
 } from "../../atoms/categoryAtom";
 
 const ServiceListTop = ({ setBusinessList }) => {
@@ -15,6 +17,17 @@ const ServiceListTop = ({ setBusinessList }) => {
   const regionIdVal = useRecoilValue(regionState);
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
+   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
+  const [detailDatas, setDetailDatas] = useRecoilState(detailList);
+  const cateName = categoryDatas.find(
+    item => item.categoryId === categoryId,
+  )?.categoryName;
+  console.log(detailDatas);
+  const detailName =
+    Object.values(detailDatas)
+      .flat()
+      .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
+
   // const [regionId] = useRecoilState(regionIdState)
   const [searchTerm, setSearchTerm] = useState("");
   const handleChange = e => {
@@ -103,7 +116,9 @@ const ServiceListTop = ({ setBusinessList }) => {
     <PageTopDiv>
       <div className="inner">
         <h1>청소</h1>
-        <span>청소 {">"} 원룸</span>
+        <span>
+          {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
+        </span>
         <ul>
           <li>
             <button
