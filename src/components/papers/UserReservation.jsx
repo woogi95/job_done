@@ -9,18 +9,21 @@ import {
   PapersDiv,
   ReservationPaperContDiv,
 } from "./papers";
+import { getCookie } from "../../apis/cookie";
 // import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = useRecoilValue(serviceIdState);
-  console.log("serviceId:", serviceId);
+  // const serviceId = useRecoilValue(serviceIdState);
+  const serviceId = getCookie("serviceId");
+  // console.log("serviceId:", serviceId);
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
       console.log("이게 찍히니????", serviceId);
+
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );

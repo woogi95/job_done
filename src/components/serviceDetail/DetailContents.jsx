@@ -176,7 +176,7 @@ const DetailContents = () => {
         <DContsDiv>
           <div className="box" id="about">
             <h2>업체소개</h2>
-            <p>
+            <p className="title-b">
               {businessDetail.contents ? parse(businessDetail.contents) : ""}
             </p>
             {detailPicList.map((item, index) => (

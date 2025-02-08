@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { reviewListState } from "../../atoms/reviewAtom";
-import { ReviewDiv, StarTotalDiv } from "./serviceDetail";
+import { ReviewDiv, ReviewFilterDiv, StarTotalDiv } from "./serviceDetail";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { FaStar, FaStarHalf } from "react-icons/fa";
@@ -22,14 +22,23 @@ const ContReview = () => {
   const [selectedOption, setSelectedOption] = useState("최신순"); // Default selected option
   const businessId = businessDetail.businessId;
   const page = 1;
-  const size = 5;
+  const size = 10;
+
+  // 정렬 방식에 따른 API 호출
+  const handleSortTypeClick = (businessId, option, state) => {
+    console.log("businessId, status!!!", businessId, option, state);
+    setOptionOpen(!optionOpen);
+    setStatus(option);
+    setSelectedOption(option);
+    getReviewList(businessId, state);
+  };
 
   // 리뷰 목록 가져오기
-  const getReviewList = async (businessId, status) => {
-    console.log(businessId, status);
+  const getReviewList = async (businessId, state) => {
+    console.log("3424businessId, status!!!", businessId, state);
     try {
       const res = await axios.get(
-        `/api/review?businessId=${businessId}&status=${status}&page=${page}&size=${size}`,
+        `/api/review?businessId=${businessId}&state=${state}&page=${page}&size=${size}`,
       );
       console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
@@ -38,17 +47,9 @@ const ContReview = () => {
     }
   };
 
-  // 정렬 방식에 따른 API 호출
-  const handleSortTypeClick = (businessId, status, option) => {
-    setOptionOpen(!optionOpen);
-    setStatus(status);
-    setSelectedOption(option); // Update the selected option text
-    getReviewList(businessId, status);
-  };
-
   useEffect(() => {
     getReviewList(businessId, status);
-  }, [businessId, status]);
+  }, []);
 
   // 별점 렌더링
   const renderStars = score => {
@@ -83,7 +84,7 @@ const ContReview = () => {
       <ReviewDiv>
         <div className="rv-top">
           <h3>서비스 리뷰 {businessDetail.reviewCount}</h3>
-          <FilterDiv>
+          <ReviewFilterDiv>
             <div className="select" onClick={() => setOptionOpen(!optionOpen)}>
               <p>{selectedOption}</p>
               <IoIosArrowDown />
@@ -93,14 +94,20 @@ const ContReview = () => {
                 {options.map((item, index) => (
                   <div
                     key={item}
-                    onClick={() => handleSortTypeClick(businessId, index, item)}
+                    onClick={() =>
+                      handleSortTypeClick(
+                        businessDetail.businessId,
+                        item,
+                        index,
+                      )
+                    }
                   >
                     {item}
                   </div>
                 ))}
               </div>
             )}
-          </FilterDiv>
+          </ReviewFilterDiv>
         </div>
         <div className="rv-list">
           {reviewList?.map((item, index) => (
@@ -144,7 +151,7 @@ const ContReview = () => {
                           pic =>
                             typeof pic === "string" &&
                             pic.match(/\.(jpg|jpeg|png|gif)$/i),
-                        ) // 이미지 파일 확장자를 가진 문자열만 필터링
+                        )
                         .slice(0, 2)
                         .map((pic, index) => (
                           <div key={index}>
