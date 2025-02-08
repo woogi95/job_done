@@ -1,7 +1,7 @@
-import React from "react";
-import Header from "./Header";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import { useLocation, Outlet } from "react-router-dom";
+import Header from "./Header";
+
 function Layout() {
   const { pathname } = useLocation();
   const nolayoutPaths = [
@@ -9,11 +9,14 @@ function Layout() {
     "/login/signup",
     "/login/email",
     "/login/signupdone",
+    "/login/epwcheck",
+    "/login/epwedit",
     "/login/epw",
     "/business",
     "/business/number",
   ];
   const isLayourVisible = !nolayoutPaths.includes(pathname);
+
   return (
     <div>
       {isLayourVisible && <Header />}

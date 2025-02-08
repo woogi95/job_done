@@ -5,10 +5,12 @@ import {
   numDubCheck,
 } from "../../../atoms/businessAtom";
 import { useRecoilState } from "recoil";
-
+import dayjs from "dayjs";
 import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../../apis/login";
+// import axios from "axios";
 function BusinessNumber() {
   const [form] = Form.useForm();
   const [result, setResult] = useState(null); // 결과를 저장할 상태
@@ -19,8 +21,14 @@ function BusinessNumber() {
   const [fileList, setFileList] = useState([]); // 파일 상태
   const [previewImages, setPreviewImages] = useState([]); // 이미지 미리보기 상태
   const [checkMessage, setCheckMessage] = useRecoilState(checkMsg);
+  const [errorModal, setErrorModal] = useState(false);
   const navigate = useNavigate();
-  const sucess = [setNumMOdal(false), navigate("/")];
+  const sucess = () => {
+    setNumMOdal(false);
+    navigate("/");
+  };
+  console.log(busiInfo);
+
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
 
@@ -47,7 +55,6 @@ function BusinessNumber() {
       const result = await response.json();
       if (result) {
         setResult(result);
-        setNumMOdal(true);
       }
       console.log(result);
     } catch (err) {
@@ -58,19 +65,19 @@ function BusinessNumber() {
   };
   // 업체 최종 등록
   const onSubmit = async data => {
+    console.log(busiInfo);
     try {
       const formData = new FormData();
 
       const requestData = {
-        userId: data.userId,
-        businessNum: "",
-        businessName: data.businessName,
-        address: data.address,
-        serviceTypeId: data.serviceTypeId,
-        busiCreatedAt: data.busiCreatedAt,
-        tel: data.tel,
+        businessNum: data.businessNum,
+        businessName: busiInfo.businessName,
+        address: busiInfo.address,
+        detailTypeId: busiInfo.detailTypeId,
+        busiCreatedAt: dayjs(busiInfo.busiCreatedAt).format("YYYY/MM/DD"),
+        tel: busiInfo.tel,
       };
-
+      console.log(requestData);
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",
@@ -78,18 +85,29 @@ function BusinessNumber() {
           type: "application/json",
         }),
       );
-
-      // 파일 추가 (data.pic이 있는 경우)
+      if (busiInfo.logo) {
+        formData.append("logo", busiInfo.logo);
+      }
       if (data.paper) {
-        formData.append("pic", data.pic);
+        // 파일 추가 (data.pic이 있는 경우)
+        formData.append("paper", data.paper);
       }
 
+      console.log(requestData);
       // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
-      const res = await axios.post("/api/business/sign-up", formData, {
+      const res = await loginApi.post("/api/business/sign-up", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(res);
+
+      if (res.status === 200) {
+        setNumMOdal(true);
+        localStorage.setItem("businessId", JSON.stringify(res.data.resultData));
+      } else {
+        setErrorModal(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -143,7 +161,7 @@ function BusinessNumber() {
 
         <Form.Item
           label="사업자 등록증"
-          name={"pic"}
+          name={"paper"}
           rules={[{ required: false }]}
         >
           <Upload
@@ -171,7 +189,7 @@ function BusinessNumber() {
           </div>
         )}
         <Form.Item className="clickbuttons">
-          <button className="cancle" onClick={() => goCancle()}>
+          <button type="button" className="cancle" onClick={() => goCancle()}>
             취소
           </button>
           <Button htmlType="submit" className="nextButton">
@@ -182,10 +200,38 @@ function BusinessNumber() {
       {numModal && (
         <div className="num-ModalFull items-center justify-center">
           <div className="num-Modal">
-            <h1>등록이 완료되었습니다.</h1>
-            <button className="" onClick={() => sucess}>
-              확인
-            </button>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>등록이 완료되었습니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={e => sucess(e)}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {errorModal && (
+        <div className="num-ModalFull items-center justify-center">
+          <div className="num-Modal">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: 30,
+                marginTop: 20,
+              }}
+            >
+              <h1>이미 등록된 사업자 번호 입니다.</h1>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button onClick={() => setErrorModal(false)}>확인</button>
+            </div>
           </div>
         </div>
       )}
