@@ -10,10 +10,6 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { papersState, serviceIdState } from "../../atoms/businessAtom";
-import { loginApi } from "../../apis/login";
-import { useNavigate } from "react-router-dom";
 // import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
