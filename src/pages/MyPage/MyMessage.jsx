@@ -7,10 +7,10 @@ import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 
 const socket = new SockJS("http://192.168.0.195:5173/chat");
-const stompClient = Stomp.over(() => socket); // SockJS 팩토리를 함수로 전달
+const stompClient = Stomp.over(() => socket);
 
 export const runSocket = () => {
-  stompClient.reconnectDelay = 5000; // 자동 재연결 설정
+  stompClient.reconnectDelay = 5000;
   stompClient.onConnect = frame => {
     console.log("Connected: " + frame);
   };
@@ -68,7 +68,6 @@ function MyMessage() {
     }
   };
 
-  // 방 선택시 번호
   const handleRoomSelect = roomId => {
     setSelectedRoomId(roomId);
     fetchChatMessages(roomId);
@@ -101,7 +100,6 @@ function MyMessage() {
       });
 
       console.log("메시지 전송 응답:", res.data);
-      // 채팅 목록 새로고침
       await fetchChatMessages(selectedRoomId);
       setMessage("");
       setSelectedImages([]);
@@ -111,14 +109,12 @@ function MyMessage() {
     }
   };
 
-  // 이미지 업로드 핸들러
   const handleImageUpload = event => {
     const files = Array.from(event.target.files);
     setSelectedImages(files);
     console.log("선택된 이미지:", files);
   };
 
-  // 메시지 전송 핸들러
   const handleSendMessage = sendMessage;
 
   useEffect(() => {

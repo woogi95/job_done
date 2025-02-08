@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
 import { statusText } from "../../components/ServiceIcon";
-import { Select } from "antd";
+import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
 
 function MyReservation() {
@@ -20,6 +20,8 @@ function MyReservation() {
     show: false,
     success: false,
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   const serviceChange = async serviceId => {
     try {
@@ -163,6 +165,17 @@ function MyReservation() {
     reservationData();
   }, []);
 
+  // 현재 페이지에 해당하는 예약 목록만 필터링
+  const getCurrentPageData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return reservation.slice(startIndex, endIndex);
+  };
+
+  const handlePageChange = page => {
+    setCurrentPage(page);
+  };
+
   return (
     <MyPageLayout>
       <div className="flex flex-col justify-center items-center gap-y-[20px]">
@@ -170,7 +183,7 @@ function MyReservation() {
           예약현황
         </span>
         <div className="w-full max-w-[800px]">
-          {reservation.map(item => (
+          {getCurrentPageData().map(item => (
             <div key={item.id} className="mb-[15px]">
               <div className="flex flex-col gap-[10px] px-[55px]">
                 <div className="flex justify-between">
@@ -233,6 +246,17 @@ function MyReservation() {
               <div className="h-[1px] bg-slate-900 mx-auto my-[20px] w-[85%] flex justify-center items-center"></div>
             </div>
           ))}
+
+          {/* 페이지네이션 추가 */}
+          <div className="flex justify-center my-4">
+            <Pagination
+              current={currentPage}
+              total={reservation.length}
+              pageSize={itemsPerPage}
+              onChange={handlePageChange}
+              showSizeChanger={false}
+            />
+          </div>
         </div>
       </div>
 
@@ -324,7 +348,7 @@ function MyReservation() {
         </div>
       )}
 
-      {/* 문의하기 모달 - 별도로 분리 */}
+      {/* 문의하기 모달*/}
       {qnaModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
