@@ -11,18 +11,15 @@ import {
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
 import { Pagination } from "antd";
-// import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  // const serviceId = useRecoilValue(serviceIdState);
   const serviceId = getCookie("serviceId");
   // console.log("serviceId:", serviceId);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
-
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28

@@ -30,9 +30,9 @@ const ServiceListTop = ({ setBusinessList }) => {
 
   // const [regionId] = useRecoilState(regionIdState)
   const [searchTerm, setSearchTerm] = useState("");
-  const handleChange = e => {
-    setSearchTerm(e.target.value);
-  };
+  // const handleChange = e => {
+  //   setSearchTerm(e.target.value);
+  // };
   useEffect(() => {
     console.log("검색어:", regionIdVal);
   }, [searchTerm]);
@@ -178,8 +178,13 @@ const ServiceListTop = ({ setBusinessList }) => {
             type="text"
             placeholder="검색어를 입력해주세요"
             value={searchTerm}
-            onChange={handleChange}
-            // onChange={handleSearchChange}
+            onChange={e => setSearchTerm(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // 기본 동작 방지 (폼 제출 방지)
+                handleSearch(categoryId, detailTypeId, regionId, searchTerm);
+              }
+            }}
           />
           <button
             onClick={() =>
