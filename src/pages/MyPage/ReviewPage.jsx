@@ -42,7 +42,6 @@ function ReviewPage() {
     if (!selectedReview) return;
 
     try {
-      // 1. 리뷰 내용 수정
       const reviewData = {
         reviewId: selectedReview.reviewId,
         contents: reviewContent,
@@ -55,14 +54,11 @@ function ReviewPage() {
       );
       console.log("리뷰 수정 성공:", reviewRes);
 
-      // 2. 이미지 처리
       if (selectedImages.length > 0) {
-        // 이미지 상태 업데이트
         await loginApi.put("/api/review/state", {
           reviewId: selectedReview.reviewId,
         });
 
-        // 새로운 이미지 업로드
         const formData = new FormData();
         selectedImages.forEach(image => {
           if (image instanceof File) {
@@ -98,9 +94,10 @@ function ReviewPage() {
 
   const deleteReview = async reviewId => {
     try {
-      const res = await loginApi.delete(`/api/review/`, {
-        reviewId: reviewId,
-        withCredentials: true,
+      const res = await loginApi.delete(`/api/review`, {
+        params: {
+          reviewId: reviewId,
+        },
       });
       if (res.status === 200) {
         alert("리뷰가 삭제되었습니다.");
@@ -169,12 +166,11 @@ function ReviewPage() {
     setSelectedReviewId(null);
   };
 
-  // 페이지네이션을 위한 현재 페이지의 리뷰들을 계산
+  // 페이지네이션을 위한 현재 페이지 리뷰들 계산
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews = review.slice(indexOfFirstReview, indexOfLastReview);
 
-  // 페이지 변경 핸들러
   const handlePageChange = page => {
     setCurrentPage(page);
   };
@@ -222,11 +218,17 @@ function ReviewPage() {
                   </div>
                 </div>
               </div>
-              <div>
-                <button onClick={() => handleReviewModalOpen(item)}>
-                  수정
+              <div className="flex justify-center items-center gap-[10px]">
+                <button
+                  onClick={() => handleReviewModalOpen(item)}
+                  className="flex justify-center items-center font-semibold text-[#1e1e1e] underline"
+                >
+                  리뷰수정
                 </button>
-                <button onClick={() => handleDeleteModalOpen(item.reviewId)}>
+                <button
+                  onClick={() => handleDeleteModalOpen(item.reviewId)}
+                  className="font-semibold text-[#F53A3A]"
+                >
                   삭제
                 </button>
               </div>
@@ -323,7 +325,7 @@ function ReviewPage() {
                     </div>
                     <button
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm"
+                      className="absolute -top-2 -right-2 bg-[#F53A3A] text-white rounded-full w-5 h-5 flex items-center justify-center text-sm"
                     >
                       <RxCross2 className="text-[16px]" />
                     </button>

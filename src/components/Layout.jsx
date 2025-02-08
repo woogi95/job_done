@@ -1,8 +1,6 @@
-import React from "react";
-import Header from "./Header";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "./Footer";
-import { useLocation, Outlet } from "react-router-dom";
-import NotFound from "../pages/NotFound";
+import Header from "./Header";
 
 function Layout() {
   const { pathname } = useLocation();
@@ -12,8 +10,8 @@ function Layout() {
     "/login/email",
     "/login/signupdone",
     "/login/epwcheck",
-    "/login/epwchecking",
     "/login/epwedit",
+    "/login/epw",
     "/business",
     "/business/number",
   ];

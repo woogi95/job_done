@@ -22,17 +22,14 @@ const ServiceListTop = ({
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
   const [categoryDatas, setCategoryDatas] = useRecoilState(categoryList);
   const [detailDatas, setDetailDatas] = useRecoilState(detailList);
-  console.log(categoryId);
-  console.log(categoryDatas);
-  const cateName = categoryDatas
-    .filter(item => item.id === "{categoryId}") // targetId와 일치하는 객체만 필터링
-    .map(item => item.name);
-  console.log(cateName);
-  const detaileName = detailTypeId
-    ? detailDatas
-        .filter(item => item.id === detailTypeId) // targetId와 일치하는 객체만 필터링
-        .map(item => item.name)
-    : "";
+  const cateName = categoryDatas.find(
+    item => item.categoryId === categoryId,
+  )?.categoryName;
+  console.log(detailDatas);
+  const detailName =
+    Object.values(detailDatas)
+      .flat()
+      .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
     console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
@@ -62,7 +59,7 @@ const ServiceListTop = ({
       <div className="inner">
         <h1>청소</h1>
         <span>
-          {cateName} {">"} {detaileName}
+          {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
         </span>
         <ul>
           <li>
