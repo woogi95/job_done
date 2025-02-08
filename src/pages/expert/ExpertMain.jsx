@@ -7,8 +7,8 @@ import { useRecoilState } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { reserveList } from "../../atoms/reservationAtom";
 import { loginApi } from "../../apis/login";
+import ExpertMainReserveList from "./ExpertMainReserveList.jsx";
 
-import ExpertMainReserveList from "./ExpertMainReserveList";
 const BigBox = styled.div`
   height: 100%;
   width: 489px;
