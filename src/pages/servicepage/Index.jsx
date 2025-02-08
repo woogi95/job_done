@@ -12,7 +12,6 @@ import {
 import { likeStatusState } from "../../atoms/like";
 import axios from "axios";
 import { loginApi } from "../../apis/login";
-// import "./index.css";
 function Service() {
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);

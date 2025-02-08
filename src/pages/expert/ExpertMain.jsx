@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -8,6 +8,7 @@ import { businessDetailState } from "../../atoms/businessAtom";
 import { reserveList } from "../../atoms/reservationAtom";
 import { loginApi } from "../../apis/login";
 
+import ExpertMainReserveList from "./ExpertMainReserveList";
 const BigBox = styled.div`
   height: 100%;
   width: 489px;
@@ -33,19 +34,21 @@ function ExpertMain() {
       if (res && res.data.resultData) {
         // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)
         filteredData = res.data.resultData.map(item => ({
-          userName: item.userName,
-          serviceId: item.serviceId,
-          startDate: item.startDate,
+          title: item.userName,
+          servicId: item.serviceId,
+          start: item.startDate,
         }));
       }
       console.log(filteredData);
-      // ✅ if 문 밖에서 `setReserveInfo` 호출
+
       setReserveInfo(filteredData);
     } catch (error) {
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    businessPage();
+  }, []);
   return (
     <div style={{ backgroundColor: "white", padding: 15 }}>
       {/* 상단 예약 건수 등 3 칸 */}
@@ -124,10 +127,7 @@ function ExpertMain() {
       >
         {/*  예약 현황 */}
         <BigBox>
-          <ul>
-            <h1>예약 현황.</h1>
-            <li></li>
-          </ul>
+          <ExpertMainReserveList />
         </BigBox>
         {/* 미니 켈린더 */}
         <BigBox>
