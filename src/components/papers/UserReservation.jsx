@@ -25,9 +25,11 @@ const UserReservation = () => {
     setIsPopupOpen(true);
     patchServiceState(3, serviceId);
   };
-  const handlePopupClose = () => {
+  const handleClosePopup = () => {
     setIsPopupOpen(false);
-    navigate("/mypage/reservation");
+  };
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
   };
 
   const getEstimate = async serviceId => {
@@ -83,6 +85,10 @@ const UserReservation = () => {
       );
     }
   };
+
+  // useEffect(() => {
+  //   console.log("중요!!!!!!", serviceId);
+  // }, [serviceId]);
 
   return (
     <PapersDiv>
@@ -214,13 +220,14 @@ const UserReservation = () => {
       </div>
       <Popup
         isOpen={isPopupOpen}
-        onClose={handlePopupClose}
-        onCancel={handlePopupClose}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
         title="예약 취소"
         message={popupMessage}
+        // showCancelButton={true}
+        // cancelLink="/cancel"
         confirmLink="/mypage/reservation"
-        // showConfirmButton={true}
-        showCancelButton={true}
+        showConfirmButton={true}
       />
     </PapersDiv>
   );
