@@ -3,6 +3,7 @@ import { FaStar } from "react-icons/fa";
 import { BsHeartFill } from "react-icons/bs";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
+import { Link } from "react-router-dom";
 
 function Wishlist() {
   const ImgURL = "http://112.222.157.156:5224";
@@ -48,8 +49,8 @@ function Wishlist() {
       </div>
       <div className="flex flex-wrap gap-[15px]">
         {wishlist.map(item => (
-          <a
-            href="/"
+          <Link
+            to={`/service/${item.businessId}`}
             key={item.businessId}
             className="flex flex-col rounded-lg w-[calc(33.333%-20px)] gap-[10px] relative group overflow-hidden"
           >
@@ -76,7 +77,7 @@ function Wishlist() {
                 <span className="text-gray-400">{`(${item.reviewNumbers})`}</span>
               </span>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </MyPageLayout>
