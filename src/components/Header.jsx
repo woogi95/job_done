@@ -12,6 +12,7 @@ import {
   selectedDetailTypeState,
 } from "../atoms/categoryAtom";
 import { loginUser } from "../atoms/loginAtom";
+import { remove_cookie } from "../utils/Cookie";
 
 function Header() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -78,6 +79,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.clear();
     Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
     document.cookie.split(";").forEach(cookie => {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
@@ -270,7 +272,10 @@ function Header() {
                       작성한 리뷰
                     </Link>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        remove_cookie("refreshToken");
+                      }}
                       className="block w-full  px-4 py-2 text-[#1e1e1e] hover:bg-gray-100"
                     >
                       로그아웃

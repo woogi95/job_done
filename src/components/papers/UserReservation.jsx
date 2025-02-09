@@ -10,7 +10,6 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
-import { Pagination } from "antd";
 
 const UserReservation = () => {
   const navigate = useNavigate();
@@ -183,15 +182,6 @@ const UserReservation = () => {
               </ul>
             </div>
           </FormDiv>
-          <div className="my-4">
-            <Pagination
-              current={currentPage}
-              total={papers.length}
-              pageSize={itemsPerPage}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
           <BtnAreaDiv>
             <button
               className="cancel"
