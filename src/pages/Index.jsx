@@ -30,29 +30,22 @@ const Index = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // 새로운 지역 선택시 기존 데이터 초기화
-      setCategories({});
-
       try {
-        // 각 섹션별로 다른 정렬 방식 적용
         const requests = [
           axios.get("/api/business", {
             params: {
-              // categoryId: 1,
               regionId: selectedRegion,
               sortType: "인기순",
             },
           }),
           axios.get("/api/business", {
             params: {
-              // categoryId: 1,
               regionId: selectedRegion,
               sortType: "최신순",
             },
           }),
           axios.get("/api/business", {
             params: {
-              // categoryId: 1,
               regionId: selectedRegion,
               sortType: "저가순",
             },
@@ -62,13 +55,17 @@ const Index = () => {
         const responses = await Promise.all(requests);
 
         setCategories({
-          popular: responses[0].data.resultData,
-          latest: responses[1].data.resultData,
-          cheapest: responses[2].data.resultData,
+          popular: (responses[0].data.resultData || []).slice(0, 4),
+          latest: (responses[1].data.resultData || []).slice(0, 4),
+          cheapest: (responses[2].data.resultData || []).slice(0, 4),
         });
       } catch (error) {
         console.log("데이터 조회 에러:", error);
-        setCategories({});
+        setCategories({
+          popular: [],
+          latest: [],
+          cheapest: [],
+        });
       }
     };
 
@@ -116,7 +113,7 @@ const Index = () => {
                   <img
                     src={item.image}
                     alt="이벤트배너"
-                    className="w-full object-cover animate-kenburns"
+                    className="w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-black/50">
                     <span className="absolute left-[10%] top-1/2 -translate-y-1/2 text-white text-bold text-6xl whitespace-nowrap text-ellipsis drop-shadow-lg">
@@ -169,11 +166,11 @@ const Index = () => {
             인기 글
           </span>
           <div className="flex gap-[15px] mb-[80px]">
-            {categories.popular && categories.popular.length > 0 ? (
+            {categories.popular?.length > 0 ? (
               categories.popular.slice(0, 4).map(item => (
                 <Link
-                  to={`/service/${item.businessId}`}
-                  key={item.categoryId}
+                  to="/"
+                  key={item.businessId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1"
                 >
                   <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
@@ -232,10 +229,10 @@ const Index = () => {
             최신 글
           </span>
           <div className="flex gap-[15px] mb-[80px]">
-            {categories.latest && categories.latest.length > 0 ? (
+            {categories.latest?.length > 0 ? (
               categories.latest.slice(0, 4).map(item => (
                 <Link
-                  to={`/service/${item.businessId}`}
+                  to="/"
                   key={item.businessId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
                 >
@@ -295,10 +292,10 @@ const Index = () => {
             최저가
           </span>
           <div className="flex gap-[15px]">
-            {categories.cheapest && categories.cheapest.length > 0 ? (
+            {categories.cheapest?.length > 0 ? (
               categories.cheapest.slice(0, 4).map(item => (
                 <Link
-                  to={`/service/${item.businessId}`}
+                  to="/"
                   key={item.businessId}
                   className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
                 >

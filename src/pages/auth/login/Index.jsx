@@ -33,9 +33,9 @@ function LoginPage() {
         // accessToken을 쿠키에 직접 저장
 
         Cookies.set("accessToken", accessToken, {
-          expires: 1, // 1일 후 만료
+          expires: 1, // 1일 후 만료 (이거 프론트가 쓰면 안됨)
           secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
-          sameSite: "Strict",
+          sameSite: "Strict", // 도메인 제한
         });
         // ✅ 사용자 상태 업데이트
         setUserInfo({

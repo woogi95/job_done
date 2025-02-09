@@ -45,6 +45,7 @@ loginApi.interceptors.response.use(
             httpOnly: false, // `HttpOnly` 옵션을 사용할 경우 JS에서 설정 불가
             secure: process.env.NODE_ENV === "production",
             sameSite: "Strict",
+            path: "/", // 전체 도메인에서 쿠키 접근 가능하도록 설정
           });
 
           // 새 accessToken으로 헤더 업데이트

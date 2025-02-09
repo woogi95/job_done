@@ -258,10 +258,6 @@ function Index() {
     console.log("옵션 아이디", selectedOption);
   }, [address, detailAddress, selectedOption]);
 
-  if (reservationSubmitted) {
-    return <UserReservation />;
-  }
-
   const rsvTime = [
     "08:00",
     "09:00",
