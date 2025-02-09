@@ -61,6 +61,7 @@ import Qna from "./pages/Qna";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentFailed from "./components/PaymentFailed";
 import Estimate from "./components/papers/Estimate";
+import UserReservLook from "./pages/mypage/UserReservLook";
 
 function App() {
   return (
@@ -118,6 +119,10 @@ function App() {
             <Route path="wishlist" element={<Wishlist />} />
           </Route>
           <Route path="/estimate/:serviceId" element={<Estimate />} />
+          <Route
+            path="/UserReservLook/:serviceId"
+            element={<UserReservLook />}
+          />
         </Route>
         {/* ----- 전문가 페이지 ----- */}
         <Route element={<ExportLayout />}>

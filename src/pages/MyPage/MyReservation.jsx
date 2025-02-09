@@ -115,7 +115,6 @@ function MyReservation() {
         }),
       );
 
-      // 이미지 파일들 추가
       uploadedFiles.forEach((file, index) => {
         formData.append("pics", file);
       });
@@ -144,11 +143,13 @@ function MyReservation() {
 
   const handleReservationCancel = async serviceId => {
     try {
-      const res = await loginApi.post(`/api/service/${serviceId}/cancel`);
-      if (res.status === 200) {
-        setCancelStatus({ show: true, success: true });
-        reservationData(); // 예약 목록 새로고침
-      }
+      await loginApi.patch(`/api/service`, {
+        completed: 3,
+        serviceId: serviceId,
+      });
+
+      setCancelStatus({ show: true, success: true });
+      reservationData();
     } catch (error) {
       console.error("예약 취소 실패:", error);
       setCancelStatus({ show: true, success: false });
@@ -172,7 +173,7 @@ function MyReservation() {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return reservation.slice(startIndex, endIndex);
+    return [...reservation].reverse().slice(startIndex, endIndex);
   };
 
   const handlePageChange = page => {
@@ -185,8 +186,7 @@ function MyReservation() {
     );
     if (currentReservation) {
       if ([0, 1].includes(currentReservation.completed)) {
-        document.cookie = `serviceId=${serviceId}; path=/`;
-        setIsReservationDetailOpen(true);
+        navigate(`/UserReservLook/${serviceId}`);
       } else if (currentReservation.completed === 2) {
         navigate(`/estimate/${serviceId}`);
       }
@@ -222,10 +222,10 @@ function MyReservation() {
                 </div>
                 <div className="flex justify-center items-center gap-[15px]">
                   <button
-                    disabled={[0, 1, 6].includes(item.completed)}
+                    disabled={[0, 1, 3, 4, 5, 6].includes(item.completed)}
                     onClick={() => {
                       if (
-                        ![0, 1, 6].includes(item.completed) &&
+                        ![0, 1, 3, 4, 5, 6].includes(item.completed) &&
                         [7, 8, 9].includes(item.completed)
                       ) {
                         setSelectedServiceId(item.serviceId);
@@ -236,7 +236,7 @@ function MyReservation() {
                     }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${
-                        [0, 1, 6].includes(item.completed)
+                        [0, 1, 3, 4, 5, 6].includes(item.completed)
                           ? "bg-[#D9D9D9] cursor-not-allowed text-[#C3C3C3]"
                           : "bg-[#3887FF] hover:bg-[#2d6cd9] text-[#FFFFFF]"
                       }`}
@@ -246,16 +246,20 @@ function MyReservation() {
                       : "결제하기"}
                   </button>
                   <button
+                    disabled={[3, 4, 5].includes(item.completed)}
                     onClick={() => {
                       if ([7, 8, 9].includes(item.completed)) {
                         handleInquiryModalOpen(item.serviceId);
                       } else {
                         handleReservationCancel(item.serviceId);
-                        handleServiceChange(item.serviceId);
-                        console.log("서비스 변경 호출", serviceChange);
                       }
                     }}
-                    className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]"
+                    className={`flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] rounded-lg border-[#ABABAB] border-[1px]
+                      ${
+                        [3, 4, 5].includes(item.completed)
+                          ? "bg-[#D9D9D9] cursor-not-allowed text-[#C3C3C3]"
+                          : "bg-[#ffffff]"
+                      }`}
                   >
                     {[7, 8, 9].includes(item.completed)
                       ? "문의하기"
