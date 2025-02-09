@@ -43,13 +43,14 @@ function LoginPage() {
         // expirationDate.setMinutes(
         //   expirationDate.getMinutes() + expiresInMinutes,
         // );
-
+        
         // Cookies.set("accessToken", accessToken, {
         //   expires: 3 / (24 * 60),
         //   secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
         //   sameSite: "Strict",
         // });
         setCookie(`accessToken`, res.data.resultData.accessToken);
+        
         // ✅ 사용자 상태 업데이트
         setUserInfo({
           userId: userId,

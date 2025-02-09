@@ -175,7 +175,7 @@ const ServiceListTop = ({ setBusinessList }) => {
             onChange={e => setSearchTerm(e.target.value)}
             onKeyDown={e => {
               if (e.key === "Enter") {
-                e.preventDefault(); // 기본 동작 방지 (폼 제출 방지)
+                e.preventDefault();
                 handleSearch(categoryId, detailTypeId, regionId, searchTerm);
               }
             }}
