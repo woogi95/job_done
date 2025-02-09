@@ -1,4 +1,5 @@
 import { IoSearch } from "react-icons/io5";
+import { BiSolidRightArrow } from "react-icons/bi";
 import { PageTopDiv } from "./service";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -28,15 +29,7 @@ const ServiceListTop = ({ setBusinessList }) => {
       .flat()
       .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
 
-  // const [regionId] = useRecoilState(regionIdState)
   const [searchTerm, setSearchTerm] = useState("");
-  // const handleChange = e => {
-  //   setSearchTerm(e.target.value);
-  // };
-  useEffect(() => {
-    console.log("검색어:", regionIdVal);
-  }, [searchTerm]);
-
   const handleSearch = async (
     categoryId,
     detailTypeId,
@@ -111,14 +104,15 @@ const ServiceListTop = ({ setBusinessList }) => {
 
   useEffect(() => {
     handleRegionClick(categoryId, detailTypeId, regionId);
-  }, [categoryId, detailTypeId, regionId]);
+  }, []);
   return (
     <PageTopDiv>
       <div className="inner">
-        <h1>
-          {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
-        </h1>
-        <span>{/* {cateName}  */}</span>
+        <h1>{cateName}</h1>
+        <span>
+          {cateName} {detailTypeId >= 1 ? <BiSolidRightArrow /> : ""}
+          {detailName}
+        </span>
         <ul>
           <li>
             <button
@@ -187,6 +181,7 @@ const ServiceListTop = ({ setBusinessList }) => {
             }}
           />
           <button
+            className="search-btn"
             onClick={() =>
               handleSearch(categoryId, detailTypeId, regionId, searchTerm)
             }

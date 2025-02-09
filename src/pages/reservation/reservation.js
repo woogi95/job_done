@@ -2,9 +2,8 @@ import styled from "@emotion/styled";
 import { BtnAreaDiv } from "../../components/papers/papers";
 
 export const ReservationDiv = styled.div`
-  /* border: 1px solid #eee; */
   padding: 80px 100px;
-  /* background-color: rgb(248, 248, 248); */
+
   .tit {
     text-align: center;
     font-size: 38px;
@@ -43,6 +42,18 @@ export const ReserVationContDiv = styled.div`
     font-weight: 600;
     color: #121212;
     margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    p {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 0px;
+      font-weight: 600;
+      b {
+        color: red;
+      }
+    }
   }
   h4 {
     font-size: 14px;
@@ -236,6 +247,7 @@ export const ReservationInfoDiv = styled.div`
     overflow: hidden;
     border-radius: 5px;
     margin-bottom: 10px;
+    position: relative;
     input {
       /* border: 1px solid #ccc; */
       height: 40px;
@@ -272,6 +284,9 @@ export const ReservationInfoDiv = styled.div`
         background-color: #34a5f0;
       }
     }
+  }
+  .error-m {
+    color: red;
   }
 `;
 // 예약하기 컨텐츠 --- 오른쪽
