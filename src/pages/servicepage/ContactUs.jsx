@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-
-import { FiSend } from "react-icons/fi";
+import { useState } from "react";
+//styled
 import { MessageBoxDiv } from "./servicepage";
 import { MessageDetail } from "../../components/ServiceIcon";
-
+// icon
+import { FiSend } from "react-icons/fi";
 import { CiImageOn } from "react-icons/ci";
 
 function ContactUs() {
   const [message, setMessage] = useState("");
-
   const handleSendMessage = () => {
     console.log("Sending message:", message);
   };

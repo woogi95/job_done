@@ -25,6 +25,8 @@ import { businessDetailState } from "../../atoms/businessAtom";
 import { likeStatusState } from "../../atoms/like";
 import { loginApi } from "../../apis/login";
 import ContReview from "./ContReview";
+import { getCookie } from "../../utils/Cookie";
+import { Popup } from "../ui/Popup";
 
 const DetailContents = () => {
   const [isFixed, setIsFixed] = useState(false); //nav 스크롤고정
@@ -35,19 +37,36 @@ const DetailContents = () => {
   const [isPfDetailPop, setIsPfDetailPop] = useState(false);
   const [selectedPortfolioId, setSelectedPortfolioId] = useState(null);
   const businessDetail = useRecoilValue(businessDetailState);
+  // const serviceIdState = useRecoilValue(serviceIdState);
   const businessId = businessDetail.businessId;
+  // const serviceId = serviceIdState.serviceId;
+
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
-  // const [likeStatus] = useRecoilState(likeStatusState);
+  // 팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupTitle, setPopupTitle] = useState("");
+  const [popupLink, setPopupLink] = useState("");
   const currentLikeStatus = likeStatus[businessId] || {
     isLiked: false,
   };
-
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+  };
   const handleClickBusiness = async e => {
     e.preventDefault();
+    const accessToken = getCookie("accessToken");
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("좋아요를 위해 로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+      return;
+    }
 
     try {
       // POST 요청 보내기
-      const response = await loginApi.post("/api/like", { businessId });
+      const res = await loginApi.post("/api/like", { businessId });
       const currentLikeStatus = likeStatus[businessId] || { isLiked: false };
       const newLikeStatus = !currentLikeStatus.isLiked;
       // 상태 업데이트
@@ -56,10 +75,10 @@ const DetailContents = () => {
         updatedState[businessId] = { isLiked: newLikeStatus };
         return updatedState;
       });
-      if (response.status === 200) {
-        console.log("success:", response.data);
+      if (res.status === 200) {
+        console.log("success:", res.data);
       } else {
-        console.log("Failed:", response.data);
+        console.log("Failed:", res.data);
       }
     } catch (error) {
       console.error(error);
@@ -113,18 +132,36 @@ const DetailContents = () => {
     setIsPfDetailPop(true);
   };
 
-  // 문의하기
-  const openWindow = () => {
-    const width = 410;
-    const height = 570;
-    const left = (screen.width - width) / 2;
-    const top = (screen.height - height) / 2;
+  // 문의하기 3차 (지우지마)
+  // const openWindow = () => {
+  //   const width = 410;
+  //   const height = 570;
+  //   const left = (screen.width - width) / 2;
+  //   const top = (screen.height - height) / 2;
 
-    window.open(
-      "/service/contactus",
-      "_blank",
-      `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
-    );
+  //   window.open(
+  //     "/service/contactus",
+  //     "_blank",
+  //     `width=${width},height=${height},top=${top},left=${left},resizable=yes`,
+  //   );
+  // };
+
+  const handleReservation = () => {
+    const accessToken = getCookie("accessToken");
+    console.log(accessToken);
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("예약을 위해 로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+    } else {
+      navigate(`/reservation/?businessId=${businessId}`);
+    }
+  };
+  const handleContactUs = () => {
+    setPopupTitle("서비스 준비중입니다");
+    setPopupMessage("현재 서비스가 준비중입니다. 조금만 기다려 주세요.");
+    setIsPopupOpen(true);
   };
   return (
     <DetailLayout>
@@ -239,12 +276,19 @@ const DetailContents = () => {
           <div className="btn-area">
             <button
               onClick={() => {
-                navigate(`/reservation/?businessId=${businessId}`);
+                handleReservation();
               }}
             >
               예약하기
             </button>
-            <button onClick={openWindow}>문의하기</button>
+            {/* <button onClick={openWindow}>문의하기</button> */}
+            <button
+              onClick={() => {
+                handleContactUs();
+              }}
+            >
+              문의하기
+            </button>
           </div>
         </div>
       </SummaryDiv>
@@ -252,6 +296,16 @@ const DetailContents = () => {
         portfolioId={selectedPortfolioId}
         setIsPfDetailPop={setIsPfDetailPop}
         isPfDetailPop={isPfDetailPop}
+      />
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handlePopupClose}
+        title={popupTitle}
+        message={popupMessage}
+        onCancel={handlePopupClose}
+        showCancelButton={true}
+        showConfirmButton={true}
+        confirmLink={popupLink}
       />
     </DetailLayout>
   );

@@ -5,8 +5,17 @@ import { papersState } from "../../atoms/businessAtom";
 import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
+import LoadingPopup from "../LoadingPopup";
 
 const Estimate = () => {
+  // 컨펌 팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  // const [isSuccess, setIsSuccess] = useState(true);
+  // 로딩상태
+  const [isLoading, setIsLoading] = useState(false);
+  // 결제 링크
+  // const [paymentUrl, setPaymentUrl] = useState("");
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   // const serviceId = papers.serviceId;
@@ -17,7 +26,6 @@ const Estimate = () => {
       console.log("이게 찍히니????", serviceId);
 
       const res = await loginApi.get(
-        `/api/service/detail?serviceId=${serviceId}`,
         `/api/service/detail?serviceId=${serviceId}`,
       );
       console.log("견적서 정보", res);
@@ -30,10 +38,6 @@ const Estimate = () => {
     }
   };
 
-  // 컨펌 팝업
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
-  const [isSuccess, setIsSuccess] = useState(true);
   // 컨펌팝업
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -53,6 +57,42 @@ const Estimate = () => {
   const formatBusinessNumber = number => {
     if (!number) return "사업자 번호 없음";
     return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
+  };
+
+  const handleClickNewPage = async serviceId => {
+    // /api/payment/ready?serviceId=229
+    setIsLoading(true);
+    console.log("결제 누구야!", serviceId);
+    try {
+      const width = 480;
+      const height = 600;
+      const left = (window.innerWidth - width) / 2;
+      const top = (window.innerHeight - height) / 2;
+      const paymentWindow = window.open(
+        // `${res.data.next_redirect_pc_url}`,
+        `https://www.naver.com/`,
+        "_blank",
+        `width=${width},height=${height},left=${left},top=${top}`,
+      );
+      const res = await loginApi(`/api/payment/ready?serviceId=${serviceId}`);
+      console.log(res.data.next_redirect_pc_url);
+      // const paymentWindow = window.open(
+      //   `${res.data.next_redirect_pc_url}`,
+      //   "_blank",
+      //   `width=${width},height=${height},left=${left},top=${top}`,
+      // );
+
+      const checkWindowClosed = setInterval(() => {
+        if (paymentWindow.closed) {
+          setIsLoading(false);
+          clearInterval(checkWindowClosed);
+        }
+      }, 60000);
+    } catch (error) {
+      console.log(error);
+
+      setIsLoading(false);
+    }
   };
   useEffect(() => {
     getEstimate(serviceId);
@@ -202,7 +242,14 @@ const Estimate = () => {
             >
               예약취소
             </button>
-            <button className="confirm">결제하기</button>
+            <button
+              className="confirm"
+              onClick={() => {
+                handleClickNewPage(serviceId);
+              }}
+            >
+              결제하기
+            </button>
           </BtnAreaDiv>
         </PaperContDiv>
       </div>
@@ -217,6 +264,7 @@ const Estimate = () => {
         confirmLink="/mypage/reservation"
         showConfirmButton={true}
       />
+      {isLoading && <LoadingPopup />}
     </PapersDiv>
   );
 };

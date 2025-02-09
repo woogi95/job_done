@@ -33,12 +33,13 @@ export const PopupContDiv = styled.div`
   .btn-area {
     display: flex;
     justify-content: center;
+    gap: 8px;
   }
 
   .btn-area button {
     padding: 14px 20px;
     width: 50%;
-    background-color: #4caf50;
+    background-color: #4581f0;
     color: white;
     border: none;
     border-radius: 5px;
@@ -47,14 +48,14 @@ export const PopupContDiv = styled.div`
   }
 
   .btn-area button:nth-child(1) {
-    background-color: #4581f0;
+    background-color: #aaa;
   }
 
   .btn-area button:hover {
-    background-color: #45a049;
+    background-color: rgb(46, 103, 209);
   }
 
   .btn-area button:nth-child(1):hover {
-    background-color: rgb(23, 67, 179);
+    background-color: #999;
   }
 `;

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   BtnAreaDiv,
   FormDiv,
-  PaperContDiv,
   PapersDiv,
   ReservationPaperContDiv,
 } from "./papers";
@@ -20,7 +19,7 @@ const ExpertReservation = ({ setIsReservationPop }) => {
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${28}`);
+      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
       // console.log(res.data.resultData);
       setPapers(res.data.resultData);
     } catch (error) {
@@ -32,10 +31,7 @@ const ExpertReservation = ({ setIsReservationPop }) => {
     if (!phone) return "-";
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   };
-  const formatBusinessNumber = number => {
-    if (!number) return "사업자 번호 없음";
-    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
-  };
+
   useEffect(() => {
     getEstimate(serviceId);
   }, [serviceId]);
