@@ -1,9 +1,12 @@
-import { FaStar } from "react-icons/fa";
-import { BsHeartFill, BsHeart } from "react-icons/bs";
-import { ListItemDiv } from "./service";
 import { Link } from "react-router-dom";
+// 싱태관리
 import { useRecoilState } from "recoil";
 import { likeStatusState } from "../../atoms/like";
+// comp
+import { ListItemDiv } from "./service";
+// icon
+import { BsHeartFill } from "react-icons/bs";
+import { FaStar } from "react-icons/fa";
 
 const ServiceListItem = ({ business, onClick }) => {
   const BASE_URL = "http://112.222.157.156:5224";

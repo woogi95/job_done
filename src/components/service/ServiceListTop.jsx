@@ -23,48 +23,53 @@ const ServiceListTop = ({ setBusinessList }) => {
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryId,
   )?.categoryName;
+  console.log(detailDatas);
   const detailName =
     Object.values(detailDatas)
       .flat()
       .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
 
   const [searchTerm, setSearchTerm] = useState("");
-
-  // 중복 요청을 막는 새로운 함수
-  const handleSearchOrRegionClick = async (
+  const handleSearch = async (
     categoryId,
     detailTypeId,
     regionIdVal,
     searchTerm,
   ) => {
-    console.log(categoryId, detailTypeId, regionIdVal, searchTerm);
-
-    let url = "/api/business?";
-
-    // categoryId가 있으면 추가
-    if (categoryId !== undefined && categoryId !== null) {
-      url += `categoryId=${categoryId}&`;
-    }
-
-    // detailTypeId가 있으면 추가
-    if (detailTypeId !== undefined && detailTypeId !== null) {
-      url += `detailTypeId=${detailTypeId}&`;
-    }
-
-    // regionIdVal가 있으면 추가
-    if (regionIdVal !== undefined && regionIdVal !== null) {
-      url += `regionId=${regionIdVal}&`;
-    }
-
-    // searchTerm이 있으면 추가
-    if (searchTerm !== undefined && searchTerm.trim() !== "") {
-      url += `searchTerm=${searchTerm}&`;
-    }
-
-    // 마지막 '&' 제거
-    url = url.endsWith("&") ? url.slice(0, -1) : url;
-
+    console.log("검색어:", searchTerm);
+    console.log(
+      "categoryId",
+      categoryId,
+      detailTypeId,
+      regionIdVal,
+      searchTerm,
+    );
     try {
+      let url = "/api/business?";
+
+      // categoryId가 있으면 추가
+      if (categoryId !== undefined && categoryId !== null) {
+        url += `categoryId=${categoryId}&`;
+      }
+
+      // detailTypeId가 있으면 추가
+      if (detailTypeId !== undefined && detailTypeId !== null) {
+        url += `detailTypeId=${detailTypeId}&`;
+      }
+
+      // regionIdVal가 있으면 추가
+      if (regionIdVal !== undefined && regionIdVal !== null) {
+        url += `regionId=${regionIdVal}&`;
+      }
+
+      // searchTerm이 있으면 추가
+      if (searchTerm !== undefined && searchTerm.trim() !== "") {
+        url += `searchTerm=${searchTerm}&`;
+      }
+
+      // 마지막 '&' 제거
+      url = url.endsWith("&") ? url.slice(0, -1) : url;
+
       const res = await axios.get(url);
       console.log("검색 결과:", res.data.resultData);
 
@@ -75,11 +80,31 @@ const ServiceListTop = ({ setBusinessList }) => {
     }
   };
 
-  useEffect(() => {
-    // 최초 로딩 시 regionId, categoryId, detailTypeId에 따라 검색
-    handleSearchOrRegionClick(categoryId, detailTypeId, regionId, searchTerm);
-  }, [categoryId, detailTypeId, regionId, searchTerm]);
+  const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
+    console.log(categoryId, detailTypeId, regionId);
+    setRegionId(regionId);
 
+    try {
+      let url = `/api/business?categoryId=${categoryId}`;
+      if (detailTypeId) {
+        url += `&detailTypeId=${detailTypeId}`;
+      }
+      if (regionId) {
+        url += `&regionId=${regionId}`;
+      }
+
+      const res = await axios.get(url);
+      console.log(res.data.resultData);
+      setBusinessList(res.data.resultData);
+      // setFilteredBusinessList(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleRegionClick(categoryId, detailTypeId, regionId);
+  }, []);
   return (
     <PageTopDiv>
       <div className="inner">
@@ -92,14 +117,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           <li>
             <button
               to="/service"
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  undefined,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId)}
               className={regionId === undefined ? "active" : ""}
             >
               전체
@@ -107,14 +125,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  1,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId, 1)}
               className={regionId === 1 ? "active" : ""}
             >
               대구
@@ -122,14 +133,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  2,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId, 2)}
               className={regionId === 2 ? "active" : ""}
             >
               부산
@@ -137,14 +141,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  3,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId, 3)}
               className={regionId === 3 ? "active" : ""}
             >
               포항
@@ -152,14 +149,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  4,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId, 4)}
               className={regionId === 4 ? "active" : ""}
             >
               경주
@@ -167,14 +157,7 @@ const ServiceListTop = ({ setBusinessList }) => {
           </li>
           <li>
             <button
-              onClick={() =>
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  5,
-                  searchTerm,
-                )
-              }
+              onClick={() => handleRegionClick(categoryId, detailTypeId, 5)}
               className={regionId === 5 ? "active" : ""}
             >
               구미
@@ -193,24 +176,14 @@ const ServiceListTop = ({ setBusinessList }) => {
             onKeyDown={e => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                handleSearchOrRegionClick(
-                  categoryId,
-                  detailTypeId,
-                  regionId,
-                  searchTerm,
-                );
+                handleSearch(categoryId, detailTypeId, regionId, searchTerm);
               }
             }}
           />
           <button
             className="search-btn"
             onClick={() =>
-              handleSearchOrRegionClick(
-                categoryId,
-                detailTypeId,
-                regionId,
-                searchTerm,
-              )
+              handleSearch(categoryId, detailTypeId, regionId, searchTerm)
             }
           >
             검색

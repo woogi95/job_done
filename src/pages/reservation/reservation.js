@@ -10,7 +10,6 @@ export const ReservationDiv = styled.div`
   }
 `;
 export const ReserVationContDiv = styled.div`
-  /* border: 1px solid yellow; */
   padding: 80px 0 50px;
 
   > form {
@@ -21,7 +20,6 @@ export const ReserVationContDiv = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     flex-direction: row;
-    /* border: 1px solid pink; */
     margin: 0 auto;
     > div {
       width: 400px;
@@ -72,7 +70,6 @@ export const ReserVationContDiv = styled.div`
 
 // 예약하기 컨텐츠 --- 왼쪽
 export const LeftContDiv = styled.div`
-  /* border: 1px solid green; */
   /* 큐브 */
   > div {
     padding: 0px 0 25px;
@@ -249,7 +246,6 @@ export const ReservationInfoDiv = styled.div`
     margin-bottom: 10px;
     position: relative;
     input {
-      /* border: 1px solid #ccc; */
       height: 40px;
       line-height: 40px;
       width: 100%;
@@ -292,7 +288,6 @@ export const ReservationInfoDiv = styled.div`
 // 예약하기 컨텐츠 --- 오른쪽
 export const RightContDiv = styled.div`
   width: 50%;
-  /* border: 1px solid red; */
   > div {
     margin-bottom: 25px;
   }
@@ -318,7 +313,6 @@ export const SelectOptionDiv = styled.div`
     }
     .option-list {
       padding: 10px;
-      /* border: 1px solid #eee; */
       label {
         display: flex;
         justify-content: space-between;
@@ -358,7 +352,6 @@ export const RoomSizeDiv = styled.div`
     border-radius: 5px;
     margin-bottom: 10px;
     input {
-      /* border: 1px solid #eee; */
       height: 40px;
       line-height: 40px;
       width: 100%;

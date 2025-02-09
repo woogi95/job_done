@@ -12,31 +12,36 @@ export const Popup = ({
   cancelLink,
   confirmLink,
 }) => {
-  if (!isOpen) return null;
   const navigate = useNavigate();
-  // 확인 네비
   const handleConfirmClick = () => {
+    console.log("Confirm clicked");
+    console.log(confirmLink);
     if (confirmLink) {
+      console.log("Navigating to: ", confirmLink);
       navigate(confirmLink);
     } else if (onClose) {
       onClose();
     }
   };
-  // 취소 네비
+
+  //
   const handleCancelClick = () => {
+    console.log("Cancel clicked");
     if (cancelLink) {
+      console.log("Navigating to: ", cancelLink);
       navigate(cancelLink);
     } else if (onCancel) {
       onCancel();
     }
   };
+
+  if (!isOpen) return null;
+
   return (
     <PopupDiv>
       <PopupContDiv>
         {title && <h4>{title}</h4>}
-
         {message && <span>{message}</span>}
-
         <div className="btn-area">
           {showCancelButton && (
             <button type="button" onClick={handleCancelClick}>

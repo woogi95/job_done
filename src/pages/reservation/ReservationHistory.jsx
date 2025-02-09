@@ -3,7 +3,7 @@ function ReservationHistory() {
   return (
     <div>
       예약내역페이지
-      {/* 견적서인데 일단 둘곳 없어서 둠 스웨거랑 폴더랑 꼬임 */}
+      {/* 견적서 임시 컴포넌트 확인용*/}
       <Estimate />
     </div>
   );

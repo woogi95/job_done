@@ -1,8 +1,13 @@
-import { ko } from "date-fns/locale";
-import moment from "moment";
 import { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setCookie } from "../../apis/cookie";
+import { loginApi } from "../../apis/login";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { businessDetailState, serviceIdState } from "../../atoms/businessAtom";
+//comp
+import UserReservation from "../../components/papers/UserReservation";
+// styled
 import { LayoutDiv } from "../page";
 import {
   BottomContDiv,
@@ -18,19 +23,17 @@ import {
   TimeDiv,
   TotalPriceDiv,
 } from "./reservation";
+// npm date
+import DatePicker from "react-datepicker";
+import { ko } from "date-fns/locale";
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-// icon
-import axios from "axios";
 import { useForm } from "react-hook-form";
+// icon
 import { BsCheckCircleFill, BsCircle } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { loginApi } from "../../apis/login";
-import { businessDetailState, serviceIdState } from "../../atoms/businessAtom";
-import UserReservation from "../../components/papers/UserReservation";
-import { setCookie } from "../../apis/cookie";
 
 const schema = yup.object({
   productId: yup.number(),
@@ -64,7 +67,6 @@ function Index() {
   const [selectedOption, setSelectedOption] = useState([]);
   const businessDetail = useRecoilValue(businessDetailState);
   const businessId = businessDetail.businessId;
-  // const [optionDetailIdList, setOptionDetailIdList] = useState()
   const [isTest, setIsTest] = useState();
   const [serviceId, setServiceId] = useRecoilState(serviceIdState);
   useEffect(() => {
@@ -101,7 +103,7 @@ function Index() {
   });
 
   useEffect(() => {
-    console.log("===========");
+    // console.log("===========");
     // console.log(sendAllData);
     const sendOptionData = sendAllData.map(item => ({
       optionDetailId: item.optionDetailId,
@@ -182,7 +184,7 @@ function Index() {
     basicPrice +
     Object.values(selectedPrices).reduce((sum, price) => sum + price, 0) +
     pyeongVal * 10000;
-
+  const displayTotalPrice = isNaN(totalPrice) ? 0 : totalPrice;
   // 옵션 변경 처리
   const handleOptionChange = (productOptionId, optionPrice, optionDetailId) => {
     console.log("productOptionId : ", productOptionId);
@@ -250,8 +252,6 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    // setValue("address", `${address} ${detailAddress}`);
-    // console.log(watch("address"));
     console.log("옵션 아이디", selectedOption);
   }, [address, detailAddress, selectedOption]);
 
@@ -347,16 +347,12 @@ function Index() {
                       id="detailAddress"
                       placeholder="상세 주소를 입력해주세요"
                       value={detailAddress}
-                      // {...register("detailAddress")}
                       onChange={e => setDetailAddress(e.target.value)}
                     />
-                    {/* {errors.detailAddress && (
-                      <p>{errors.detailAddress.message}</p>
-                    )} */}
                   </label>
                   <RoomSizeDiv>
                     <h3>
-                      평수입력{" "}
+                      평수입력
                       <p>
                         <b>*</b>평당 10,000원 입니다.(세차시 0 입력)
                       </p>
@@ -431,7 +427,7 @@ function Index() {
                   <h3>예상금액</h3>
                   <div>
                     <h4>총금액</h4>
-                    <p>{totalPrice.toLocaleString()}원</p>
+                    <p>{displayTotalPrice.toLocaleString()}원</p>
                   </div>
                 </TotalPriceDiv>
               </RightContDiv>
