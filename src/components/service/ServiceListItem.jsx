@@ -11,7 +11,7 @@ const ServiceListItem = ({ business, onClick }) => {
   const currentLikeStatus = likeStatus[business.businessId] || {
     isLiked: false,
   };
-  console.log("!! business", business);
+  // console.log("!! business", business);
   return (
     <ListItemDiv>
       {/* /service/detail?serviceId=1 */}
@@ -28,7 +28,7 @@ const ServiceListItem = ({ business, onClick }) => {
             {currentLikeStatus.isLiked ? (
               <BsHeartFill />
             ) : (
-              <BsHeartFill style={{ color: "#fff" }} />
+              <BsHeartFill style={{ color: "#eee" }} />
             )}
           </div>
         </div>
