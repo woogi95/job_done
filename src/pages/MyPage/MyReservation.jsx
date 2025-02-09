@@ -25,19 +25,15 @@ function MyReservation() {
 
   const serviceChange = async serviceId => {
     try {
-      if (!serviceId) {
-        throw new Error("서비스 ID가 없습니다.");
-      }
-
       const res = await loginApi.patch("/api/service", {
-        completed: 3,
-        serviceId: serviceId,
+        params: {
+          completed: 3,
+          serviceId: serviceId,
+        },
       });
       console.log("서비스 데이터:", res.data.resultData);
-      return res.data;
     } catch (error) {
-      console.error("서비스 상태 변경 실패:", error);
-      throw error;
+      console.log(error);
     }
   };
 
@@ -144,14 +140,10 @@ function MyReservation() {
 
   const handleReservationCancel = async serviceId => {
     try {
-      if (!serviceId) {
-        throw new Error("서비스 ID가 없습니다.");
-      }
-
       const res = await loginApi.post(`/api/service/${serviceId}/cancel`);
       if (res.status === 200) {
         setCancelStatus({ show: true, success: true });
-        await reservationData();
+        reservationData(); // 예약 목록 새로고침
       }
     } catch (error) {
       console.error("예약 취소 실패:", error);
@@ -234,16 +226,13 @@ function MyReservation() {
                       : "결제하기"}
                   </button>
                   <button
-                    onClick={async () => {
+                    onClick={() => {
                       if ([7, 8, 9].includes(item.completed)) {
                         handleInquiryModalOpen(item.serviceId);
                       } else {
-                        try {
-                          await handleReservationCancel(item.serviceId);
-                          await handleServiceChange(item.serviceId);
-                        } catch (error) {
-                          console.error("예약 취소 처리 중 오류 발생:", error);
-                        }
+                        handleReservationCancel(item.serviceId);
+                        handleServiceChange(item.serviceId);
+                        console.log("서비스 변경 호출", serviceChange);
                       }
                     }}
                     className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]"
@@ -258,7 +247,7 @@ function MyReservation() {
             </div>
           ))}
 
-          {/* 페이지네이션 */}
+          {/* 페이지네이션 추가 */}
           <div className="flex justify-center my-4">
             <Pagination
               current={currentPage}
