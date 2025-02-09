@@ -137,6 +137,7 @@ export const BtnAreaDiv = styled.div`
 
 export const ReservationPaperContDiv = styled(PaperContDiv)`
   .tit {
+    text-align: left !important;
     strong {
       color: #4581f0;
     }

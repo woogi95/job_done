@@ -28,7 +28,7 @@ const ServiceListItem = ({ business, onClick }) => {
             {currentLikeStatus.isLiked ? (
               <BsHeartFill />
             ) : (
-              <BsHeartFill style={{ color: "#ffffff" }} />
+              <BsHeartFill style={{ color: "#fff" }} />
             )}
           </div>
         </div>

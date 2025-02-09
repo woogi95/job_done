@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
-import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
 
@@ -11,10 +10,16 @@ const Estimate = () => {
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
+      console.log("이게 찍히니????", serviceId);
 
-      console.log("!!!!", res);
-      setPapers(res.data.resultData);
+      const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}`,
+      );
+      console.log("견적서 정보", res);
+      if (res.data) {
+        setPapers(res.data.resultData);
+      }
+      console.log(res.data.DataMessage);
     } catch (error) {
       console.log(error);
     }

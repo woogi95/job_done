@@ -9,6 +9,7 @@ export const loginApi = axios.create({
 // 모든 요청에 AccessToken 자동 포함
 loginApi.interceptors.request.use(
   config => {
+    // const accessToken = Cookies.get("refreshToken");
     const accessToken = Cookies.get("accessToken");
 
     if (accessToken) {

@@ -8,6 +8,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { loginUser } from "../../../atoms/loginAtom";
 import UserLayout from "../../../components/UserLayout";
 import "./Index.css";
+import { setCookie } from "../../../apis/cookie";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
@@ -30,13 +31,25 @@ function LoginPage() {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
 
-        // accessToken을 쿠키에 직접 저장
+        // Cookies.set("accessToken", accessToken, {
+        //   maxAge: 3 * 60,
+        //   // secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
+        //   // sameSite: "Strict", // SameSite 설정
+        // });
 
-        Cookies.set("accessToken", accessToken, {
-          expires: 1, // 1일 후 만료
-          secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
-          sameSite: "Strict",
-        });
+        // accessToken을 쿠키에 직접 저장
+        // const expiresInMinutes = 3;
+        // const expirationDate = new Date();
+        // expirationDate.setMinutes(
+        //   expirationDate.getMinutes() + expiresInMinutes,
+        // );
+
+        // Cookies.set("accessToken", accessToken, {
+        //   expires: 3 / (24 * 60),
+        //   secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
+        //   sameSite: "Strict",
+        // });
+        setCookie(`accessToken`, res.data.resultData.accessToken);
         // ✅ 사용자 상태 업데이트
         setUserInfo({
           userId: userId,

@@ -28,15 +28,41 @@ const Filter = ({ setBusinessList }) => {
   ) => {
     setSortType(sortType);
     setOptionOpen(false);
+
+    // 기본 URL
+    let url = "/api/business?";
+
+    // categoryId가 있을 경우 쿼리 파라미터에 추가
+    if (categoryId) {
+      url += `categoryId=${categoryId}&`;
+    }
+
+    // detailTypeId가 있을 경우 쿼리 파라미터에 추가
+    if (detailTypeId) {
+      url += `detailTypeId=${detailTypeId}&`;
+    }
+
+    // sortType이 있을 경우 쿼리 파라미터에 추가
+    if (sortType) {
+      url += `sortType=${sortType}&`;
+    }
+
+    // regionId가 있을 경우 쿼리 파라미터에 추가
+    if (regionId) {
+      url += `regionId=${regionId}&`;
+    }
+
+    // 마지막 "&" 제거
+    url = url.endsWith("&") ? url.slice(0, -1) : url;
+
     try {
-      const response = await axios.get(
-        `/api/business?categoryId=${categoryId}&detailTypeId=${detailTypeId}&sortType=${sortType}`,
-      );
+      const response = await axios.get(url);
       setBusinessList(response.data.resultData);
     } catch (error) {
       console.error(error);
     }
   };
+
   useEffect(() => {
     handleSortTypeClick(categoryId, detailTypeId, regionId, sortType);
   }, [categoryId, detailTypeId, regionId, sortType]);

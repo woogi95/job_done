@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loginApi } from "../../apis/login";
-import { papersState, serviceIdState } from "../../atoms/businessAtom";
+import { papersState } from "../../atoms/businessAtom";
 import {
   BtnAreaDiv,
   FormDiv,
@@ -10,16 +10,28 @@ import {
   ReservationPaperContDiv,
 } from "./papers";
 import { getCookie } from "../../apis/cookie";
-import { Pagination } from "antd";
+import { Popup } from "../ui/Popup";
 
 const UserReservation = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
   const serviceId = getCookie("serviceId");
-  // console.log("serviceId:", serviceId);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  const [isSuccess, setIsSuccess] = useState(true);
+  // 컨펌팝업
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+    patchServiceState(3, serviceId);
+  };
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
+  };
+
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
@@ -29,7 +41,10 @@ const UserReservation = () => {
         `/api/service/detail?serviceId=${serviceId}`,
       );
       console.log("견적서 정보", res);
-      setPapers(res.data.resultData);
+      if (res.data) {
+        setPapers(res.data.resultData);
+      }
+      console.log(res.data.DataMessage);
     } catch (error) {
       console.log(error);
     }
@@ -39,14 +54,10 @@ const UserReservation = () => {
     if (!phone) return "-";
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
   };
-  const formatBusinessNumber = number => {
-    if (!number) return "사업자 번호 없음";
-    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
-  };
   useEffect(() => {
     getEstimate(serviceId);
     console.log(papers);
-  }, []);
+  }, [serviceId]);
 
   const patchServiceState = async (completed, serviceId) => {
     try {
@@ -56,24 +67,28 @@ const UserReservation = () => {
         serviceId,
       });
       console.log(res.data.resultData);
+
+      if (res.data) {
+        setIsSuccess(true);
+        setPopupMessage("예약취소 요청하였습니다.");
+      } else {
+        setIsSuccess(false);
+        setPopupMessage(
+          "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+        );
+      }
     } catch (error) {
       console.log(error);
+      setIsSuccess(false);
+      setPopupMessage(
+        "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+      );
     }
   };
 
-  useEffect(() => {
-    console.log("중요!!!!!!", serviceId);
-  }, [serviceId]);
-
-  // 페이지 변경 핸들러
-  const handlePageChange = page => {
-    setCurrentPage(page);
-  };
-
-  // 현재 페이지에 해당하는 데이터 계산
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = papers.slice(indexOfFirstItem, indexOfLastItem);
+  // useEffect(() => {
+  //   console.log("중요!!!!!!", serviceId);
+  // }, [serviceId]);
 
   return (
     <PapersDiv>
@@ -151,7 +166,7 @@ const UserReservation = () => {
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>{papersInfo.pyeong}</span>
+                  <span>{papersInfo.pyeong} 평</span>
                 </li>
                 {papersInfo.options && papersInfo.options.length > 0 && (
                   <li className="option">
@@ -164,7 +179,7 @@ const UserReservation = () => {
                             <em>({option.optionDetailName})</em>
                           </p>
                           <span>
-                            {option.optionDetailPrice.toLocaleString()}원
+                            {option.optionDetailPrice.toLocaleString()} 원
                           </span>
                         </li>
                       ))}
@@ -174,7 +189,7 @@ const UserReservation = () => {
 
                 <li>
                   <p>예상비용</p>
-                  <span>{papersInfo.price.toLocaleString()}원</span>
+                  <span>{papersInfo.price.toLocaleString()} 원</span>
                 </li>
                 <li>
                   <p>문의사항</p>
@@ -183,20 +198,11 @@ const UserReservation = () => {
               </ul>
             </div>
           </FormDiv>
-          <div className="my-4">
-            <Pagination
-              current={currentPage}
-              total={papers.length}
-              pageSize={itemsPerPage}
-              onChange={handlePageChange}
-              showSizeChanger={false}
-            />
-          </div>
           <BtnAreaDiv>
             <button
               className="cancel"
               onClick={() => {
-                patchServiceState(3, serviceId);
+                handleOpenPopup();
               }}
             >
               예약취소
@@ -212,6 +218,17 @@ const UserReservation = () => {
           </BtnAreaDiv>
         </ReservationPaperContDiv>
       </div>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
+        title="예약 취소"
+        message={popupMessage}
+        // showCancelButton={true}
+        // cancelLink="/cancel"
+        confirmLink="/mypage/reservation"
+        showConfirmButton={true}
+      />
     </PapersDiv>
   );
 };
