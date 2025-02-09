@@ -1,18 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
+import { getCookie } from "../../apis/cookie";
+import { loginApi } from "../../apis/login";
+import { Popup } from "../ui/Popup";
 
 const Estimate = () => {
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = papers.serviceId;
+  // const serviceId = papers.serviceId;
+  const serviceId = getCookie("serviceId");
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
       console.log("이게 찍히니????", serviceId);
 
       const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}`,
         `/api/service/detail?serviceId=${serviceId}`,
       );
       console.log("견적서 정보", res);
@@ -23,6 +28,22 @@ const Estimate = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  // 컨펌 팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  const [isSuccess, setIsSuccess] = useState(true);
+  // 컨펌팝업
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+    patchServiceState(3, serviceId);
+  };
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
   };
 
   const formatPhoneNumber = phone => {
@@ -173,11 +194,29 @@ const Estimate = () => {
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button className="cancel">예약취소</button>
+            <button
+              className="cancel"
+              onClick={() => {
+                handleOpenPopup();
+              }}
+            >
+              예약취소
+            </button>
             <button className="confirm">결제하기</button>
           </BtnAreaDiv>
         </PaperContDiv>
       </div>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
+        title="예약 취소"
+        message={popupMessage}
+        // showCancelButton={true}
+        // cancelLink="/cancel"
+        confirmLink="/mypage/reservation"
+        showConfirmButton={true}
+      />
     </PapersDiv>
   );
 };
