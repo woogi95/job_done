@@ -186,6 +186,7 @@ function MyReservation() {
     );
     if (currentReservation) {
       if ([0, 1].includes(currentReservation.completed)) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/UserReservLook/${serviceId}`);
       } else if (currentReservation.completed === 2) {
         navigate(`/estimate/${serviceId}`);
