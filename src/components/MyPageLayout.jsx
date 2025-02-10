@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { loginApi } from "../apis/login";
 
 function MyPageLayout({ children }) {
@@ -7,6 +7,7 @@ function MyPageLayout({ children }) {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [activeMenu, setActiveMenu] = useState("");
 
   const getUserInfo = async () => {
     try {
@@ -55,34 +56,65 @@ function MyPageLayout({ children }) {
           </div>
           <ul className="flex flex-col justify-center items-center gap-[40px] text-[24px]">
             <li>
-              <Link to="/mypage" className="text-[#616161]">
+              <NavLink
+                to="/mypage"
+                end
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 내 정보
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/mypage/reservation" className="text-[#616161]">
+              <NavLink
+                to="/mypage/reservation"
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 예약현황
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/mypage/usage" className="text-[#616161]">
+              <NavLink
+                to="/mypage/usage"
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 이용내역
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/mypage/wishlist" className="text-[#616161]">
+              <NavLink
+                to="/mypage/wishlist"
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 찜목록
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/mypage/message" className="text-[#616161]">
+              <NavLink
+                to="/mypage/message"
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 메시지함
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link to="/mypage/review" className="text-[#616161]">
+              <NavLink
+                to="/mypage/review"
+                className={({ isActive }) =>
+                  `text-[#616161] ${isActive ? "text-[#11b1e1]" : ""}`
+                }
+              >
                 리뷰 관리
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>
