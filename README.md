@@ -96,15 +96,40 @@ graph TD
 ## 폴더구조
 
 ```
+<<<<<<< HEAD
+job_done
+=======
 job-done
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 ├─ .prettierrc
 ├─ eslint.config.js
 ├─ index.html
 ├─ package-lock.json
 ├─ package.json
 ├─ public
+<<<<<<< HEAD
+│  ├─ images
+│  │  ├─ arrow-right.svg
+│  │  ├─ b-logo.svg
+│  │  ├─ event
+│  │  │  ├─ event_banner_1.png
+│  │  │  ├─ event_banner_2.jpg
+│  │  │  └─ event_banner_3.jpg
+│  │  ├─ logo.svg
+│  │  └─ order
+│  │     ├─ cleaning_icon.jpg
+│  │     ├─ default_profile.jpg
+│  │     ├─ Group 80.png
+│  │     └─ Interior_1.jpg
+│  ├─ kakao_login_large_wide.png
+│  └─ vite.svg
+├─ README.md
+├─ server
+│  └─ server.json
+=======
 │  └─ images
 ├─ README.md
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 ├─ src
 │  ├─ apis
 │  │  ├─ cookie.js
@@ -140,7 +165,10 @@ job-done
 │  │  ├─ ExpertLayout.jsx
 │  │  ├─ Footer.jsx
 │  │  ├─ Header.jsx
+<<<<<<< HEAD
+=======
 │  │  ├─ JobBLogo.jsx
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  │  ├─ Layout.jsx
 │  │  ├─ LoadingPopup.jsx
 │  │  ├─ MyPageLayout.jsx
@@ -180,7 +208,10 @@ job-done
 │  ├─ context
 │  │  └─ Context.jsx
 │  ├─ index.css
+<<<<<<< HEAD
+=======
 │  ├─ main
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  ├─ main.jsx
 │  ├─ main.tsx
 │  ├─ pages
@@ -276,9 +307,12 @@ job-done
 │  │     └─ servicepage.js
 │  ├─ routers
 │  │  └─ Root.jsx
+<<<<<<< HEAD
+=======
 │  ├─ styles
 │  │  ├─ login
 │  │  └─ order
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  ├─ types
 │  │  └─ TypeBox.ts
 │  ├─ utils
@@ -289,4 +323,9 @@ job-done
 ├─ tsconfig.json
 ├─ tsconfig.node.json
 └─ vite.config.ts
+<<<<<<< HEAD
+
 ```
+=======
+```
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a

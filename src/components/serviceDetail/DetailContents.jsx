@@ -273,7 +273,7 @@ const DetailContents = () => {
             </div>
             <div className="box">
               <b>경력</b>
-              <div>{businessDetail.years}</div>
+              <div>{businessDetail.years}년</div>
             </div>
           </div>
           <div className="btn-area">

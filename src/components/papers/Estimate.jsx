@@ -61,7 +61,7 @@ const Estimate = () => {
       const left = (window.innerWidth - width) / 2;
       const top = (window.innerHeight - height) / 2;
 
-      const res = await loginApi.get(
+      const res = await loginApi.post(
         `/api/payment/ready?serviceId=${serviceId}`,
       );
       if (res.data?.next_redirect_pc_url) {
@@ -140,7 +140,9 @@ const Estimate = () => {
                 </li>
                 <li>
                   <p>분류</p>
-                  <span>{papersInfo.categoryName}</span>
+                  <span>
+                    {papersInfo.categoryName} {">"} {papersInfo.detailTypeName}
+                  </span>
                 </li>
                 <li>
                   <p>주소</p>
@@ -186,7 +188,7 @@ const Estimate = () => {
                 </li>
                 <li>
                   <p>평수</p>
-                  <span>{papersInfo.pyeong}</span>
+                  <span>{papersInfo.pyeong} 평</span>
                 </li>
                 {papersInfo.options?.length > 0 && (
                   <li className="option">
@@ -199,7 +201,7 @@ const Estimate = () => {
                             <em>({option.optionDetailName})</em>
                           </p>
                           <span>
-                            {option.optionDetailPrice.toLocaleString()}
+                            {option.optionDetailPrice.toLocaleString()}원
                           </span>
                         </li>
                       ))}
@@ -208,7 +210,7 @@ const Estimate = () => {
                 )}
                 <li>
                   <p>견적비용</p>
-                  <span>{papersInfo.price.toLocaleString()}</span>
+                  <span>{papersInfo.price.toLocaleString()}원</span>
                 </li>
                 <li>
                   <p>특이사항</p>
