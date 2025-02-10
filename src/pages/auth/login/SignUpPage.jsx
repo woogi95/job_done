@@ -31,11 +31,11 @@ function SignUpPage() {
   const navigate = useNavigate();
 
   const initData = {
-    name: "홍길동",
-    email: "by5028@naver.com",
-    upw: "Qkqhdi12",
-    upwConfirm: "Qkqhdi12",
-    phone: "01012345678",
+    name: "",
+    email: "",
+    upw: "",
+    upwConfirm: "",
+    phone: "",
     pic: "",
   };
   //취소버튼

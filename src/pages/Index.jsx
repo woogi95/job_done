@@ -83,13 +83,16 @@ const Index = () => {
             modules={[Pagination, Autoplay]}
             pagination={{
               dynamicBullets: true,
+              clickable: true,
+              dynamicMainBullets: 3,
+              dynamicBulletProperty: "scale",
             }}
             autoplay={{
               delay: 5000,
               disableOnInteraction: false,
             }}
             loop={true}
-            className="h-[250px] overflow-hidden"
+            className="h-[250px] overflow-hidden [&_.swiper-pagination]:bottom-6 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
           >
             {EventBanner.map(item => (
               <SwiperSlide key={item.id}>
@@ -152,37 +155,55 @@ const Index = () => {
           <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             인기 글
           </span>
-          <div className="flex gap-[15px] mb-[80px]">
+          <div className="mb-[80px]">
             {categories.popular && categories.popular.length > 0 ? (
-              categories.popular.slice(0, 4).map((item, index) => (
-                <Link
-                  to={`/service/${item.businessId}`}
-                  key={`popular-${item.businessId}-${index}`}
-                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1"
-                >
-                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
-                    <img
-                      src={`${BASE_URL}${item.pic}`}
-                      alt="사진"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="block w-full overflow-hidden font-medium text-lg">
-                    {item.title}
-                  </span>
-                  <span className="text-[20px] font-bold text-blue-600">
-                    {item.price.toLocaleString()}원~
-                  </span>
-                  <div className="flex justify-between text-[15px] items-center">
-                    <span className="text-gray-600">{item.businessName}</span>
-                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
-                      <FaStar className="text-[#FF9D00]" />
-                      <span className="font-medium">{item.scoreAvg}</span>
-                      <span className="text-gray-400">{`(${item.serviceCount})`}</span>
-                    </span>
-                  </div>
-                </Link>
-              ))
+              <Swiper
+                modules={[Pagination]}
+                pagination={{
+                  dynamicBullets: true,
+                  clickable: true,
+                  dynamicMainBullets: 3,
+                  dynamicBulletProperty: "scale",
+                }}
+                slidesPerView={4}
+                spaceBetween={15}
+                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+              >
+                {categories.popular.map((item, index) => (
+                  <SwiperSlide key={`popular-${item.businessId}-${index}`}>
+                    <Link
+                      to={`/service/${item.businessId}`}
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-100 hover:-translate-y-1 h-[400px]"
+                    >
+                      <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
+                        <img
+                          src={`${BASE_URL}${item.pic}`}
+                          alt="사진"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                        {item.title}
+                      </span>
+                      <div className="mt-auto">
+                        <span className="text-[20px] font-bold text-blue-600 block truncate">
+                          {item.price.toLocaleString()}원~
+                        </span>
+                        <div className="flex justify-between text-[15px] items-center">
+                          <span className="text-gray-600 truncate max-w-[120px]">
+                            {item.businessName}
+                          </span>
+                          <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                            <FaStar className="text-[#FF9D00]" />
+                            <span className="font-medium">{item.scoreAvg}</span>
+                            <span className="text-gray-400">{`(${item.serviceCount})`}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             ) : (
               <div className="flex w-full gap-[15px]">
                 {[...Array(4)].map((_, index) => (
@@ -215,37 +236,55 @@ const Index = () => {
           <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최신 글
           </span>
-          <div className="flex gap-[15px] mb-[80px]">
+          <div className="mb-[80px]">
             {categories.latest && categories.latest.length > 0 ? (
-              categories.latest.slice(0, 4).map((item, index) => (
-                <Link
-                  to={`/service/${item.businessId}`}
-                  key={`latest-${item.businessId}-${index}`}
-                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
-                >
-                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
-                    <img
-                      src={`${BASE_URL}${item.pic}`}
-                      alt="사진"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="block w-full overflow-hidden font-medium text-lg">
-                    {item.title}
-                  </span>
-                  <span className="text-[20px] font-bold text-blue-600">
-                    {item.price.toLocaleString()}원~
-                  </span>
-                  <div className="flex justify-between text-[15px] items-center">
-                    <span className="text-gray-600">{item.businessName}</span>
-                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
-                      <FaStar className="text-[#FF9D00]" />
-                      <span className="font-medium">{item.scoreAvg}</span>
-                      <span className="text-gray-400">{`(${item.serviceCount})`}</span>
-                    </span>
-                  </div>
-                </Link>
-              ))
+              <Swiper
+                modules={[Pagination]}
+                pagination={{
+                  dynamicBullets: true,
+                  clickable: true,
+                  dynamicMainBullets: 3,
+                  dynamicBulletProperty: "scale",
+                }}
+                slidesPerView={4}
+                spaceBetween={15}
+                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+              >
+                {categories.latest.map((item, index) => (
+                  <SwiperSlide key={`latest-${item.businessId}-${index}`}>
+                    <Link
+                      to={`/service/${item.businessId}`}
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 h-[400px]"
+                    >
+                      <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
+                        <img
+                          src={`${BASE_URL}${item.pic}`}
+                          alt="사진"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                        {item.title}
+                      </span>
+                      <div className="mt-auto">
+                        <span className="text-[20px] font-bold text-blue-600 block truncate">
+                          {item.price.toLocaleString()}원~
+                        </span>
+                        <div className="flex justify-between text-[15px] items-center">
+                          <span className="text-gray-600 truncate max-w-[120px]">
+                            {item.businessName}
+                          </span>
+                          <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                            <FaStar className="text-[#FF9D00]" />
+                            <span className="font-medium">{item.scoreAvg}</span>
+                            <span className="text-gray-400">{`(${item.serviceCount})`}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             ) : (
               <div className="flex w-full gap-[15px]">
                 {[...Array(4)].map((_, index) => (
@@ -261,7 +300,7 @@ const Index = () => {
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
-                src="./images/event/event_banner_1.png"
+                src="./images/order/event_2.jpg"
                 alt="이벤트배너"
                 className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
               />
@@ -278,37 +317,55 @@ const Index = () => {
           <span className="flex pb-[10px] text-2xl font-bold text-gray-800">
             최저가
           </span>
-          <div className="flex gap-[15px]">
+          <div>
             {categories.cheapest && categories.cheapest.length > 0 ? (
-              categories.cheapest.slice(0, 4).map((item, index) => (
-                <Link
-                  to={`/service/${item.businessId}`}
-                  key={`cheapest-${item.businessId}-${index}`}
-                  className="flex flex-col rounded-xl w-1/3 gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
-                >
-                  <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
-                    <img
-                      src={`${BASE_URL}${item.pic}`}
-                      alt="사진"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="block w-full overflow-hidden font-medium text-lg">
-                    {item.title}
-                  </span>
-                  <span className="text-[20px] font-bold text-blue-600">
-                    {item.price.toLocaleString()}원~
-                  </span>
-                  <div className="flex justify-between text-[15px] items-center">
-                    <span className="text-gray-600">{item.businessName}</span>
-                    <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
-                      <FaStar className="text-[#FF9D00]" />
-                      <span className="font-medium">{item.scoreAvg}</span>
-                      <span className="text-gray-400">{`(${item.serviceCount})`}</span>
-                    </span>
-                  </div>
-                </Link>
-              ))
+              <Swiper
+                modules={[Pagination]}
+                pagination={{
+                  dynamicBullets: true,
+                  clickable: true,
+                  dynamicMainBullets: 3,
+                  dynamicBulletProperty: "scale",
+                }}
+                slidesPerView={4}
+                spaceBetween={15}
+                className="py-[20px] [&_.swiper-pagination]:bottom-0 [&_.swiper-pagination-bullet]:w-[25px] [&_.swiper-pagination-bullet]:h-[5px] [&_.swiper-pagination-bullet]:rounded-full [&_.swiper-pagination-bullet]:mx-1"
+              >
+                {categories.cheapest.map((item, index) => (
+                  <SwiperSlide key={`cheapest-${item.businessId}-${index}`}>
+                    <Link
+                      to={`/service/${item.businessId}`}
+                      className="flex flex-col rounded-xl w-full gap-[10px] relative group overflow-hidden bg-white p-[10px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-1 h-[400px]"
+                    >
+                      <div className="aspect-[4/3] w-full rounded-lg overflow-hidden">
+                        <img
+                          src={`${BASE_URL}${item.pic}`}
+                          alt="사진"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        />
+                      </div>
+                      <span className="block w-full overflow-hidden font-medium text-lg line-clamp-2">
+                        {item.title}
+                      </span>
+                      <div className="mt-auto">
+                        <span className="text-[20px] font-bold text-blue-600 block truncate">
+                          {item.price.toLocaleString()}원~
+                        </span>
+                        <div className="flex justify-between text-[15px] items-center">
+                          <span className="text-gray-600 truncate max-w-[120px]">
+                            {item.businessName}
+                          </span>
+                          <span className="flex justify-center items-center gap-[3px] bg-gray-50 px-3 py-1 rounded-full">
+                            <FaStar className="text-[#FF9D00]" />
+                            <span className="font-medium">{item.scoreAvg}</span>
+                            <span className="text-gray-400">{`(${item.serviceCount})`}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
             ) : (
               <div className="flex w-full gap-[15px]">
                 {[...Array(4)].map((_, index) => (
@@ -320,11 +377,11 @@ const Index = () => {
           {/* 하단 배너 */}
           <div className="max-w-[1280px] m-auto py-[80px]">
             <Link
-              to="/business"
+              to="/login"
               className="flex h-[200px] max-w-[1280px] m-auto relative overflow-hidden group"
             >
               <img
-                src="./images/event/event_banner_1.png"
+                src="./images/order/event_3.jpg"
                 alt="이벤트배너"
                 className="w-full object-cover transition-transform duration-200 group-hover:scale-105"
               />
