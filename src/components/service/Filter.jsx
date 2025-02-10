@@ -13,8 +13,8 @@ import { IoIosArrowDown } from "react-icons/io";
 
 const Filter = ({ setBusinessList }) => {
   const [optionOpen, setOptionOpen] = useState(false);
-  const [sortType, setSortType] = useState("최신순");
-  const options = ["최신순", "평점순", "주문량순", "저가순"];
+  const [sortType, setSortType] = useState("평점순");
+  const options = ["평점순", "최신순", "주문량순", "저가순"];
 
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);

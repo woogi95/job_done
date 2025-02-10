@@ -6,6 +6,7 @@ import { getCookie } from "../../apis/cookie";
 import { loginApi } from "../../apis/login";
 import { Popup } from "../ui/Popup";
 import LoadingPopup from "../LoadingPopup";
+import { useNavigate } from "react-router-dom";
 
 const Estimate = () => {
   // 컨펌 팝업
@@ -15,7 +16,7 @@ const Estimate = () => {
   const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-
+  const navigate = useNavigate();
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
@@ -23,7 +24,7 @@ const Estimate = () => {
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      // console.log("견적서 정보", res);
+      // console.log("견적서 정보", res.data.resultData);
       if (res.data) {
         setPapers(res.data.resultData);
       }
@@ -38,6 +39,32 @@ const Estimate = () => {
     patchServiceState(3, serviceId);
   };
 
+  const patchServiceState = async (completed, serviceId) => {
+    try {
+      // console.log(completed, serviceId);
+      const res = await loginApi.patch(`/api/service`, {
+        completed,
+        serviceId,
+      });
+      // console.log(res.data.resultData);
+
+      if (res.data) {
+        setIsSuccess(true);
+        setPopupMessage("예약취소 요청하였습니다.");
+      } else {
+        setIsSuccess(false);
+        setPopupMessage(
+          "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSuccess(false);
+      setPopupMessage(
+        "예약취소 요청에 실패하셨습니다. 잠시후 다시 시도해주세요.",
+      );
+    }
+  };
   const handleClosePopup = () => setIsPopupOpen(false);
   const handleCancelPopup = () => setIsPopupOpen(false);
 
@@ -54,7 +81,7 @@ const Estimate = () => {
       return;
     }
     setIsLoading(true);
-    console.log("결제 누구야!", serviceId);
+    // console.log("결제 누구야!", serviceId);
     try {
       const width = 480;
       const height = 600;
@@ -75,6 +102,7 @@ const Estimate = () => {
           if (paymentWindow.closed) {
             setIsLoading(false);
             clearInterval(checkWindowClosed);
+            navigate("/mypage/usage");
           }
         }, 1000);
       }
@@ -208,6 +236,29 @@ const Estimate = () => {
                     </ul>
                   </li>
                 )}
+                {papersInfo.etc?.length > 0 && (
+                  <li className="option">
+                    <p>추가옵션</p>
+                    <ul>
+                      {papersInfo.etc.map((option, index) => (
+                        <li key={index}>
+                          <p>
+                            {option.etcComment}
+                            {/* <em>({option.etcPrice})</em> */}
+                          </p>
+                          <span>{option.etcPrice.toLocaleString()}원</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                )}
+                {/* "etc": [
+      {
+        "etcId": 0,
+        "etcPrice": 0,
+        "etcComment": "string"
+      }
+    ], */}
                 <li>
                   <p>견적비용</p>
                   <span>{papersInfo.price.toLocaleString()}원</span>
