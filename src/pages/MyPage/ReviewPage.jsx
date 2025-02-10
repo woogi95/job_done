@@ -17,6 +17,7 @@ function ReviewPage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedReviewId, setSelectedReviewId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isImgPut, setIsImgPut] = useState(false);
   const reviewsPerPage = 5;
 
   const reviewList = async () => {
@@ -43,6 +44,7 @@ function ReviewPage() {
 
     try {
       const reviewData = {
+        serviceId: selectedReview.serviceId,
         reviewId: selectedReview.reviewId,
         contents: reviewContent,
         score: rating,
@@ -67,9 +69,9 @@ function ReviewPage() {
         });
         formData.append("reviewId", selectedReview.reviewId);
 
-        const imageRes = await loginApi.post("/api/review/pics", formData, {
+        const imageRes = await loginApi.put("/api/review/pics", formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         });
         console.log("이미지 업로드 성공:", imageRes);
@@ -78,6 +80,7 @@ function ReviewPage() {
       alert("리뷰가 수정되었습니다.");
       handleReviewModalClose();
       reviewList();
+      console.log(reviewList);
     } catch (error) {
       console.error("리뷰 수정 실패:", error);
       alert("리뷰 수정에 실패했습니다.");
@@ -86,7 +89,13 @@ function ReviewPage() {
 
   const correctReviewImg = async () => {
     try {
-      const res = await loginApi.put("/api/review/state");
+      const res = await loginApi.put("/api/review/state", {
+        params: {
+          reviewPicId: 0,
+          reviewId: 0,
+        },
+      });
+      console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -132,6 +141,9 @@ function ReviewPage() {
 
     setSelectedImages(newSelectedImages);
     setPreviewImages(newPreviewImages);
+
+    console.log(newSelectedImages);
+    console.log(newPreviewImages);
   };
 
   const handleReviewModalOpen = review => {
