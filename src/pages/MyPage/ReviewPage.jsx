@@ -258,9 +258,9 @@ function ReviewPage() {
                     ))}
               </div>
             </div>
+            <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] max-w-[600px] w-full"></div>
           </div>
         ))}
-        <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] max-w-[600px] w-full"></div>
 
         {/* 페이지네이션 컴포넌트 추가 */}
         <div className="my-4">

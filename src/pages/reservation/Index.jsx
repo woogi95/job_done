@@ -424,7 +424,13 @@ function Index() {
                   </div>
                 </SelectOptionDiv>
                 <TotalPriceDiv>
-                  <h3>예상금액</h3>
+                  <h3>
+                    예상금액
+                    <p>
+                      <b>*</b> 본 견적서는 예상 비용으로, 실제 계약 시 변동될 수
+                      있습니다.
+                    </p>
+                  </h3>
                   <div>
                     <h4>총금액</h4>
                     <p>{displayTotalPrice.toLocaleString()}원</p>

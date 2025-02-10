@@ -122,7 +122,9 @@ const UserReservation = () => {
                 </li>
                 <li>
                   <p>분류</p>
-                  <span>{papersInfo.categoryName}</span>
+                  <span>
+                    {papersInfo.categoryName} {">"} {papersInfo.detailTypeName}
+                  </span>
                 </li>
                 <li>
                   <p>주소</p>

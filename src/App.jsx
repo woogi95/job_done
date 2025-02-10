@@ -62,10 +62,12 @@ import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentFailed from "./components/PaymentFailed";
 import Estimate from "./components/papers/Estimate";
 import UserReservLook from "./pages/mypage/UserReservLook";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route element={<Layout />}>
           {/* 카카오페이 관련 */}
