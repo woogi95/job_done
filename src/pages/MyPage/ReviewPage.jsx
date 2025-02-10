@@ -356,7 +356,7 @@ function ReviewPage() {
       </div>
 
       {correctModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
             <span className="flex justify-center items-center text-[20px]">
               리뷰 수정
@@ -441,7 +441,7 @@ function ReviewPage() {
       )}
 
       {deleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000]">
           <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[400px]">
             <span className="flex justify-center items-center text-[20px] mb-4">
               리뷰 삭제
