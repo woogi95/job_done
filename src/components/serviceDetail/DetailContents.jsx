@@ -159,8 +159,11 @@ const DetailContents = () => {
     }
   };
   const handleContactUs = () => {
-    setPopupTitle("서비스 준비중입니다");
-    setPopupMessage("현재 서비스가 준비중입니다. 조금만 기다려 주세요.");
+    setPopupTitle("안내");
+    setPopupMessage(
+      "죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일 내에 서비스를 제공해 드리도록 하겠습니다.",
+    );
+    setPopupLink("");
     setIsPopupOpen(true);
   };
   return (

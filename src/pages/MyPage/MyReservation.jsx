@@ -1,11 +1,11 @@
+import { Pagination, Select } from "antd";
 import { useEffect, useState } from "react";
-import { loginApi } from "../../apis/login";
-import MyPageLayout from "../../components/MyPageLayout";
-import { statusText } from "../../components/ServiceIcon";
-import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
 import { useNavigate } from "react-router-dom";
+import { loginApi } from "../../apis/login";
+import MyPageLayout from "../../components/MyPageLayout";
 import UserReservation from "../../components/papers/UserReservation";
+import { statusText } from "../../components/ServiceIcon";
 
 function MyReservation() {
   const [reservation, setReservation] = useState([]);
@@ -173,7 +173,7 @@ function MyReservation() {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return [...reservation].reverse().slice(startIndex, endIndex);
+    return reservation.slice(startIndex, endIndex);
   };
 
   const handlePageChange = page => {
@@ -181,6 +181,7 @@ function MyReservation() {
   };
 
   const handleDetailClick = serviceId => {
+    console.log("클릭된 serviceId:", serviceId);
     const currentReservation = reservation.find(
       item => item.serviceId === serviceId,
     );
@@ -189,6 +190,8 @@ function MyReservation() {
         document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/UserReservLook/${serviceId}`);
       } else if (currentReservation.completed === 2) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
+        console.log("견적서로 이동, serviceId:", serviceId);
         navigate(`/estimate/${serviceId}`);
       }
     }
