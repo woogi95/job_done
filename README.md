@@ -33,3 +33,199 @@
 - hotfix : 버그를 수정용
 
 ## 폴더구조
+
+```
+job-done
+├─ .prettierrc
+├─ eslint.config.js
+├─ index.html
+├─ package-lock.json
+├─ package.json
+├─ public
+│  └─ images
+├─ README.md
+├─ src
+│  ├─ apis
+│  │  ├─ cookie.js
+│  │  └─ login.js
+│  ├─ App.css
+│  ├─ App.jsx
+│  ├─ assets
+│  │  └─ react.svg
+│  ├─ atoms
+│  │  ├─ businessAtom.js
+│  │  ├─ categoryAtom.js
+│  │  ├─ like.js
+│  │  ├─ loginAtom.js
+│  │  ├─ portfolioAtom.js
+│  │  ├─ reservationAtom.js
+│  │  ├─ reviewAtom.js
+│  │  └─ statusAtom.js
+│  ├─ components
+│  │  ├─ expert-header
+│  │  │  ├─ ExpertHeader.jsx
+│  │  │  └─ header.js
+│  │  ├─ expert-info
+│  │  │  ├─ ExpertInfo.jsx
+│  │  │  ├─ ExpertInfoEdit.jsx
+│  │  │  ├─ Logo.jsx
+│  │  │  └─ LogoEdit.jsx
+│  │  ├─ expert-List
+│  │  │  ├─ expertList.js
+│  │  │  └─ ExportFilter.jsx
+│  │  ├─ expert-side-menu
+│  │  │  ├─ ExpertSideMenu.jsx
+│  │  │  └─ sideMenu.js
+│  │  ├─ ExpertLayout.jsx
+│  │  ├─ Footer.jsx
+│  │  ├─ Header.jsx
+│  │  ├─ JobBLogo.jsx
+│  │  ├─ Layout.jsx
+│  │  ├─ LoadingPopup.jsx
+│  │  ├─ MyPageLayout.jsx
+│  │  ├─ papers
+│  │  │  ├─ Estimate.jsx
+│  │  │  ├─ ExpertReservation.jsx
+│  │  │  ├─ papers.js
+│  │  │  └─ UserReservation.jsx
+│  │  ├─ pay.js
+│  │  ├─ PaymentFailed.jsx
+│  │  ├─ PaymentSuccess copy.jsx
+│  │  ├─ PaymentSuccess.jsx
+│  │  ├─ portfolio
+│  │  │  ├─ AddPortfolio.jsx
+│  │  │  ├─ EditPortfolio.jsx
+│  │  │  └─ portfolio.js
+│  │  ├─ ProfileImage.jsx
+│  │  ├─ service
+│  │  │  ├─ Filter.jsx
+│  │  │  ├─ service.js
+│  │  │  ├─ ServiceListItem.jsx
+│  │  │  └─ ServiceListTop.jsx
+│  │  ├─ serviceDetail
+│  │  │  ├─ ContPortfolioList.jsx
+│  │  │  ├─ ContReview.jsx
+│  │  │  ├─ DetailContents.jsx
+│  │  │  ├─ DetailTop.jsx
+│  │  │  ├─ PfPopup.jsx
+│  │  │  └─ serviceDetail.js
+│  │  ├─ ServiceIcon.jsx
+│  │  ├─ ServiceSkeleton.jsx
+│  │  ├─ ui
+│  │  │  ├─ Button.jsx
+│  │  │  ├─ Popup.jsx
+│  │  │  └─ ui.js
+│  │  └─ UserLayout.jsx
+│  ├─ context
+│  │  └─ Context.jsx
+│  ├─ index.css
+│  ├─ main
+│  ├─ main.jsx
+│  ├─ main.tsx
+│  ├─ pages
+│  │  ├─ auth
+│  │  │  ├─ business
+│  │  │  │  ├─ businessnumber.css
+│  │  │  │  ├─ BusinessNumber.jsx
+│  │  │  │  └─ Index.jsx
+│  │  │  └─ login
+│  │  │     ├─ emailpage.css
+│  │  │     ├─ EmailPage.jsx
+│  │  │     ├─ Index.css
+│  │  │     ├─ Index.jsx
+│  │  │     ├─ memo
+│  │  │     ├─ memo.jsx
+│  │  │     ├─ passwordedit.css
+│  │  │     ├─ PasswordEdit.jsx
+│  │  │     ├─ passwordemail.css
+│  │  │     ├─ PasswordEmail.jsx
+│  │  │     ├─ passwordemailcheck.css
+│  │  │     ├─ PasswordEmailCheck.jsx
+│  │  │     ├─ signupdone.css
+│  │  │     ├─ SignUpDone.jsx
+│  │  │     ├─ signuppage.css
+│  │  │     └─ SignUpPage.jsx
+│  │  ├─ company
+│  │  │  ├─ Index.jsx
+│  │  │  └─ ReservationPage.jsx
+│  │  ├─ expert
+│  │  │  ├─ company-management
+│  │  │  │  ├─ CompanyInfo.jsx
+│  │  │  │  ├─ companyManagement.js
+│  │  │  │  ├─ EditCompanyInfo.jsx
+│  │  │  │  ├─ EditDetailPage.jsx
+│  │  │  │  ├─ ExpertDetailPage.jsx
+│  │  │  │  └─ Portfolio.jsx
+│  │  │  ├─ expertmain.css
+│  │  │  ├─ ExpertMain.jsx
+│  │  │  ├─ expertmainreservelist.js
+│  │  │  ├─ ExpertMainReserveList.jsx
+│  │  │  ├─ management
+│  │  │  │  ├─ CompanyInfo.jsx
+│  │  │  │  ├─ EditCompanyInfo.jsx
+│  │  │  │  ├─ EditDetailPage.jsx
+│  │  │  │  ├─ ExpertDetailPage.jsx
+│  │  │  │  └─ Portfolio.jsx
+│  │  │  ├─ message-center
+│  │  │  │  └─ Index.jsx
+│  │  │  ├─ payment-management
+│  │  │  │  └─ Index.jsx
+│  │  │  ├─ quotation
+│  │  │  │  ├─ CreateQuotation.jsx
+│  │  │  │  ├─ EditQuotation.jsx
+│  │  │  │  └─ QuotationService.jsx
+│  │  │  ├─ quote-management
+│  │  │  │  ├─ EditQuotation.jsx
+│  │  │  │  ├─ Index.jsx
+│  │  │  │  ├─ qouteManagement.js
+│  │  │  │  └─ QuotationForm.jsx
+│  │  │  ├─ reservation-management
+│  │  │  │  ├─ Index.jsx
+│  │  │  │  └─ reservationMangement.js
+│  │  │  ├─ review-center
+│  │  │  │  ├─ index.css
+│  │  │  │  ├─ Index.jsx
+│  │  │  │  ├─ reviewview.css
+│  │  │  │  └─ ReviewView.jsx
+│  │  │  ├─ schedule-management
+│  │  │  │  ├─ index.css
+│  │  │  │  └─ Index.jsx
+│  │  │  └─ statistics
+│  │  │     └─ Index.jsx
+│  │  ├─ Index.jsx
+│  │  ├─ mypage
+│  │  │  ├─ Index.jsx
+│  │  │  ├─ MyMessage.jsx
+│  │  │  ├─ MyReservation.jsx
+│  │  │  ├─ ReviewPage.jsx
+│  │  │  ├─ UsageDetails.jsx
+│  │  │  ├─ UserReservLook.jsx
+│  │  │  └─ Wishlist.jsx
+│  │  ├─ NotFound.jsx
+│  │  ├─ page.js
+│  │  ├─ Qna.jsx
+│  │  ├─ reservation
+│  │  │  ├─ Index.jsx
+│  │  │  ├─ reservation.js
+│  │  │  └─ ReservationHistory.jsx
+│  │  └─ servicepage
+│  │     ├─ ContactUs.jsx
+│  │     ├─ Detail.jsx
+│  │     ├─ Index.jsx
+│  │     └─ servicepage.js
+│  ├─ routers
+│  │  └─ Root.jsx
+│  ├─ styles
+│  │  ├─ login
+│  │  └─ order
+│  ├─ types
+│  │  └─ TypeBox.ts
+│  ├─ utils
+│  │  └─ Cookie.jsx
+│  └─ vite-env.d.ts
+├─ tailwind.config.js
+├─ tsconfig.app.json
+├─ tsconfig.json
+├─ tsconfig.node.json
+└─ vite.config.ts
+```

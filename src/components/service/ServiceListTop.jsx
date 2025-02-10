@@ -23,7 +23,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryId,
   )?.categoryName;
-  console.log(detailDatas);
+  // console.log(detailDatas);
   const detailName =
     Object.values(detailDatas)
       .flat()
@@ -36,14 +36,14 @@ const ServiceListTop = ({ setBusinessList }) => {
     regionIdVal,
     searchTerm,
   ) => {
-    console.log("검색어:", searchTerm);
-    console.log(
-      "categoryId",
-      categoryId,
-      detailTypeId,
-      regionIdVal,
-      searchTerm,
-    );
+    // console.log("검색어:", searchTerm);
+    // console.log(
+    //   "categoryId",
+    //   categoryId,
+    //   detailTypeId,
+    //   regionIdVal,
+    //   searchTerm,
+    // );
     try {
       let url = "/api/business?";
 
@@ -71,7 +71,7 @@ const ServiceListTop = ({ setBusinessList }) => {
       url = url.endsWith("&") ? url.slice(0, -1) : url;
 
       const res = await axios.get(url);
-      console.log("검색 결과:", res.data.resultData);
+      // console.log("검색 결과:", res.data.resultData);
 
       setBusinessList(res.data.resultData);
       setFilteredBusinessList(res.data.resultData);
@@ -81,7 +81,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   };
 
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
-    console.log(categoryId, detailTypeId, regionId);
+    // console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
 
     try {
@@ -94,7 +94,7 @@ const ServiceListTop = ({ setBusinessList }) => {
       }
 
       const res = await axios.get(url);
-      console.log(res.data.resultData);
+      // console.log(res.data.resultData);
       setBusinessList(res.data.resultData);
       // setFilteredBusinessList(res.data.resultData);
     } catch (error) {

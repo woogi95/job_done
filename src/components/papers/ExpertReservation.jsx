@@ -26,7 +26,7 @@ const ExpertReservation = ({ setIsReservationPop }) => {
       console.log(error);
     }
   };
-  console.log(papers);
+  // console.log(papers);
   const formatPhoneNumber = phone => {
     if (!phone) return "-";
     return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");

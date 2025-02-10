@@ -75,11 +75,11 @@ const DetailContents = () => {
         updatedState[businessId] = { isLiked: newLikeStatus };
         return updatedState;
       });
-      if (res.status === 200) {
-        console.log("success:", res.data);
-      } else {
-        console.log("Failed:", res.data);
-      }
+      // if (res.status === 200) {
+      //   console.log("success:", res.data);
+      // } else {
+      //   console.log("Failed:", res.data);
+      // }
     } catch (error) {
       console.error(error);
     }
@@ -94,14 +94,14 @@ const DetailContents = () => {
       const res = await axios.get(
         `/api/business/pic/${businessId}?businessId=${businessId}`,
       );
-      console.log(res.data.resultData);
+      // console.log(res.data.resultData);
       setDetailPicList(res.data.resultData);
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(detailPicList);
+  // console.log(detailPicList);
   useEffect(() => {
     getDetailPagePic(id);
   }, [id]);
@@ -127,7 +127,7 @@ const DetailContents = () => {
     setActiveLink(id);
   };
   const handleImageClick = portfolioId => {
-    console.log("portfolioId", portfolioId);
+    // console.log("portfolioId", portfolioId);
     setSelectedPortfolioId(portfolioId);
     setIsPfDetailPop(true);
   };
@@ -148,7 +148,7 @@ const DetailContents = () => {
 
   const handleReservation = () => {
     const accessToken = getCookie("accessToken");
-    console.log(accessToken);
+    // console.log(accessToken);
     if (!accessToken) {
       setPopupTitle("로그인 필요");
       setPopupMessage("예약을 위해 로그인 후 이용해 주세요.");

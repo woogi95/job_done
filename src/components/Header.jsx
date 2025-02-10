@@ -130,18 +130,18 @@ function Header() {
   }, []);
 
   useEffect(() => {
-    console.log("선택된 카테고리:", selectedCategory);
+    // console.log("선택된 카테고리:", selectedCategory);
     setSelectedCategory(selectedCategory);
   }, [selectedCategory]);
 
   useEffect(() => {
-    console.log("선택된 디테일 타입:", selectedDetailType);
+    // console.log("선택된 디테일 타입:", selectedDetailType);
     setSelectedDetailType(selectedDetailType);
   }, [selectedDetailType]);
 
   useEffect(() => {
     fetchCategories();
-    console.log("카테고리 데이터:", categories);
+    // console.log("카테고리 데이터:", categories);
   }, []);
 
   useEffect(() => {

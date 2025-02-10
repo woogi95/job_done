@@ -30,7 +30,7 @@ const ExpertSideMenu = () => {
   const handleMenuClick = (newState, menuName) => {
     setStatus(newState); // Recoil 상태에 상태 값 저장
     navigate(`/expert/${menuName}`);
-    console.log(navigate);
+    // console.log(navigate);
   };
 
   return (

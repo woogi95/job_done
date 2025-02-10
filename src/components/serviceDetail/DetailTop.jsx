@@ -6,7 +6,7 @@ import { businessDetailState } from "../../atoms/businessAtom";
 const DetailTop = () => {
   const BASE_URL = "http://112.222.157.156:5224";
   const businessDetail = useRecoilValue(businessDetailState);
-  console.log(businessDetail);
+  // console.log(businessDetail);
   if (!businessDetail) {
     return <p>업체 정보를 불러오는 중입니다...</p>;
   }
