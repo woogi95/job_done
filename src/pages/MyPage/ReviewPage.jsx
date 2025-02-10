@@ -153,7 +153,6 @@ function ReviewPage() {
 
     const newPreviews = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
-    // console.log("선택된 이미지:", files);
   };
 
   const handleRemoveClose = () => {
@@ -180,7 +179,6 @@ function ReviewPage() {
         남은_이미지_수: newImageInfo.length,
       });
     } else {
-      // 새로 추가된 이미지 삭제 (API 호출 불필요)
       const adjustedIndex = index - imageInfo.length;
       const newSelectedImages = [...selectedImages];
       const newPreviewImages = [...previewImages];
@@ -200,22 +198,19 @@ function ReviewPage() {
     setRating(review.score);
     setReviewContent(review.contents);
     if (review.pics && Array.isArray(review.pics)) {
-      // 경로와 PK를 분리하여 저장
       const imagePaths = review.pics.filter((_, index) => index % 2 === 0);
       const imagePks = review.pics.filter((_, index) => index % 2 === 1);
 
-      // 미리보기 이미지 설정
       const previews = imagePaths.map(pic => `${picURL}${pic}`);
       setPreviewImages(previews);
 
-      // 이미지 정보를 객체 배열로 저장
       const imageInfo = imagePaths.map((path, index) => ({
         path: path,
         pk: imagePks[index],
       }));
 
-      setSelectedImages([]); // 새로운 이미지용 배열은 비워둠
-      setImageInfo(imageInfo); // 새로운 state 필요
+      setSelectedImages([]);
+      setImageInfo(imageInfo);
     }
     setCorrectModalOpen(true);
   };

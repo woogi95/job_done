@@ -26,6 +26,10 @@ function MyReservation() {
   const itemsPerPage = 5;
   const navigate = useNavigate();
   const [isReservationDetailOpen, setIsReservationDetailOpen] = useState(false);
+  const [reviewCompleteModal, setReviewCompleteModal] = useState({
+    show: false,
+    success: false,
+  });
 
   const serviceChange = async serviceId => {
     try {
@@ -93,7 +97,11 @@ function MyReservation() {
   const reviewWrite = async serviceId => {
     try {
       if (!serviceId || !reviewContent.trim()) {
-        alert("서비스 ID와 리뷰 내용은 필수입니다.");
+        setReviewCompleteModal({
+          show: true,
+          success: false,
+          message: "서비스 ID와 리뷰 내용은 필수입니다.",
+        });
         return;
       }
 
@@ -123,7 +131,16 @@ function MyReservation() {
       });
 
       if (res.status === 200) {
-        alert("리뷰가 성공적으로 등록되었습니다.");
+        await loginApi.patch("/api/service", {
+          completed: 8,
+          serviceId: serviceId,
+        });
+
+        setReviewCompleteModal({
+          show: true,
+          success: true,
+          message: "리뷰가 성공적으로 등록되었습니다.",
+        });
         setReviewContent("");
         setPreviewImages([]);
         setUploadedFiles([]);
@@ -134,7 +151,11 @@ function MyReservation() {
       }
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
-      alert("리뷰 등록에 실패했습니다. 다시 시도해주세요.");
+      setReviewCompleteModal({
+        show: true,
+        success: false,
+        message: "리뷰 등록에 실패했습니다. 다시 시도해주세요.",
+      });
     }
   };
 
@@ -157,12 +178,6 @@ function MyReservation() {
     setCancelStatus({ show: false, success: false });
   };
 
-  // useEffect(() => {
-  //   reservation.map(item => {
-  //     console.log("serviceId:", item.serviceId);
-  //     console.log("예약 항목 전체 데이터:", item);
-  //   });
-  // }, [reservation]);
   useEffect(() => {
     reservationData();
   }, []);
@@ -190,6 +205,10 @@ function MyReservation() {
         navigate(`/estimate/${serviceId}`);
       }
     }
+  };
+
+  const handleReviewCompleteModalClose = () => {
+    setReviewCompleteModal({ show: false, success: false, message: "" });
   };
 
   return (
@@ -221,11 +240,11 @@ function MyReservation() {
                 </div>
                 <div className="flex justify-center items-center gap-[15px]">
                   <button
-                    disabled={[0, 1, 3, 4, 5, 6].includes(item.completed)}
+                    disabled={[0, 1, 3, 4, 5, 6, 8].includes(item.completed)}
                     onClick={() => {
                       if (
-                        ![0, 1, 3, 4, 5, 6].includes(item.completed) &&
-                        [7, 8, 9].includes(item.completed)
+                        ![0, 1, 3, 4, 5, 6, 8].includes(item.completed) &&
+                        [7, 9].includes(item.completed)
                       ) {
                         setSelectedServiceId(item.serviceId);
                         handleReviewModalOpen(item.serviceId);
@@ -235,14 +254,16 @@ function MyReservation() {
                     }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${
-                        [0, 1, 3, 4, 5, 6].includes(item.completed)
+                        [0, 1, 3, 4, 5, 6, 8].includes(item.completed)
                           ? "bg-[#D9D9D9] cursor-not-allowed text-[#C3C3C3]"
                           : "bg-[#3887FF] hover:bg-[#2d6cd9] text-[#FFFFFF]"
                       }`}
                   >
-                    {[7, 8, 9].includes(item.completed)
-                      ? "리뷰쓰기"
-                      : "결제하기"}
+                    {item.completed === 8
+                      ? "리뷰작성완료"
+                      : [7, 9].includes(item.completed)
+                        ? "리뷰쓰기"
+                        : "결제하기"}
                   </button>
                   <button
                     disabled={[3, 4, 5].includes(item.completed)}
@@ -270,7 +291,7 @@ function MyReservation() {
             </div>
           ))}
 
-          {/* 페이지네이션 추가 */}
+          {/* 페이지네이션 */}
           <div className="flex justify-center my-4">
             <Pagination
               current={currentPage}
@@ -290,8 +311,8 @@ function MyReservation() {
 
         {/* 리뷰 모달 */}
         {reviewModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[1000] overflow-y-auto">
+            <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px] my-8">
               <span className="flex justify-center items-center text-[20px]">
                 리뷰 작성
               </span>
@@ -399,7 +420,7 @@ function MyReservation() {
           </div>
         )}
 
-        {/* 취소 상태 모달 추가 */}
+        {/* 취소 상태 모달 */}
         {cancelStatus.show && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
@@ -415,6 +436,30 @@ function MyReservation() {
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                   onClick={handleCancelStatusClose}
+                >
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 리뷰 완료 모달 */}
+        {reviewCompleteModal.show && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]">
+            <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+              <h2 className="flex justify-center items-center text-xl font-bold mb-4">
+                {reviewCompleteModal.success
+                  ? "리뷰 등록 완료"
+                  : "리뷰 등록 실패"}
+              </h2>
+              <p className="text-gray-600 mb-6 text-center">
+                {reviewCompleteModal.message}
+              </p>
+              <div className="flex justify-center items-center">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                  onClick={handleReviewCompleteModalClose}
                 >
                   확인
                 </button>
