@@ -1,7 +1,6 @@
 import { Button, DatePicker, Form, Input, Select, Upload } from "antd";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import moment from "moment";
 import { busiFile, businessInfo } from "../../../atoms/businessAtom";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,6 +8,7 @@ import {
   detailTypesStateS,
 } from "../../../atoms/categoryAtom";
 import axios from "axios";
+import JobBLogo from "../../../components/JobBLogo";
 
 function BusinessSignUp() {
   const [form] = Form.useForm();
@@ -21,14 +21,14 @@ function BusinessSignUp() {
 
   const navigate = useNavigate();
   const initData = {
-    userId: 19,
-    businessNum: "564",
-    businessName: "해드리오",
-    address: "만경관근처",
+    userId: 0,
+    businessNum: "",
+    businessName: "",
+    address: "",
     categoryId: "",
-    detailTypeId: 1,
+    detailTypeId: 0,
     busiCreatedAt: "",
-    tel: "0533836669",
+    tel: "",
     logo: "",
   };
 
@@ -120,6 +120,7 @@ function BusinessSignUp() {
 
   return (
     <div className="signUpDiv">
+      <JobBLogo />
       <Form
         form={form}
         initialValues={{

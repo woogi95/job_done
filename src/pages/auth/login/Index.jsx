@@ -4,21 +4,24 @@ import Cookies from "js-cookie";
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { loginUser } from "../../../atoms/loginAtom";
 import UserLayout from "../../../components/UserLayout";
 import "./Index.css";
 import { setCookie } from "../../../apis/cookie";
+import { useState } from "react";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
+  const [epwFail, setEpwFail] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
-  const userInfoValue = useRecoilValue(loginUser);
 
   const initData = {
     email: "",
     upw: "",
   };
+
   const loginTry = async data => {
     console.log("로그인 요청:", data);
     try {
@@ -26,8 +29,9 @@ function LoginPage() {
         withCredentials: true,
       });
       console.log("서버 응답:", res.data);
-
-      if (res.data.resultData && res.data.resultData.accessToken) {
+      const message = res.data.resultMessage.includes("성공") ? true : false;
+      console.log(message);
+      if (message === true) {
         const { accessToken, userId, name, email, pic, businessId } =
           res.data.resultData;
 
@@ -43,14 +47,16 @@ function LoginPage() {
         // expirationDate.setMinutes(
         //   expirationDate.getMinutes() + expiresInMinutes,
         // );
-        
+
         // Cookies.set("accessToken", accessToken, {
         //   expires: 3 / (24 * 60),
         //   secure: process.env.NODE_ENV === "production", // HTTPS에서만 저장
         //   sameSite: "Strict",
         // });
-        setCookie(`accessToken`, res.data.resultData.accessToken);
-        
+        setCookie(`accessToken`, res.data.resultData.accessToken, {
+          path: "/",
+        });
+
         // ✅ 사용자 상태 업데이트
         setUserInfo({
           userId: userId,
@@ -66,7 +72,9 @@ function LoginPage() {
 
         navigate("/");
       } else {
-        alert("로그인 실패: 서버 응답 오류");
+        setErrorMsg(res.data.resultMessage);
+        setEpwFail(true);
+        return;
       }
     } catch (error) {
       console.error("로그인 오류:", error);
@@ -159,6 +167,14 @@ function LoginPage() {
         </div>
       </Form>
       <div style={{ width: 320, justifyContent: "center" }}></div>
+      {epwFail && (
+        <div className="emailModalFull">
+          <div className="emailModal">
+            <h1>{errorMsg}</h1>
+            <button onClick={() => setEpwFail(false)}>확인</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

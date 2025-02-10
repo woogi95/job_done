@@ -67,6 +67,8 @@ function SignUpPage() {
       console.log(res.data.resultData);
       if (res.data.resultData === 1) {
         setEmailOk(false);
+      } else {
+        setEmailClick(true);
       }
     } catch (error) {
       console.log(error);

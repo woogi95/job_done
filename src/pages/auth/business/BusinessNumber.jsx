@@ -10,6 +10,7 @@ import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../../apis/login";
+import JobBLogo from "../../../components/JobBLogo";
 // import axios from "axios";
 function BusinessNumber() {
   const [form] = Form.useForm();
@@ -114,6 +115,7 @@ function BusinessNumber() {
   };
   return (
     <div>
+      <JobBLogo />
       <Form
         form={form}
         initialValues={busiInfo}
