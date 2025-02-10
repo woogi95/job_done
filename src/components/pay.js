@@ -76,5 +76,30 @@ export const PayModalDiv = styled.div`
       background-color: rgb(53, 107, 207);
     }
   }
+  span {
+    color: #4581f0;
+    font-size: 16px;
+  }
 `;
-export const LoadingDiv = styled.div``;
+export const LoadingDiv = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .box {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 10px;
+    p {
+      font-size: 40px;
+      color: #fff;
+    }
+  }
+`;
