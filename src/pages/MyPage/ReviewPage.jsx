@@ -5,6 +5,18 @@ import MyPageLayout from "../../components/MyPageLayout";
 import { Select, Pagination } from "antd";
 import { RxCross2 } from "react-icons/rx";
 
+const convertImageUrlsToFiles = async imageUrls => {
+  const imageFiles = await Promise.all(
+    imageUrls.map(async imageUrl => {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const filename = imageUrl.split("/").pop(); // 파일명 추출
+      return new File([blob], filename, { type: blob.type });
+    }),
+  );
+  return imageFiles;
+};
+
 function ReviewPage() {
   const picURL = "http://112.222.157.156:5224";
   const [review, setReview] = useState([]);
@@ -19,6 +31,7 @@ function ReviewPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isImgPut, setIsImgPut] = useState(false);
   const reviewsPerPage = 5;
+  const [imageInfo, setImageInfo] = useState([]);
 
   const reviewList = async () => {
     try {
@@ -38,6 +51,9 @@ function ReviewPage() {
       setReview([]);
     }
   };
+  useEffect(() => {
+    console.log("리뷰 데이터 : ", review);
+  }, [review]);
 
   const correctReview = async () => {
     if (!selectedReview) return;
@@ -46,17 +62,15 @@ function ReviewPage() {
       const formData = new FormData();
 
       const requestData = {
-        pics: selectedImages.map(image => image.name || ""),
-        p: {
-          reviewId: selectedReview.reviewId,
-          serviceId: selectedReview.serviceId,
-          contents: reviewContent,
-          score: rating,
-        },
+        reviewId: selectedReview.reviewId,
+        serviceId: selectedReview.serviceId,
+        contents: reviewContent.trim(),
+        score: rating,
       };
+      console.log("Request Data:", requestData);
 
       formData.append(
-        "data",
+        "p",
         new Blob([JSON.stringify(requestData)], {
           type: "application/json",
         }),
@@ -66,11 +80,17 @@ function ReviewPage() {
         formData.append("pics", file);
       });
 
+      for (const pair of formData.entries()) {
+        console.log("FormData Entry:", pair[0], pair[1]);
+      }
+
       const res = await loginApi.put("/api/review", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      console.log("Response after update:", res.data);
 
       if (res.status === 200) {
         alert("리뷰가 수정되었습니다.");
@@ -83,21 +103,29 @@ function ReviewPage() {
     }
   };
 
-  const correctReviewImg = async () => {
+  const correctReviewImg = async picId => {
     try {
       const res = await loginApi.put("/api/review/state", {
-        params: {
-          reviewPicId: 0,
-          reviewId: 0,
-        },
+        reviewPicId: picId,
       });
-      // console.log(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const correctServiceImg = async reviewId => {
+    console.log("reviewId", reviewId);
+    try {
+      const res = await loginApi.put("/api/review/state", {
+        reviewId: reviewId,
+      });
+    } catch (error) {
+      console.log("이미지 삭제 API 에러:", error);
+    }
+  };
+
   const deleteReview = async reviewId => {
+    console.log("reviewId", reviewId);
     try {
       const res = await loginApi.delete(`/api/review`, {
         params: {
@@ -128,18 +156,43 @@ function ReviewPage() {
     // console.log("선택된 이미지:", files);
   };
 
-  const handleRemoveImage = index => {
-    const newSelectedImages = [...selectedImages];
-    const newPreviewImages = [...previewImages];
+  const handleRemoveClose = () => {
+    correctServiceImg();
+  };
 
-    newSelectedImages.splice(index, 1);
-    newPreviewImages.splice(index, 1);
+  const handleRemoveImage = async index => {
+    if (index < imageInfo.length) {
+      const newImageInfo = [...imageInfo];
+      const removedImage = newImageInfo[index];
 
-    setSelectedImages(newSelectedImages);
-    setPreviewImages(newPreviewImages);
+      await correctReviewImg(removedImage.pk);
+      console.log("삭제된 이미지 PK:", removedImage.pk);
 
-    // console.log(newSelectedImages);
-    // console.log(newPreviewImages);
+      newImageInfo.splice(index, 1);
+      setImageInfo(newImageInfo);
+
+      const newPreviewImages = [...previewImages];
+      newPreviewImages.splice(index, 1);
+      setPreviewImages(newPreviewImages);
+
+      console.log("기존 이미지 삭제 완료:", {
+        삭제된_이미지_PK: removedImage.pk,
+        남은_이미지_수: newImageInfo.length,
+      });
+    } else {
+      // 새로 추가된 이미지 삭제 (API 호출 불필요)
+      const adjustedIndex = index - imageInfo.length;
+      const newSelectedImages = [...selectedImages];
+      const newPreviewImages = [...previewImages];
+
+      newSelectedImages.splice(adjustedIndex, 1);
+      newPreviewImages.splice(index, 1);
+
+      setSelectedImages(newSelectedImages);
+      setPreviewImages(newPreviewImages);
+
+      console.log("새로 추가된 이미지 삭제 완료");
+    }
   };
 
   const handleReviewModalOpen = review => {
@@ -147,15 +200,30 @@ function ReviewPage() {
     setRating(review.score);
     setReviewContent(review.contents);
     if (review.pics && Array.isArray(review.pics)) {
-      const filteredPics = review.pics.filter((_, index) => index % 2 === 0);
-      const previews = filteredPics.map(pic => `${picURL}${pic}`);
+      // 경로와 PK를 분리하여 저장
+      const imagePaths = review.pics.filter((_, index) => index % 2 === 0);
+      const imagePks = review.pics.filter((_, index) => index % 2 === 1);
+
+      // 미리보기 이미지 설정
+      const previews = imagePaths.map(pic => `${picURL}${pic}`);
       setPreviewImages(previews);
-      setSelectedImages(filteredPics);
+
+      // 이미지 정보를 객체 배열로 저장
+      const imageInfo = imagePaths.map((path, index) => ({
+        path: path,
+        pk: imagePks[index],
+      }));
+
+      setSelectedImages([]); // 새로운 이미지용 배열은 비워둠
+      setImageInfo(imageInfo); // 새로운 state 필요
     }
     setCorrectModalOpen(true);
   };
 
   const handleReviewModalClose = () => {
+    if (selectedReview) {
+      correctServiceImg(selectedReview.reviewId);
+    }
     setCorrectModalOpen(false);
     setSelectedReview(null);
     setRating(0);
