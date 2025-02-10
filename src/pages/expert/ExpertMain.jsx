@@ -6,7 +6,6 @@ import "./expertmain.css";
 import { useRecoilState } from "recoil";
 import { businessDetailState } from "../../atoms/businessAtom";
 import { reserveList } from "../../atoms/reservationAtom";
-import { loginApi } from "../../apis/login";
 import ExpertMainReserveList from "./ExpertMainReserveList.jsx";
 
 const BigBox = styled.div`
@@ -18,37 +17,8 @@ const BigBox = styled.div`
   font-family: "Pretendard-Regular", "Spoqa Han Sans Neo", "Roboto", sans-serif;
 `;
 function ExpertMain() {
-  const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   const [reserveInfo, setReserveInfo] = useRecoilState(reserveList);
-  const businessPage = async () => {
-    try {
-      const busiId = localStorage.getItem("businessId");
-      const res = await loginApi.get(
-        `/api/service?business_id=${busiId}&status=4&page=1&size=100`,
-      );
-
-      console.log(res); // API 응답 확인
-
-      let filteredData = []; // ✅ if 블록 바깥에서 선언 (초기값 빈 배열)
-
-      if (res && res.data.resultData) {
-        // ✅ 필요한 데이터만 추출 (userName, serviceId, startDate)
-        filteredData = res.data.resultData.map(item => ({
-          title: item.userName,
-          servicId: item.serviceId,
-          start: item.startDate,
-        }));
-      }
-      console.log(filteredData);
-
-      setReserveInfo(filteredData);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    businessPage();
-  }, []);
+  const [businessInfo, setBusinessInfo] = useRecoilState(businessDetailState);
   return (
     <div style={{ backgroundColor: "white", padding: 15 }}>
       {/* 상단 예약 건수 등 3 칸 */}
@@ -79,8 +49,8 @@ function ExpertMain() {
               padding: 10,
             }}
           >
-            <span>예약 현황</span>
-            <span>0건</span>
+            <span>작업 현황</span>
+            <span>{businessInfo.setReserveInfo}건</span>
           </div>
           <div
             style={{
