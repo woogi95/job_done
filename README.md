@@ -1,36 +1,97 @@
-# 잡던 (Job_Done)
+# 잡던 프로젝트 (JobDone)
 
-## 링크들
+<div align="center">
+  <img src="./public/images/logo.svg" alt="잡던 로고" width="200">
 
-## 사용한 도구들
+</div>
 
-## 1. 코딩 컨벤션
+## 📚 목차
 
-- 변수, 상수, 함수, 파일, 클레스명
-  : camelCase(카멜케이스)
-- 확장자 jsx, tsx
-  : PascalCase(파스칼케이스)
-- 화살표 함수 사용
-  : context
+- [프로젝트 소개](#프로젝트-소개)
+- [기술 스택](#기술-스택)
+- [개발 규칙](#개발-규칙)
+- [폴더 구조](#폴더-구조)
 
-## 2. 커밋 컨벤션
+## 🚀 프로젝트 소개
 
-- feat : 새로운 기능 구현 및 추가
-- fix : 오류 수정
-- docs : readme.md, json 파일 등 수정, 라이브러리 설치(문서 관련)
-- style : 공백, 세미콜론 및 스타일 수정
-- refactor : 코드 리팩토링
-- chore : 빌드 부분 혹은 패키지 매니저 수정 사항
-- rename : 파일명, 폴더명 수정
-- remove : 파일 삭제
+잡던(JobDone)은 다양한 전문 서비스를 중개하는 온라인 플랫폼입니다.
 
-## 3. 브랜치 전략
+### 주요 기능
 
-- main: 메인 서버 확인용
-- develop : 메인에 들어가기 전 서브 확인용
-- feature : 추가 기능 개발 확인용
-- release : develop 을 release 로 옮긴 후 테스트를 진행용
-- hotfix : 버그를 수정용
+- 전문가/업체 검색 및 예약
+- 견적서 요청 및 관리
+- 실시간 결제 시스템
+- 전문가를 위한 비즈니스 관리 도구
+  - 예약/일정 관리
+  - 견적서 관리
+  - 고객 문의 및 리뷰 관리
+  - 매출 통계
+
+### 특징
+
+- React와 JavaScript 기반의 모던한 프론트엔드 아키텍처
+- Recoil을 활용한 효율적인 상태 관리
+- 전문가와 일반 사용자를 위한 이원화된 인터페이스
+- 카카오페이 결제 연동
+- JWT 기반 인증 시스템
+
+## 🛠 기술 스택
+
+### Frontend
+
+[![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=black)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=TypeScript&logoColor=white)]()
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)]()
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)]()
+[![Recoil](https://img.shields.io/badge/Recoil-3578E5?style=flat-square&logo=recoil&logoColor=white)]()
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)]()
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)]()
+[![Emotion](https://img.shields.io/badge/Emotion-DB7093?style=flat-square&logo=emotion&logoColor=white)]()
+
+### Development Tools
+
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)]()
+[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white)]()
+[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=flat-square&logo=prettier&logoColor=black)]()
+
+## 📋 개발 규칙
+
+### 1. 코딩 컨벤션
+
+| 구분                             | 규칙         | 예시                           |
+| -------------------------------- | ------------ | ------------------------------ |
+| 변수, 상수, 함수, 파일, 클래스명 | camelCase    | `userName`, `getData()`        |
+| JSX/TSX 파일명                   | PascalCase   | `UserProfile.tsx`              |
+| 화살표 함수                      | context 사용 | `const handleClick = () => {}` |
+
+### 2. 커밋 컨벤션
+
+| 태그       | 설명                                |
+| ---------- | ----------------------------------- |
+| `feat`     | 새로운 기능 구현 및 추가            |
+| `fix`      | 오류 수정                           |
+| `docs`     | 문서 관련 변경 (README.md, JSON 등) |
+| `style`    | 코드 포맷팅, 세미콜론 누락 등       |
+| `refactor` | 코드 리팩토링                       |
+| `chore`    | 빌드 관련 변경, 패키지 매니저 수정  |
+| `rename`   | 파일/폴더명 변경                    |
+| `remove`   | 파일 삭제                           |
+
+### 3. 브랜치 전략
+
+```mermaid
+graph TD
+    A[main] --> B[develop]
+    B --> C[feature]
+    B --> D[release]
+    A --> E[hotfix]
+```
+
+- `main`: 메인 서버 배포용
+- `develop`: 개발 단계 통합 브랜치
+- `feature`: 기능 개발용
+- `release`: 테스트용
+- `hotfix`: 긴급 버그 수정용
 
 ## 폴더구조
 
