@@ -86,10 +86,6 @@ const UserReservation = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("중요!!!!!!", serviceId);
-  // }, [serviceId]);
-
   return (
     <PapersDiv>
       <div className="inner">

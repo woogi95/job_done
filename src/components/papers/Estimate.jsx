@@ -11,20 +11,15 @@ const Estimate = () => {
   // 컨펌 팝업
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
-  // const [isSuccess, setIsSuccess] = useState(true);
-  // 로딩상태
   const [isLoading, setIsLoading] = useState(false);
-  // 결제 링크
-  // const [paymentUrl, setPaymentUrl] = useState("");
+  const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  // const serviceId = papers.serviceId;
-  const serviceId = getCookie("serviceId");
-  const getEstimate = async serviceId => {
-    try {
-      ///api/service/detail?serviceId=28
-      console.log("이게 찍히니????", serviceId);
 
+  const getEstimate = async serviceId => {
+    if (!serviceId) return;
+    try {
+      console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
@@ -34,33 +29,30 @@ const Estimate = () => {
       }
       console.log(res.data.DataMessage);
     } catch (error) {
-      console.log(error);
+      console.error("견적서 조회 중 오류 발생:", error);
     }
   };
 
-  // 컨펌팝업
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
     patchServiceState(3, serviceId);
   };
-  const handleClosePopup = () => {
-    setIsPopupOpen(false);
-  };
-  const handleCancelPopup = () => {
-    setIsPopupOpen(false);
-  };
 
-  const formatPhoneNumber = phone => {
-    if (!phone) return "-";
-    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-  };
-  const formatBusinessNumber = number => {
-    if (!number) return "사업자 번호 없음";
-    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
-  };
+  const handleClosePopup = () => setIsPopupOpen(false);
+  const handleCancelPopup = () => setIsPopupOpen(false);
 
-  const handleClickNewPage = async serviceId => {
-    // /api/payment/ready?serviceId=229
+  const formatPhoneNumber = phone =>
+    phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
+  const formatBusinessNumber = number =>
+    number
+      ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
+      : "사업자 번호 없음";
+
+  const handleClickNewPage = async () => {
+    if (!serviceId) {
+      console.error("serviceId가 없습니다.");
+      return;
+    }
     setIsLoading(true);
     console.log("결제 누구야!", serviceId);
     try {
@@ -68,36 +60,43 @@ const Estimate = () => {
       const height = 600;
       const left = (window.innerWidth - width) / 2;
       const top = (window.innerHeight - height) / 2;
-      const paymentWindow = window.open(
-        // `${res.data.next_redirect_pc_url}`,
-        `https://www.naver.com/`,
-        "_blank",
-        `width=${width},height=${height},left=${left},top=${top}`,
+
+      const res = await loginApi.get(
+        `/api/payment/ready?serviceId=${serviceId}`,
       );
-      const res = await loginApi(`/api/payment/ready?serviceId=${serviceId}`);
-      console.log(res.data.next_redirect_pc_url);
-      // const paymentWindow = window.open(
-      //   `${res.data.next_redirect_pc_url}`,
-      //   "_blank",
-      //   `width=${width},height=${height},left=${left},top=${top}`,
-      // );
+      if (res.data?.next_redirect_pc_url) {
+        const paymentWindow = window.open(
+          res.data.next_redirect_pc_url,
+          "_blank",
+          `width=${width},height=${height},left=${left},top=${top}`,
+        );
 
-      const checkWindowClosed = setInterval(() => {
-        if (paymentWindow.closed) {
-          setIsLoading(false);
-          clearInterval(checkWindowClosed);
-        }
-      }, 60000);
+        const checkWindowClosed = setInterval(() => {
+          if (paymentWindow.closed) {
+            setIsLoading(false);
+            clearInterval(checkWindowClosed);
+          }
+        }, 1000);
+      }
     } catch (error) {
-      console.log(error);
-
+      console.error("결제 준비 중 오류 발생:", error);
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
-    getEstimate(serviceId);
-    console.log("==>", papersInfo);
+    const storedServiceId = getCookie("serviceId");
+    if (storedServiceId) {
+      setServiceId(storedServiceId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (serviceId) {
+      getEstimate(serviceId);
+    }
   }, [serviceId]);
+
   return (
     <PapersDiv>
       <div className="inner">
@@ -189,7 +188,7 @@ const Estimate = () => {
                   <p>평수</p>
                   <span>{papersInfo.pyeong}</span>
                 </li>
-                {papersInfo.options && papersInfo.options.length > 0 && (
+                {papersInfo.options?.length > 0 && (
                   <li className="option">
                     <p>옵션</p>
                     <ul>
@@ -207,21 +206,6 @@ const Estimate = () => {
                     </ul>
                   </li>
                 )}
-                {papersInfo.etc && papersInfo.etc.length > 0 && (
-                  <li className="option">
-                    <p>추가견적</p>
-                    <ul>
-                      {papersInfo.etc.map((etcItem, index) => (
-                        <li key={index}>
-                          <p>
-                            {etcItem.etcComment} <em>({etcItem.etcId})</em>
-                          </p>
-                          <span>{etcItem.etcPrice.toLocaleString()}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
                 <li>
                   <p>견적비용</p>
                   <span>{papersInfo.price.toLocaleString()}</span>
@@ -234,20 +218,10 @@ const Estimate = () => {
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button
-              className="cancel"
-              onClick={() => {
-                handleOpenPopup();
-              }}
-            >
+            <button className="cancel" onClick={handleOpenPopup}>
               예약취소
             </button>
-            <button
-              className="confirm"
-              onClick={() => {
-                handleClickNewPage(serviceId);
-              }}
-            >
+            <button className="confirm" onClick={handleClickNewPage}>
               결제하기
             </button>
           </BtnAreaDiv>
@@ -259,10 +233,8 @@ const Estimate = () => {
         onCancel={handleCancelPopup}
         title="예약 취소"
         message={popupMessage}
-        // showCancelButton={true}
-        // cancelLink="/cancel"
         confirmLink="/mypage/reservation"
-        showConfirmButton={true}
+        showConfirmButton
       />
       {isLoading && <LoadingPopup />}
     </PapersDiv>

@@ -173,7 +173,7 @@ function MyReservation() {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return [...reservation].reverse().slice(startIndex, endIndex);
+    return [...reservation].slice(startIndex, endIndex);
   };
 
   const handlePageChange = page => {
@@ -189,6 +189,7 @@ function MyReservation() {
         document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/UserReservLook/${serviceId}`);
       } else if (currentReservation.completed === 2) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
         navigate(`/estimate/${serviceId}`);
       }
     }
