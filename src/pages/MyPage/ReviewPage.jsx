@@ -29,10 +29,10 @@ function ReviewPage() {
         withCredentials: true,
       });
       setReview(Array.isArray(res.data.resultData) ? res.data.resultData : []);
-      // console.log(
-      //   "리뷰 데이터의 pics:",
-      //   res.data.resultData.map(item => item.pics),
-      // );
+      console.log(
+        "리뷰 데이터의 pics:",
+        res.data.resultData.map(item => item.pics),
+      );
     } catch (error) {
       console.error("리뷰 목록 조회 실패:", error.response || error);
       setReview([]);
@@ -43,41 +43,40 @@ function ReviewPage() {
     if (!selectedReview) return;
 
     try {
-      const reviewData = {
-        serviceId: selectedReview.serviceId,
-        reviewId: selectedReview.reviewId,
-        contents: reviewContent,
-        score: rating,
+      const formData = new FormData();
+
+      const requestData = {
+        pics: selectedImages.map(image => image.name || ""),
+        p: {
+          reviewId: selectedReview.reviewId,
+          serviceId: selectedReview.serviceId,
+          contents: reviewContent,
+          score: rating,
+        },
       };
 
-      const reviewRes = await loginApi.put(`/api/review`, reviewData);
-      // console.log("리뷰 수정 성공:", reviewRes);
+      formData.append(
+        "data",
+        new Blob([JSON.stringify(requestData)], {
+          type: "application/json",
+        }),
+      );
 
-      if (selectedImages.length > 0) {
-        await loginApi.put("/api/review/state", {
-          reviewId: selectedReview.reviewId,
-        });
+      selectedImages.forEach(file => {
+        formData.append("pics", file);
+      });
 
-        const formData = new FormData();
-        selectedImages.forEach(image => {
-          if (image instanceof File) {
-            formData.append("files", image);
-          }
-        });
-        formData.append("reviewId", selectedReview.reviewId);
+      const res = await loginApi.put("/api/review", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-        const imageRes = await loginApi.put("/api/review/pics", formData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        // console.log("이미지 업로드 성공:", imageRes);
+      if (res.status === 200) {
+        alert("리뷰가 수정되었습니다.");
+        handleReviewModalClose();
+        reviewList();
       }
-
-      alert("리뷰가 수정되었습니다.");
-      handleReviewModalClose();
-      reviewList();
-      // console.log(reviewList);
     } catch (error) {
       console.error("리뷰 수정 실패:", error);
       alert("리뷰 수정에 실패했습니다.");
@@ -190,7 +189,7 @@ function ReviewPage() {
           작성한 리뷰
         </span>
         {currentReviews.map((item, index) => (
-          <div key={index} className="w-full max-w-[600px] h-[130px]">
+          <div key={index} className="w-full max-w-[600px]">
             <div className="flex justify-between items-center">
               <div className="flex justify-center items-center gap-[5px]">
                 <div>
@@ -241,26 +240,45 @@ function ReviewPage() {
                 </button>
               </div>
             </div>
-            <div className="flex justify-between py-[10px]">
-              <div className="text-[16px] font-medium">{item.contents}</div>
-              <div className="flex gap-2 mt-2">
-                {Array.isArray(item.pics) &&
-                  item.pics
-                    .filter((_, picIndex) => picIndex % 2 === 0)
-                    .slice(0, 2)
-                    .map((pic, picIndex) => (
-                      <img
-                        key={picIndex}
-                        src={`${picURL}${pic}`}
-                        alt={`리뷰 이미지 ${picIndex + 1}`}
-                        className="w-20 h-20 object-cover rounded-md"
-                      />
-                    ))}
+            <div className="flex py-[10px]">
+              <div className="text-[16px] font-medium w-[70%] min-w-[300px] break-words">
+                {item.contents}
+              </div>
+              <div className="flex gap-2 ml-auto">
+                {Array.isArray(item.pics) ? (
+                  <>
+                    {item.pics
+                      .filter((_, picIndex) => picIndex % 2 === 0)
+                      .slice(0, 2)
+                      .map((pic, picIndex) => (
+                        <img
+                          key={picIndex}
+                          src={`${picURL}${pic}`}
+                          alt={`리뷰 이미지 ${picIndex + 1}`}
+                          className="w-20 h-20 object-cover rounded-md shrink-0"
+                        />
+                      ))}
+                    {item.pics.filter((_, i) => i % 2 === 0).length === 1 && (
+                      <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-md shrink-0 flex items-center justify-center">
+                        <span className="text-gray-400">No Image</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-md shrink-0 flex items-center justify-center">
+                      <span className="text-gray-400">No Image</span>
+                    </div>
+                    <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-md shrink-0 flex items-center justify-center">
+                      <span className="text-gray-400">No Image</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
+            <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] max-w-[600px] w-full"></div>
           </div>
         ))}
-        <div className="flex justify-center items-center h-[1px] bg-[#DBDBDB] max-w-[600px] w-full"></div>
 
         {/* 페이지네이션 컴포넌트 추가 */}
         <div className="my-4">
