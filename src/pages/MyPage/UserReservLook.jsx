@@ -8,11 +8,11 @@ import {
   FormDiv,
   PapersDiv,
   ReservationPaperContDiv,
-} from "./papers";
+} from "../../components/papers/papers";
 import { getCookie } from "../../apis/cookie";
-import { Popup } from "../ui/Popup";
+import { Popup } from "../../components/ui/Popup";
 
-const UserReservation = () => {
+const UserReservLook = () => {
   const navigate = useNavigate();
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
@@ -20,7 +20,7 @@ const UserReservation = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
   const [isSuccess, setIsSuccess] = useState(true);
-  // 컨펌팝업
+
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
     patchServiceState(3, serviceId);
@@ -34,17 +34,16 @@ const UserReservation = () => {
 
   const getEstimate = async serviceId => {
     try {
-      ///api/service/detail?serviceId=28
-      // console.log("이게 찍히니????", serviceId);
+      console.log("이게 찍히니????", serviceId);
 
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      // console.log("견적서 정보", res);
+      console.log("견적서 정보", res);
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      // console.log(res.data.DataMessage);
+      console.log(res.data.DataMessage);
     } catch (error) {
       console.log(error);
     }
@@ -56,17 +55,17 @@ const UserReservation = () => {
   };
   useEffect(() => {
     getEstimate(serviceId);
-    // console.log(papers);
+    console.log(papers);
   }, [serviceId]);
 
   const patchServiceState = async (completed, serviceId) => {
     try {
-      // console.log(completed, serviceId);
+      console.log(completed, serviceId);
       const res = await loginApi.patch(`/api/service`, {
         completed,
         serviceId,
       });
-      // console.log(res.data.resultData);
+      console.log(res.data.resultData);
 
       if (res.data) {
         setIsSuccess(true);
@@ -220,8 +219,6 @@ const UserReservation = () => {
         onCancel={handleCancelPopup}
         title="예약 취소"
         message={popupMessage}
-        // showCancelButton={true}
-        // cancelLink="/cancel"
         confirmLink="/mypage/reservation"
         showConfirmButton={true}
       />
@@ -229,4 +226,4 @@ const UserReservation = () => {
   );
 };
 
-export default UserReservation;
+export default UserReservLook;

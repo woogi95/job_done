@@ -1,9 +1,11 @@
+import { Pagination, Select } from "antd";
 import { useEffect, useState } from "react";
+import { RxCross2 } from "react-icons/rx";
+import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../apis/login";
 import MyPageLayout from "../../components/MyPageLayout";
+import UserReservation from "../../components/papers/UserReservation";
 import { statusText } from "../../components/ServiceIcon";
-import { Select, Pagination } from "antd";
-import { RxCross2 } from "react-icons/rx";
 
 function MyReservation() {
   const [reservation, setReservation] = useState([]);
@@ -22,6 +24,8 @@ function MyReservation() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const navigate = useNavigate();
+  const [isReservationDetailOpen, setIsReservationDetailOpen] = useState(false);
 
   const serviceChange = async serviceId => {
     try {
@@ -31,7 +35,6 @@ function MyReservation() {
           serviceId: serviceId,
         },
       });
-      console.log("서비스 데이터:", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -80,10 +83,8 @@ function MyReservation() {
           size: 10,
         },
       });
-      // console.log("너 맞니? : ", res.data.resultData);
       setReservation(res.data.resultData);
       setResState(res.data.resultData);
-      // console.log("잘 담김? : ", resState);
     } catch (error) {
       console.log(error);
     }
@@ -111,7 +112,6 @@ function MyReservation() {
         }),
       );
 
-      // 이미지 파일들 추가
       uploadedFiles.forEach((file, index) => {
         formData.append("pics", file);
       });
@@ -140,11 +140,13 @@ function MyReservation() {
 
   const handleReservationCancel = async serviceId => {
     try {
-      const res = await loginApi.post(`/api/service/${serviceId}/cancel`);
-      if (res.status === 200) {
-        setCancelStatus({ show: true, success: true });
-        reservationData(); // 예약 목록 새로고침
-      }
+      await loginApi.patch(`/api/service`, {
+        completed: 3,
+        serviceId: serviceId,
+      });
+
+      setCancelStatus({ show: true, success: true });
+      reservationData();
     } catch (error) {
       console.error("예약 취소 실패:", error);
       setCancelStatus({ show: true, success: false });
@@ -155,17 +157,16 @@ function MyReservation() {
     setCancelStatus({ show: false, success: false });
   };
 
-  useEffect(() => {
-    reservation.map(item => {
-      console.log("serviceId:", item.serviceId);
-      console.log("예약 항목 전체 데이터:", item);
-    });
-  }, [reservation]);
+  // useEffect(() => {
+  //   reservation.map(item => {
+  //     console.log("serviceId:", item.serviceId);
+  //     console.log("예약 항목 전체 데이터:", item);
+  //   });
+  // }, [reservation]);
   useEffect(() => {
     reservationData();
   }, []);
 
-  // 현재 페이지에 해당하는 예약 목록만 필터링
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -174,6 +175,21 @@ function MyReservation() {
 
   const handlePageChange = page => {
     setCurrentPage(page);
+  };
+
+  const handleDetailClick = serviceId => {
+    const currentReservation = reservation.find(
+      item => item.serviceId === serviceId,
+    );
+    if (currentReservation) {
+      if ([0, 1].includes(currentReservation.completed)) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
+        navigate(`/UserReservLook/${serviceId}`);
+      } else if (currentReservation.completed === 2) {
+        document.cookie = `serviceId=${serviceId}; path=/`;
+        navigate(`/estimate/${serviceId}`);
+      }
+    }
   };
 
   return (
@@ -188,7 +204,10 @@ function MyReservation() {
               <div className="flex flex-col gap-[10px] px-[55px]">
                 <div className="flex justify-between">
                   <span>예약일 : {item.createdAt.split(" ")[0]}</span>
-                  <button onClick={() => window.open("", "_blank")}>
+                  <button
+                    onClick={() => handleDetailClick(item.serviceId)}
+                    className="hover:text-[#3887FF]"
+                  >
                     상세보기
                   </button>
                 </div>
@@ -202,10 +221,10 @@ function MyReservation() {
                 </div>
                 <div className="flex justify-center items-center gap-[15px]">
                   <button
-                    disabled={[0, 1, 6].includes(item.completed)}
+                    disabled={[0, 1, 3, 4, 5, 6].includes(item.completed)}
                     onClick={() => {
                       if (
-                        ![0, 1, 6].includes(item.completed) &&
+                        ![0, 1, 3, 4, 5, 6].includes(item.completed) &&
                         [7, 8, 9].includes(item.completed)
                       ) {
                         setSelectedServiceId(item.serviceId);
@@ -216,7 +235,7 @@ function MyReservation() {
                     }}
                     className={`flex justify-center items-center max-w-[340px] w-full h-[40px] rounded-lg border-[#ABABAB] border-[1px]
                       ${
-                        [0, 1, 6].includes(item.completed)
+                        [0, 1, 3, 4, 5, 6].includes(item.completed)
                           ? "bg-[#D9D9D9] cursor-not-allowed text-[#C3C3C3]"
                           : "bg-[#3887FF] hover:bg-[#2d6cd9] text-[#FFFFFF]"
                       }`}
@@ -226,16 +245,20 @@ function MyReservation() {
                       : "결제하기"}
                   </button>
                   <button
+                    disabled={[3, 4, 5].includes(item.completed)}
                     onClick={() => {
                       if ([7, 8, 9].includes(item.completed)) {
                         handleInquiryModalOpen(item.serviceId);
                       } else {
                         handleReservationCancel(item.serviceId);
-                        handleServiceChange(item.serviceId);
-                        console.log("서비스 변경 호출", serviceChange);
                       }
                     }}
-                    className="flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] bg-[#ffffff] rounded-lg border-[#ABABAB] border-[1px]"
+                    className={`flex justify-center items-center max-w-[340px] w-full h-[40px] text-[#1e1e1e] rounded-lg border-[#ABABAB] border-[1px]
+                      ${
+                        [3, 4, 5].includes(item.completed)
+                          ? "bg-[#D9D9D9] cursor-not-allowed text-[#C3C3C3]"
+                          : "bg-[#ffffff]"
+                      }`}
                   >
                     {[7, 8, 9].includes(item.completed)
                       ? "문의하기"
@@ -258,142 +281,148 @@ function MyReservation() {
             />
           </div>
         </div>
-      </div>
 
-      {/* 리뷰 모달 */}
-      {reviewModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
-            <span className="flex justify-center items-center text-[20px]">
-              리뷰 작성
-            </span>
-            <div className="h-[1px] my-[20px] bg-[#DBDBDB] max-w-[300px] w-full mx-auto"></div>
-            <div className="flex justify-center items-center">
-              <span className="flex justify-center items-center">
-                솔직한 후기를 남겨보세요!
+        {isReservationDetailOpen && (
+          <div className="fixed inset-0 z-50">
+            <UserReservation />
+          </div>
+        )}
+
+        {/* 리뷰 모달 */}
+        {reviewModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="flex flex-col justify-center bg-white p-6 rounded-lg w-[500px]">
+              <span className="flex justify-center items-center text-[20px]">
+                리뷰 작성
               </span>
-            </div>
-            <div className="flex justify-center items-center mt-[10px]">
-              <div className="flex justify-between items-center gap-2 w-full max-w-[300px]">
-                <Select
-                  className="w-[150px]"
-                  value={rating}
-                  onChange={value => setRating(value)}
-                  options={[
-                    { value: 1, label: "⭐" },
-                    { value: 2, label: "⭐⭐" },
-                    { value: 3, label: "⭐⭐⭐" },
-                    { value: 4, label: "⭐⭐⭐⭐" },
-                    { value: 5, label: "⭐⭐⭐⭐⭐" },
-                  ]}
-                />
-                <label className="flex items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
-                  이미지 추가
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageUpload}
+              <div className="h-[1px] my-[20px] bg-[#DBDBDB] max-w-[300px] w-full mx-auto"></div>
+              <div className="flex justify-center items-center">
+                <span className="flex justify-center items-center">
+                  솔직한 후기를 남겨보세요!
+                </span>
+              </div>
+              <div className="flex justify-center items-center mt-[10px]">
+                <div className="flex justify-between items-center gap-2 w-full max-w-[300px]">
+                  <Select
+                    className="w-[150px]"
+                    value={rating}
+                    onChange={value => setRating(value)}
+                    options={[
+                      { value: 1, label: "⭐" },
+                      { value: 2, label: "⭐⭐" },
+                      { value: 3, label: "⭐⭐⭐" },
+                      { value: 4, label: "⭐⭐⭐⭐" },
+                      { value: 5, label: "⭐⭐⭐⭐⭐" },
+                    ]}
                   />
-                </label>
+                  <label className="flex items-center justify-center px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer">
+                    이미지 추가
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+                </div>
               </div>
-            </div>
-            <div className="flex justify-center items-center mt-[10px]">
-              <textarea
-                placeholder="리뷰를 작성해주세요"
-                value={reviewContent}
-                onChange={e => setReviewContent(e.target.value)}
-                className="flex justify-center items-center w-full max-w-[400px] h-[150px] rounded-[10px] border-[1px] border-[#DBDBDB] p-[10px] resize-none"
-              />
-            </div>
-            <div className="flex justify-center items-center w-full max-w-[420px] min-h-[100px] rounded-[10px] border-[1px] border-[#DBDBDB] p-[10px] mx-auto">
-              <div className="flex flex-wrap gap-2 w-full min-h-[100px] border-2 border-dashed border-gray-300 rounded-lg p-2">
-                {previewImages.map((image, index) => (
-                  <div key={index} className="relative w-[80px] h-[80px]">
-                    <div className="w-full h-full border border-gray-200 rounded-lg overflow-hidden">
-                      <img
-                        src={image}
-                        alt={`preview ${index}`}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
+              <div className="flex justify-center items-center mt-[10px]">
+                <textarea
+                  placeholder="리뷰를 작성해주세요"
+                  value={reviewContent}
+                  onChange={e => setReviewContent(e.target.value)}
+                  className="flex justify-center items-center w-full max-w-[400px] h-[150px] rounded-[10px] border-[1px] border-[#DBDBDB] p-[10px] resize-none"
+                />
+              </div>
+              <div className="flex justify-center items-center w-full max-w-[420px] min-h-[100px] rounded-[10px] border-[1px] border-[#DBDBDB] p-[10px] mx-auto">
+                <div className="flex flex-wrap gap-2 w-full min-h-[100px] border-2 border-dashed border-gray-300 rounded-lg p-2">
+                  {previewImages.map((image, index) => (
+                    <div key={index} className="relative w-[80px] h-[80px]">
+                      <div className="w-full h-full border border-gray-200 rounded-lg overflow-hidden">
+                        <img
+                          src={image}
+                          alt={`preview ${index}`}
+                          className="w-full h-full object-cover rounded-lg"
+                        />
+                      </div>
+                      <button
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm"
+                      >
+                        <RxCross2 className="text-[16px]" />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm"
-                    >
-                      <RxCross2 className="text-[16px]" />
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+              <div className="flex justify-center items-center gap-[10px]">
+                <button
+                  onClick={() => {
+                    reviewWrite(selectedServiceId);
+                  }}
+                  className="mt-4 px-4 py-2 bg-[#3887FF] rounded text-white gap-[10px]"
+                >
+                  보내기
+                </button>
+                <button
+                  onClick={handleReviewModalClose}
+                  className="mt-4 px-4 py-2 bg-gray-200 rounded"
+                >
+                  닫기
+                </button>
               </div>
             </div>
-            <div className="flex justify-center items-center gap-[10px]">
-              <button
-                onClick={() => {
-                  reviewWrite(selectedServiceId);
-                }}
-                className="mt-4 px-4 py-2 bg-[#3887FF] rounded text-white gap-[10px]"
-              >
-                보내기
-              </button>
-              <button
-                onClick={handleReviewModalClose}
-                className="mt-4 px-4 py-2 bg-gray-200 rounded"
-              >
-                닫기
-              </button>
-            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* 문의하기 모달*/}
-      {qnaModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-            <h2 className="flex justify-center items-center text-xl font-bold mb-4">
-              안내
-            </h2>
-            <p className="text-gray-600 mb-6">
-              죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일
-              내에 서비스를 제공해 드리도록 하겠습니다.
-            </p>
-            <div className="flex justify-center items-center">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                onClick={handleInquiryModalClose}
-              >
-                확인
-              </button>
+        {/* 문의하기 모달*/}
+        {qnaModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+              <h2 className="flex justify-center items-center text-xl font-bold mb-4">
+                안내
+              </h2>
+              <p className="text-gray-600 mb-6">
+                죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일
+                내에 서비스를 제공해 드리도록 하겠습니다.
+              </p>
+              <div className="flex justify-center items-center">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                  onClick={handleInquiryModalClose}
+                >
+                  확인
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* 취소 상태 모달 추가 */}
-      {cancelStatus.show && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-            <h2 className="flex justify-center items-center text-xl font-bold mb-4">
-              {cancelStatus.success ? "예약 취소 완료" : "예약 취소 실패"}
-            </h2>
-            <p className="text-gray-600 mb-6 text-center">
-              {cancelStatus.success
-                ? "예약이 성공적으로 취소되었습니다."
-                : "예약 취소 처리 중 오류가 발생했습니다. 다시 시도해 주세요."}
-            </p>
-            <div className="flex justify-center items-center">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
-                onClick={handleCancelStatusClose}
-              >
-                확인
-              </button>
+        {/* 취소 상태 모달 추가 */}
+        {cancelStatus.show && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+              <h2 className="flex justify-center items-center text-xl font-bold mb-4">
+                {cancelStatus.success ? "예약 취소 완료" : "예약 취소 실패"}
+              </h2>
+              <p className="text-gray-600 mb-6 text-center">
+                {cancelStatus.success
+                  ? "예약이 성공적으로 취소되었습니다."
+                  : "예약 취소 처리 중 오류가 발생했습니다. 다시 시도해 주세요."}
+              </p>
+              <div className="flex justify-center items-center">
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                  onClick={handleCancelStatusClose}
+                >
+                  확인
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </MyPageLayout>
   );
 }

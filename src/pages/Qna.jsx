@@ -106,12 +106,14 @@ const Qna = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold mb-4">안내</h2>
+            <h2 className="text-xl font-bold mb-4 flex justify-center items-center">
+              안내
+            </h2>
             <p className="text-gray-600 mb-6">
               죄송합니다. 1:1 문의하기 서비스는 현재 준비 중입니다. 빠른 시일
               내에 서비스를 제공해 드리도록 하겠습니다.
             </p>
-            <div className="text-right">
+            <div className="flex justify-center items-center">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
                 onClick={() => setShowModal(false)}

@@ -10,6 +10,7 @@ import { Form, Button, Image, Upload, Input } from "antd";
 import "./businessnumber.css";
 import { useNavigate } from "react-router-dom";
 import { loginApi } from "../../../apis/login";
+import JobBLogo from "../../../components/JobBLogo";
 // import axios from "axios";
 function BusinessNumber() {
   const [form] = Form.useForm();
@@ -27,7 +28,7 @@ function BusinessNumber() {
     setNumMOdal(false);
     navigate("/");
   };
-  console.log(busiInfo);
+  // console.log(busiInfo);
 
   const handleFileChange = ({ fileList }) => {
     setFileList(fileList);
@@ -40,7 +41,7 @@ function BusinessNumber() {
   };
 
   const fetchBusinessStatus = async data => {
-    console.log(data);
+    // console.log(data);
     setCheckMessage(true);
     try {
       const response = await fetch(
@@ -56,7 +57,7 @@ function BusinessNumber() {
       if (result) {
         setResult(result);
       }
-      console.log(result);
+      // console.log(result);
     } catch (err) {
       console.error(err.message);
       setError(err.message);
@@ -65,7 +66,7 @@ function BusinessNumber() {
   };
   // 업체 최종 등록
   const onSubmit = async data => {
-    console.log(busiInfo);
+    // console.log(busiInfo);
     try {
       const formData = new FormData();
 
@@ -77,7 +78,7 @@ function BusinessNumber() {
         busiCreatedAt: dayjs(busiInfo.busiCreatedAt).format("YYYY/MM/DD"),
         tel: busiInfo.tel,
       };
-      console.log(requestData);
+      // console.log(requestData);
       // JSON 데이터를 FormData에 추가
       formData.append(
         "p",
@@ -93,14 +94,14 @@ function BusinessNumber() {
         formData.append("paper", data.paper);
       }
 
-      console.log(requestData);
+      // console.log(requestData);
       // `Content-Type` 헤더는 설정하지 않음 (자동 설정)
       const res = await loginApi.post("/api/business/sign-up", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
+      // console.log(res);
 
       if (res.status === 200) {
         setNumMOdal(true);
@@ -114,6 +115,7 @@ function BusinessNumber() {
   };
   return (
     <div>
+      <JobBLogo />
       <Form
         form={form}
         initialValues={busiInfo}

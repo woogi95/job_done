@@ -33,12 +33,12 @@ const ContReview = () => {
 
   // 리뷰 목록 가져오기
   const getReviewList = async (businessId, state) => {
-    console.log("3424businessId, status!!!", businessId, state);
+    // console.log("3424businessId, status!!!", businessId, state);
     try {
       const res = await axios.get(
         `/api/review?businessId=${businessId}&state=${state}&page=${page}&size=${size}`,
       );
-      console.log("---------------reviewList@@@", res.data.resultData);
+      // console.log("---------------reviewList@@@", res.data.resultData);
       setReviewList(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -47,10 +47,20 @@ const ContReview = () => {
 
   useEffect(() => {
     getReviewList(businessId, status);
-  }, []);
+  }, [businessId, status]);
 
   // 별점 렌더링
   const renderStars = score => {
+    if (score === 0) {
+      return (
+        <>
+          {Array.from({ length: 5 }, (_, i) => (
+            <FaStar key={`empty-${i}`} color="#E0E2E7" />
+          ))}
+        </>
+      );
+    }
+
     const fullStars = Math.floor(score); // 채워진 별 개수
     const halfStar = score % 1 >= 0.5; // 반쪽 별 여부
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // 비어 있는 별 개수
@@ -73,9 +83,18 @@ const ContReview = () => {
       <StarTotalDiv>
         <h4>{businessDetail.businessName}</h4>
         <div className="star-container">
-          <p className="star"> {renderStars(reviewList[0]?.averageScore)}</p>
+          <p className="star-bg">
+            {Array.from({ length: 5 }, (_, index) => (
+              <FaStar key={index} color="#E0E2E7" />
+            ))}
+          </p>
+          <p className="star">
+            {" "}
+            {renderStars(reviewList[0]?.averageScore || 0)}
+          </p>
+
           <span className="star-grade">
-            {reviewList.length > 0 && reviewList[0]?.averageScore.toFixed(1)}
+            {(reviewList[0]?.averageScore || 0).toFixed(1)}
           </span>
         </div>
       </StarTotalDiv>
@@ -113,7 +132,10 @@ const ContReview = () => {
               {/* 유저리뷰 */}
               <div className="user-rv">
                 <div className="user-info">
-                  <div className="user-photo">
+                  <div
+                    className="user-photo"
+                    style={{ display: item.writerPic ? "block" : "none" }}
+                  >
                     {item.writerPic ? (
                       <img
                         src={`${BASE_URL}${item.writerPic}`}
@@ -125,7 +147,14 @@ const ContReview = () => {
                         }}
                       />
                     ) : (
-                      <img style={{ backgroundColor: "#34c5f0" }}></img>
+                      <div
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          backgroundColor: "#34c5f0",
+                          borderRadius: "100%",
+                        }}
+                      />
                     )}
                   </div>
                   <div className="desc">
@@ -160,7 +189,10 @@ const ContReview = () => {
                 </div>
               </div>
               {/* 사장님댓글 */}
-              <div className="reply">
+              <div
+                className="reply"
+                style={{ background: item.comment ? "" : "#fff" }}
+              >
                 <div className="info">
                   <div className="logo-container">
                     {/* 로고 */}
@@ -171,19 +203,17 @@ const ContReview = () => {
                         className="logo"
                       />
                     ) : (
-                      <div className="logo-placeholder">👤</div>
+                      ""
                     )}
                   </div>
                   {/* 업체이름 , 작성일 */}
                   {item.comment && item.comment.name ? (
                     <h4>{item.comment.name}</h4>
                   ) : (
-                    <h4>사장님</h4>
+                    ""
                   )}
                   <b>
-                    {item.comment
-                      ? item.comment.createdAt.slice(0, 10)
-                      : "없음"}
+                    {item.comment ? item.comment.createdAt.slice(0, 10) : ""}
                   </b>
                 </div>
                 <div className="comment">

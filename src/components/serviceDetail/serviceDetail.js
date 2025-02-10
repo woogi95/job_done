@@ -43,6 +43,7 @@ export const DetailTopDiv = styled.div`
         height: 50px;
         background-color: #eee;
         border-radius: 3px;
+        overflow: hidden;
       }
       .txt {
         display: flex;
@@ -138,6 +139,7 @@ export const DetailContentsDiv = styled.div`
         /* border: 1px solid; */
         padding: 15px 20px;
         cursor: pointer;
+        font-size: 18px;
       }
       a.active {
         font-weight: 700;
@@ -157,23 +159,23 @@ export const DetailContentsDiv = styled.div`
   }
 `;
 export const DContsDiv = styled.div`
-  /* border: 1px solid #bbb; */
-  /* height: 100vh; */
   .box {
     padding: 0px 0 30px;
     &:nth-of-type(1) {
       padding-top: 10px;
     }
-    &:nth-of-type(2) {
+    /* &:nth-of-type(2) {
       border-top: 4px solid #3887ff;
       border-bottom: 4px solid #3887ff;
-    }
+    } */
 
     h2 {
+      border-top: 4px solid #3887ff;
       border-bottom: 2px solid #3887ff80;
+      background-color: #f5f5f5;
       font-size: 20px;
       font-weight: 600;
-      padding: 20px 0;
+      padding: 20px 5px;
     }
 
     p {
@@ -182,6 +184,7 @@ export const DContsDiv = styled.div`
       line-height: 1.5em;
     }
     > img {
+      width: 100%;
       padding: 0px 10px;
     }
   }
@@ -200,6 +203,7 @@ export const PortfolioSwiperDiv = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    height: 0;
     z-index: 5;
     button {
       width: 40px;
@@ -308,6 +312,7 @@ export const StarTotalDiv = styled.div`
   .star-container {
     display: flex;
     align-items: center;
+    position: relative;
     gap: 5px;
     p.star {
       /* border: 1px solid #000; */
@@ -316,10 +321,19 @@ export const StarTotalDiv = styled.div`
       display: flex;
       justify-content: center;
       gap: 3px;
+      z-index: 5;
     }
     .star-grade {
       font-weight: 700;
       font-size: 20px;
+    }
+    .star-bg {
+      display: flex;
+      font-size: 24px;
+      position: absolute;
+      top: -20px;
+      left: -10px;
+      gap: 3px;
     }
   }
 `;
@@ -552,6 +566,11 @@ export const ReviewDiv = styled.div`
             width: 80px;
             height: 80px;
             background-color: #eee;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
           }
         }
       }

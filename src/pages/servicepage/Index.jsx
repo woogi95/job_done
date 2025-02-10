@@ -1,8 +1,3 @@
-import Filter from "../../components/service/Filter";
-import ServiceListItem from "../../components/service/ServiceListItem";
-import ServiceListTop from "../../components/service/ServiceListTop";
-import { LayoutDiv } from "../page";
-import { PageNavDiv, ServiceContentDiv } from "./servicepage";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -10,18 +5,33 @@ import {
   selectedDetailTypeState,
 } from "../../atoms/categoryAtom";
 import { likeStatusState } from "../../atoms/like";
+// comp
+import ServiceListTop from "../../components/service/ServiceListTop";
+import ServiceListItem from "../../components/service/ServiceListItem";
+import Filter from "../../components/service/Filter";
+import { Popup } from "../../components/ui/Popup";
+// styled
+import { LayoutDiv } from "../page";
+import { PageNavDiv, ServiceContentDiv } from "./servicepage";
+// apis
 import axios from "axios";
 import { loginApi } from "../../apis/login";
+import { getCookie } from "../../utils/Cookie";
+
 function Service() {
   const categoryId = useRecoilValue(selectedCategoryState);
   const detailTypeId = useRecoilValue(selectedDetailTypeState);
   const [likeStatus, setLikeStatus] = useRecoilState(likeStatusState);
-  const [businessList, setBusinessList] = useState([]);
-
+  // 팝업 상태
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupTitle, setPopupTitle] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupLink, setPopupLink] = useState("");
   //페이지네이션 상태
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20; //페이지당 아이템 갯수
-
+  const itemsPerPage = 20;
+  // 업체 리스트
+  const [businessList, setBusinessList] = useState([]);
   const getBusinessList = async (categoryId, detailTypeId) => {
     try {
       const res = await axios.get(
@@ -34,18 +44,24 @@ function Service() {
   };
 
   const handleClickBusiness = async businessId => {
+    const accessToken = getCookie("accessToken");
+
+    if (!accessToken) {
+      setPopupTitle("로그인 필요");
+      setPopupMessage("좋아요를 위해 로그인 후 이용해 주세요.");
+      setPopupLink("/login");
+      setIsPopupOpen(true);
+      return;
+    }
     try {
       const response = await loginApi.post("/api/like", {
         businessId: businessId,
       });
-
-      // 응답 데이터 처리
       console.log("찜 상태가 성공적으로 업데이트되었습니다:", response.data);
 
       // 찜 상태 업데이트
       const currentLikeStatus = likeStatus[businessId] || { isLiked: false };
       const newLikeStatus = !currentLikeStatus.isLiked;
-
       setLikeStatus(prevState => ({
         ...prevState,
         [businessId]: { isLiked: newLikeStatus },
@@ -58,6 +74,20 @@ function Service() {
       alert("찜 상태 업데이트에 실패했습니다.");
     }
   };
+  // 팝업 닫기
+  const handlePopupClose = () => {
+    setIsPopupOpen(false);
+  };
+
+  //페이지네이션
+  const totalPages = Math.ceil(businessList.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = businessList.slice(indexOfFirstItem, indexOfLastItem);
+  //페이지 숫자
+  const handlePageChange = pageNumber => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     if (categoryId && detailTypeId) {
@@ -65,17 +95,6 @@ function Service() {
       setCurrentPage(1);
     }
   }, [categoryId, detailTypeId]);
-
-  //페이지네이션
-  const totalPages = Math.ceil(businessList.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = businessList.slice(indexOfFirstItem, indexOfLastItem);
-
-  //페이지 숫자
-  const handlePageChange = pageNumber => {
-    setCurrentPage(pageNumber);
-  };
 
   return (
     <>
@@ -95,16 +114,7 @@ function Service() {
               />
             ))}
           </div>
-
-          {/* 페이지네이션 */}
-          <PageNavDiv
-            style={{
-              display: "flex",
-              gap: "15px",
-              fontSize: "20px",
-              justifyContent: "center",
-            }}
-          >
+          <PageNavDiv>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
               <button
                 key={page}
@@ -117,6 +127,17 @@ function Service() {
           </PageNavDiv>
         </LayoutDiv>
       </ServiceContentDiv>
+      {/* 로그인x - 찜팝업 */}
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handlePopupClose}
+        title={popupTitle}
+        message={popupMessage}
+        onCancel={handlePopupClose}
+        showCancelButton={true}
+        showConfirmButton={true}
+        confirmLink={popupLink}
+      />
     </>
   );
 }

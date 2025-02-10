@@ -1,37 +1,102 @@
 import React, { useEffect, useState } from "react";
 import { BtnAreaDiv, FormDiv, PaperContDiv, PapersDiv } from "./papers";
-import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { papersState } from "../../atoms/businessAtom";
+import { getCookie } from "../../apis/cookie";
+import { loginApi } from "../../apis/login";
+import { Popup } from "../ui/Popup";
+import LoadingPopup from "../LoadingPopup";
 
 const Estimate = () => {
+  // 컨펌 팝업
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("예약취소 요청하였습니다.");
+  const [isLoading, setIsLoading] = useState(false);
+  const [serviceId, setServiceId] = useState(null);
   const [papers, setPapers] = useRecoilState(papersState);
   const papersInfo = useRecoilValue(papersState);
-  const serviceId = papers.serviceId;
-  const getEstimate = async serviceId => {
-    try {
-      ///api/service/detail?serviceId=28
-      const res = await axios.get(`/api/service/detail?serviceId=${serviceId}`);
 
-      console.log("!!!!", res);
-      setPapers(res.data.resultData);
+  const getEstimate = async serviceId => {
+    if (!serviceId) return;
+    try {
+      // console.log("이게 찍히니????", serviceId);
+      const res = await loginApi.get(
+        `/api/service/detail?serviceId=${serviceId}`,
+      );
+      // console.log("견적서 정보", res);
+      if (res.data) {
+        setPapers(res.data.resultData);
+      }
+      // console.log(res.data.DataMessage);
     } catch (error) {
-      console.log(error);
+      console.error("견적서 조회 중 오류 발생:", error);
     }
   };
 
-  const formatPhoneNumber = phone => {
-    if (!phone) return "-";
-    return phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true);
+    patchServiceState(3, serviceId);
   };
-  const formatBusinessNumber = number => {
-    if (!number) return "사업자 번호 없음";
-    return number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3");
+
+  const handleClosePopup = () => setIsPopupOpen(false);
+  const handleCancelPopup = () => setIsPopupOpen(false);
+
+  const formatPhoneNumber = phone =>
+    phone ? phone.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3") : "-";
+  const formatBusinessNumber = number =>
+    number
+      ? number.replace(/(\d{3})(\d{2})(\d{4})/, "$1-$2-$3")
+      : "사업자 번호 없음";
+
+  const handleClickNewPage = async () => {
+    if (!serviceId) {
+      console.error("serviceId가 없습니다.");
+      return;
+    }
+    setIsLoading(true);
+    console.log("결제 누구야!", serviceId);
+    try {
+      const width = 480;
+      const height = 600;
+      const left = (window.innerWidth - width) / 2;
+      const top = (window.innerHeight - height) / 2;
+
+      const res = await loginApi.get(
+        `/api/payment/ready?serviceId=${serviceId}`,
+      );
+      if (res.data?.next_redirect_pc_url) {
+        const paymentWindow = window.open(
+          res.data.next_redirect_pc_url,
+          "_blank",
+          `width=${width},height=${height},left=${left},top=${top}`,
+        );
+
+        const checkWindowClosed = setInterval(() => {
+          if (paymentWindow.closed) {
+            setIsLoading(false);
+            clearInterval(checkWindowClosed);
+          }
+        }, 1000);
+      }
+    } catch (error) {
+      console.error("결제 준비 중 오류 발생:", error);
+      setIsLoading(false);
+    }
   };
+
   useEffect(() => {
-    getEstimate(serviceId);
-    console.log("==>", papersInfo);
+    const storedServiceId = getCookie("serviceId");
+    if (storedServiceId) {
+      setServiceId(storedServiceId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (serviceId) {
+      getEstimate(serviceId);
+    }
   }, [serviceId]);
+
   return (
     <PapersDiv>
       <div className="inner">
@@ -123,7 +188,7 @@ const Estimate = () => {
                   <p>평수</p>
                   <span>{papersInfo.pyeong}</span>
                 </li>
-                {papersInfo.options && papersInfo.options.length > 0 && (
+                {papersInfo.options?.length > 0 && (
                   <li className="option">
                     <p>옵션</p>
                     <ul>
@@ -141,21 +206,6 @@ const Estimate = () => {
                     </ul>
                   </li>
                 )}
-                {papersInfo.etc && papersInfo.etc.length > 0 && (
-                  <li className="option">
-                    <p>추가견적</p>
-                    <ul>
-                      {papersInfo.etc.map((etcItem, index) => (
-                        <li key={index}>
-                          <p>
-                            {etcItem.etcComment} <em>({etcItem.etcId})</em>
-                          </p>
-                          <span>{etcItem.etcPrice.toLocaleString()}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
                 <li>
                   <p>견적비용</p>
                   <span>{papersInfo.price.toLocaleString()}</span>
@@ -168,11 +218,25 @@ const Estimate = () => {
             </div>
           </FormDiv>
           <BtnAreaDiv>
-            <button className="cancel">예약취소</button>
-            <button className="confirm">결제하기</button>
+            <button className="cancel" onClick={handleOpenPopup}>
+              예약취소
+            </button>
+            <button className="confirm" onClick={handleClickNewPage}>
+              결제하기
+            </button>
           </BtnAreaDiv>
         </PaperContDiv>
       </div>
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
+        title="예약 취소"
+        message={popupMessage}
+        confirmLink="/mypage/reservation"
+        showConfirmButton
+      />
+      {isLoading && <LoadingPopup />}
     </PapersDiv>
   );
 };

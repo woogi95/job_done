@@ -15,8 +15,11 @@ function UsageDetails() {
           size: 10,
         },
       });
-      console.log("무엇이 오나요?:", res.data.resultData);
-      setUsage(res.data.resultData);
+      const filterData = res.data.resultData.filter(
+        item =>
+          item.completed === 6 || (item.completed >= 3 && item.completed <= 5),
+      );
+      setUsage(filterData);
     } catch (error) {
       console.error("Error fetching usage data:", error);
     }

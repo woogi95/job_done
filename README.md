@@ -35,13 +35,18 @@
 ## 폴더구조
 
 ```
+<<<<<<< HEAD
 job_done
+=======
+job-done
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 ├─ .prettierrc
 ├─ eslint.config.js
 ├─ index.html
 ├─ package-lock.json
 ├─ package.json
 ├─ public
+<<<<<<< HEAD
 │  ├─ images
 │  │  ├─ arrow-right.svg
 │  │  ├─ b-logo.svg
@@ -60,6 +65,10 @@ job_done
 ├─ README.md
 ├─ server
 │  └─ server.json
+=======
+│  └─ images
+├─ README.md
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 ├─ src
 │  ├─ apis
 │  │  ├─ cookie.js
@@ -95,6 +104,10 @@ job_done
 │  │  ├─ ExpertLayout.jsx
 │  │  ├─ Footer.jsx
 │  │  ├─ Header.jsx
+<<<<<<< HEAD
+=======
+│  │  ├─ JobBLogo.jsx
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  │  ├─ Layout.jsx
 │  │  ├─ LoadingPopup.jsx
 │  │  ├─ MyPageLayout.jsx
@@ -134,6 +147,10 @@ job_done
 │  ├─ context
 │  │  └─ Context.jsx
 │  ├─ index.css
+<<<<<<< HEAD
+=======
+│  ├─ main
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  ├─ main.jsx
 │  ├─ main.tsx
 │  ├─ pages
@@ -229,6 +246,12 @@ job_done
 │  │     └─ servicepage.js
 │  ├─ routers
 │  │  └─ Root.jsx
+<<<<<<< HEAD
+=======
+│  ├─ styles
+│  │  ├─ login
+│  │  └─ order
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a
 │  ├─ types
 │  │  └─ TypeBox.ts
 │  ├─ utils
@@ -239,5 +262,9 @@ job_done
 ├─ tsconfig.json
 ├─ tsconfig.node.json
 └─ vite.config.ts
+<<<<<<< HEAD
 
 ```
+=======
+```
+>>>>>>> 969ff1ba4210ffa8d7efb12ae2ef68e1cf92838a

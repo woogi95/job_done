@@ -1,11 +1,9 @@
 import styled from "@emotion/styled";
 // 서브페이지 - 컨텐츠
 export const ServiceContentDiv = styled.div`
-  /* border: 1px solid #eee; */
   padding: 80px 0 160px;
 
   .list {
-    /* border: 1px solid #eee; */
     margin: 15px 0;
     display: flex;
     flex-wrap: wrap;
@@ -197,6 +195,10 @@ export const MessageBoxDiv = styled.div`
 `;
 export const PageNavDiv = styled.div`
   padding: 30px;
+  display: flex;
+  gap: 15px;
+  font-size: 20px;
+  justify-content: center;
   button {
     width: 40px;
     height: 40px;

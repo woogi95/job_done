@@ -1,14 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function UserLayout() {
+function JobBLogo() {
   const navigate = useNavigate();
   const goBack = () => navigate(-1);
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <button onClick={goBack}>
         <img
-          src="\images\logo.svg"
+          src="\images\busi-logo.png"
           style={{
             Width: "300",
             height: "70",
@@ -18,4 +18,4 @@ function UserLayout() {
     </div>
   );
 }
-export default UserLayout;
+export default JobBLogo;

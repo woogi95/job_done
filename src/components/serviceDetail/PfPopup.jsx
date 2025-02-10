@@ -37,7 +37,7 @@ const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
       const res = await axios.get(
         `/api/portfolio/pic/%7BportfolioId%7D?portfolioId=${portfolioId}`,
       );
-      console.log("깡총", res.data.resultData);
+      // console.log("깡총", res.data.resultData);
       setPfDetailImgList(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -50,7 +50,7 @@ const PfPopup = ({ isPfDetailPop, setIsPfDetailPop, portfolioId }) => {
       const res = await axios.get(
         `/api/portfolio/%7BportfolioId%7D?portfolioId=${portfolioId}`,
       );
-      console.log("깡총22", res.data.resultData);
+      // console.log("깡총22", res.data.resultData);
       setPfDetailInfoList(res.data.resultData);
     } catch (error) {
       console.log(error);

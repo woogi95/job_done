@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 export const PageTopDiv = styled.div`
   height: 320px;
   background-color: rgb(245, 245, 245);
+  background-color: #e8faff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,17 +17,24 @@ export const PageTopDiv = styled.div`
     justify-content: center;
 
     h1 {
-      font-size: 40px;
+      font-size: 45px;
       font-weight: 600;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
     span {
       display: block;
       text-align: center;
-      color: #bbb;
+      color: #3887ff;
       margin-top: 2px;
-      font-size: 14px;
-      font-weight: 300;
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      svg {
+        font-size: 10px;
+      }
     }
 
     ul {
@@ -54,7 +62,14 @@ export const PageTopDiv = styled.div`
       /* border: 1px solid #000; */
       width: 100%;
       position: relative;
+      margin-top: 5px;
       height: 40px;
+      button.search-btn {
+        transition: all.3s;
+        &:hover {
+          background-color: rgb(39, 105, 204);
+        }
+      }
       em {
         position: absolute;
         width: 40px;
@@ -94,6 +109,18 @@ export const PageTopDiv = styled.div`
         color: #fff;
       }
     }
+  }
+
+  .skyblue {
+    background-color: skyblue;
+  }
+
+  .yellow {
+    background-color: yellow;
+  }
+
+  .pink {
+    background-color: pink;
   }
 `;
 
@@ -162,6 +189,19 @@ export const ListItemDiv = styled.div`
     height: 265px;
     background-color: #eee;
     position: relative;
+    &::after {
+      content: "";
+      width: 100%;
+      height: 60px;
+      position: absolute;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(49, 49, 49, 0.5)
+      );
+      top: 0;
+      left: 0;
+    }
     img {
       width: 100%;
       height: 100%;
@@ -177,6 +217,7 @@ export const ListItemDiv = styled.div`
     height: 22px;
     color: red;
     cursor: pointer;
+    z-index: 2;
   }
 
   .info {
@@ -201,8 +242,8 @@ export const ListItemDiv = styled.div`
       text-overflow: ellipsis;
     }
     p {
-      font-size: 20px;
-      color: #000;
+      font-size: 24px;
+      color: #2563eb;
       font-weight: 700;
       margin-bottom: 10px;
     }

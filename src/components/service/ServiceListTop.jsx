@@ -1,4 +1,5 @@
 import { IoSearch } from "react-icons/io5";
+import { BiSolidRightArrow } from "react-icons/bi";
 import { PageTopDiv } from "./service";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -22,35 +23,27 @@ const ServiceListTop = ({ setBusinessList }) => {
   const cateName = categoryDatas.find(
     item => item.categoryId === categoryId,
   )?.categoryName;
-  console.log(detailDatas);
+  // console.log(detailDatas);
   const detailName =
     Object.values(detailDatas)
       .flat()
       .find(item => item.detailTypeId === detailTypeId)?.detailTypeName || "";
 
-  // const [regionId] = useRecoilState(regionIdState)
   const [searchTerm, setSearchTerm] = useState("");
-  // const handleChange = e => {
-  //   setSearchTerm(e.target.value);
-  // };
-  useEffect(() => {
-    console.log("검색어:", regionIdVal);
-  }, [searchTerm]);
-
   const handleSearch = async (
     categoryId,
     detailTypeId,
     regionIdVal,
     searchTerm,
   ) => {
-    console.log("검색어:", searchTerm);
-    console.log(
-      "categoryId",
-      categoryId,
-      detailTypeId,
-      regionIdVal,
-      searchTerm,
-    );
+    // console.log("검색어:", searchTerm);
+    // console.log(
+    //   "categoryId",
+    //   categoryId,
+    //   detailTypeId,
+    //   regionIdVal,
+    //   searchTerm,
+    // );
     try {
       let url = "/api/business?";
 
@@ -78,7 +71,7 @@ const ServiceListTop = ({ setBusinessList }) => {
       url = url.endsWith("&") ? url.slice(0, -1) : url;
 
       const res = await axios.get(url);
-      console.log("검색 결과:", res.data.resultData);
+      // console.log("검색 결과:", res.data.resultData);
 
       setBusinessList(res.data.resultData);
       setFilteredBusinessList(res.data.resultData);
@@ -88,7 +81,7 @@ const ServiceListTop = ({ setBusinessList }) => {
   };
 
   const handleRegionClick = async (categoryId, detailTypeId, regionId) => {
-    console.log(categoryId, detailTypeId, regionId);
+    // console.log(categoryId, detailTypeId, regionId);
     setRegionId(regionId);
 
     try {
@@ -101,7 +94,7 @@ const ServiceListTop = ({ setBusinessList }) => {
       }
 
       const res = await axios.get(url);
-      console.log(res.data.resultData);
+      // console.log(res.data.resultData);
       setBusinessList(res.data.resultData);
       // setFilteredBusinessList(res.data.resultData);
     } catch (error) {
@@ -111,14 +104,15 @@ const ServiceListTop = ({ setBusinessList }) => {
 
   useEffect(() => {
     handleRegionClick(categoryId, detailTypeId, regionId);
-  }, [categoryId, detailTypeId, regionId]);
+  }, []);
   return (
     <PageTopDiv>
       <div className="inner">
-        <h1>
-          {cateName} {detailTypeId >= 1 ? " > " : ""} {detailName}
-        </h1>
-        <span>{/* {cateName}  */}</span>
+        <h1>{cateName}</h1>
+        <span>
+          {cateName} {detailTypeId >= 1 ? <BiSolidRightArrow /> : ""}
+          {detailName}
+        </span>
         <ul>
           <li>
             <button
@@ -181,12 +175,13 @@ const ServiceListTop = ({ setBusinessList }) => {
             onChange={e => setSearchTerm(e.target.value)}
             onKeyDown={e => {
               if (e.key === "Enter") {
-                e.preventDefault(); // 기본 동작 방지 (폼 제출 방지)
+                e.preventDefault();
                 handleSearch(categoryId, detailTypeId, regionId, searchTerm);
               }
             }}
           />
           <button
+            className="search-btn"
             onClick={() =>
               handleSearch(categoryId, detailTypeId, regionId, searchTerm)
             }
