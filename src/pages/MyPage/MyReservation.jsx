@@ -173,7 +173,7 @@ function MyReservation() {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return reservation.slice(startIndex, endIndex);
+    return [...reservation].slice(startIndex, endIndex);
   };
 
   const handlePageChange = page => {
@@ -191,7 +191,6 @@ function MyReservation() {
         navigate(`/UserReservLook/${serviceId}`);
       } else if (currentReservation.completed === 2) {
         document.cookie = `serviceId=${serviceId}; path=/`;
-        console.log("견적서로 이동, serviceId:", serviceId);
         navigate(`/estimate/${serviceId}`);
       }
     }

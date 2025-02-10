@@ -25,15 +25,17 @@ const UserReservation = () => {
     setIsPopupOpen(true);
     patchServiceState(3, serviceId);
   };
-  const handlePopupClose = () => {
+  const handleClosePopup = () => {
     setIsPopupOpen(false);
-    navigate("/mypage/reservation");
+  };
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
   };
 
   const getEstimate = async serviceId => {
     try {
       ///api/service/detail?serviceId=28
-      console.log("이게 찍히니????", serviceId);
+      // console.log("이게 찍히니????", serviceId);
 
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
@@ -214,13 +216,14 @@ const UserReservation = () => {
       </div>
       <Popup
         isOpen={isPopupOpen}
-        onClose={handlePopupClose}
-        onCancel={handlePopupClose}
+        onClose={handleClosePopup}
+        onCancel={handleCancelPopup}
         title="예약 취소"
         message={popupMessage}
+        // showCancelButton={true}
+        // cancelLink="/cancel"
         confirmLink="/mypage/reservation"
-        // showConfirmButton={true}
-        showCancelButton={true}
+        showConfirmButton={true}
       />
     </PapersDiv>
   );

@@ -43,6 +43,7 @@ export const DetailTopDiv = styled.div`
         height: 50px;
         background-color: #eee;
         border-radius: 3px;
+        overflow: hidden;
       }
       .txt {
         display: flex;
