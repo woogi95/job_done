@@ -1,15 +1,14 @@
 import { Button, Form, Input } from "antd";
 import axios from "axios";
-import Cookies from "js-cookie";
+import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { setCookie } from "../../../apis/cookie";
 import { loginUser } from "../../../atoms/loginAtom";
 import UserLayout from "../../../components/UserLayout";
 import "./Index.css";
-import { setCookie } from "../../../apis/cookie";
-import { useState } from "react";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useRecoilState(loginUser);
