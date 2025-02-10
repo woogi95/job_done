@@ -14,10 +14,10 @@ export const Popup = ({
 }) => {
   const navigate = useNavigate();
   const handleConfirmClick = () => {
-    console.log("Confirm clicked");
-    console.log(confirmLink);
+    // console.log("Confirm clicked");
+    // console.log(confirmLink);
     if (confirmLink) {
-      console.log("Navigating to: ", confirmLink);
+      // console.log("Navigating to: ", confirmLink);
       navigate(confirmLink);
     } else if (onClose) {
       onClose();
@@ -26,9 +26,9 @@ export const Popup = ({
 
   //
   const handleCancelClick = () => {
-    console.log("Cancel clicked");
+    // console.log("Cancel clicked");
     if (cancelLink) {
-      console.log("Navigating to: ", cancelLink);
+      // console.log("Navigating to: ", cancelLink);
       navigate(cancelLink);
     } else if (onCancel) {
       onCancel();

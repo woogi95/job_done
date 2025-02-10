@@ -21,8 +21,8 @@ const ExpertHeader = () => {
       const response = await loginApi.get(
         `/api/business?business_id=${busiId}`,
       );
-      console.log("캘린더 데이터", res);
-      console.log("업체 데이터", response); // API 응답 확인
+      // console.log("캘린더 데이터", res);
+      // console.log("업체 데이터", response); // API 응답 확인
       const {
         logo,
         detailTypeId,
@@ -54,7 +54,7 @@ const ExpertHeader = () => {
           start: item.startDate,
         }));
       }
-      console.log(filteredData);
+      // console.log(filteredData);
       setBusinessInfo({
         logo: logo,
         detailTypeId: detailTypeId,
@@ -81,7 +81,7 @@ const ExpertHeader = () => {
       console.log(error);
     }
   };
-  console.log(businessInfo);
+  // console.log(businessInfo);
   useEffect(() => {
     businessPage();
   }, []);

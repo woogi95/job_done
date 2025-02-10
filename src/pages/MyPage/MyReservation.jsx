@@ -35,7 +35,6 @@ function MyReservation() {
           serviceId: serviceId,
         },
       });
-      console.log("서비스 데이터:", res.data.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -84,10 +83,8 @@ function MyReservation() {
           size: 10,
         },
       });
-      // console.log("너 맞니? : ", res.data.resultData);
       setReservation(res.data.resultData);
       setResState(res.data.resultData);
-      // console.log("잘 담김? : ", resState);
     } catch (error) {
       console.log(error);
     }
@@ -160,12 +157,12 @@ function MyReservation() {
     setCancelStatus({ show: false, success: false });
   };
 
-  useEffect(() => {
-    reservation.map(item => {
-      console.log("serviceId:", item.serviceId);
-      console.log("예약 항목 전체 데이터:", item);
-    });
-  }, [reservation]);
+  // useEffect(() => {
+  //   reservation.map(item => {
+  //     console.log("serviceId:", item.serviceId);
+  //     console.log("예약 항목 전체 데이터:", item);
+  //   });
+  // }, [reservation]);
   useEffect(() => {
     reservationData();
   }, []);
@@ -173,7 +170,7 @@ function MyReservation() {
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return [...reservation].slice(startIndex, endIndex);
+    return reservation.slice(startIndex, endIndex);
   };
 
   const handlePageChange = page => {
@@ -181,7 +178,6 @@ function MyReservation() {
   };
 
   const handleDetailClick = serviceId => {
-    console.log("클릭된 serviceId:", serviceId);
     const currentReservation = reservation.find(
       item => item.serviceId === serviceId,
     );

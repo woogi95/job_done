@@ -69,9 +69,9 @@ function Index() {
   const businessId = businessDetail.businessId;
   const [isTest, setIsTest] = useState();
   const [serviceId, setServiceId] = useRecoilState(serviceIdState);
-  useEffect(() => {
-    console.log("serviceId", serviceId);
-  }, [serviceId]);
+  // useEffect(() => {
+  //   console.log("serviceId", serviceId);
+  // }, [serviceId]);
 
   // 최종 API 로 보낼 데이터 모양
   const [sendAllData, setSendAllData] = useState([]);
@@ -108,7 +108,7 @@ function Index() {
     const sendOptionData = sendAllData.map(item => ({
       optionDetailId: item.optionDetailId,
     }));
-    console.log(sendOptionData);
+    // console.log(sendOptionData);
   }, [sendAllData]);
 
   // 옵션 목록 가져오기
@@ -144,7 +144,7 @@ function Index() {
       const res = await loginApi.post(`/api/service`, data);
       const resultData = res.data.resultData;
       setIsTest(resultData);
-      console.log("서비스 아이디가 맞나요?", res.data.resultData.serviceId);
+      // console.log("서비스 아이디가 맞나요?", res.data.resultData.serviceId);
       setServiceId(res.data.resultData.serviceId);
       setCookie("serviceId", res.data.resultData.serviceId);
 
@@ -172,7 +172,7 @@ function Index() {
       productId: productId,
       options: sendOptionData,
     };
-    console.log("!!!!", updatedData);
+    // console.log("!!!!", updatedData);
     postReservation(updatedData);
     setReservationSubmitted(true);
   };
@@ -187,10 +187,10 @@ function Index() {
   const displayTotalPrice = isNaN(totalPrice) ? 0 : totalPrice;
   // 옵션 변경 처리
   const handleOptionChange = (productOptionId, optionPrice, optionDetailId) => {
-    console.log("productOptionId : ", productOptionId);
-    console.log("optionPrice : ", optionPrice);
-    console.log("optionDetailId : ", optionDetailId);
-    console.log("----------");
+    // console.log("productOptionId : ", productOptionId);
+    // console.log("optionPrice : ", optionPrice);
+    // console.log("optionDetailId : ", optionDetailId);
+    // console.log("----------");
 
     const resultArr = sendAllData.map(item => {
       if (productOptionId === item.productOptionId) {
@@ -252,7 +252,7 @@ function Index() {
   }, []);
 
   useEffect(() => {
-    console.log("옵션 아이디", selectedOption);
+    // console.log("옵션 아이디", selectedOption);
   }, [address, detailAddress, selectedOption]);
 
   const rsvTime = [

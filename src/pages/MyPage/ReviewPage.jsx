@@ -29,10 +29,10 @@ function ReviewPage() {
         withCredentials: true,
       });
       setReview(Array.isArray(res.data.resultData) ? res.data.resultData : []);
-      console.log(
-        "리뷰 데이터의 pics:",
-        res.data.resultData.map(item => item.pics),
-      );
+      // console.log(
+      //   "리뷰 데이터의 pics:",
+      //   res.data.resultData.map(item => item.pics),
+      // );
     } catch (error) {
       console.error("리뷰 목록 조회 실패:", error.response || error);
       setReview([]);
@@ -50,11 +50,8 @@ function ReviewPage() {
         score: rating,
       };
 
-      const reviewRes = await loginApi.put(
-        `/api/review/${selectedReview.reviewId}`,
-        reviewData,
-      );
-      console.log("리뷰 수정 성공:", reviewRes);
+      const reviewRes = await loginApi.put(`/api/review`, reviewData);
+      // console.log("리뷰 수정 성공:", reviewRes);
 
       if (selectedImages.length > 0) {
         await loginApi.put("/api/review/state", {
@@ -74,13 +71,13 @@ function ReviewPage() {
             "Content-Type": "application/json",
           },
         });
-        console.log("이미지 업로드 성공:", imageRes);
+        // console.log("이미지 업로드 성공:", imageRes);
       }
 
       alert("리뷰가 수정되었습니다.");
       handleReviewModalClose();
       reviewList();
-      console.log(reviewList);
+      // console.log(reviewList);
     } catch (error) {
       console.error("리뷰 수정 실패:", error);
       alert("리뷰 수정에 실패했습니다.");
@@ -95,7 +92,7 @@ function ReviewPage() {
           reviewId: 0,
         },
       });
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -129,7 +126,7 @@ function ReviewPage() {
 
     const newPreviews = files.map(file => URL.createObjectURL(file));
     setPreviewImages(prevPreviews => [...prevPreviews, ...newPreviews]);
-    console.log("선택된 이미지:", files);
+    // console.log("선택된 이미지:", files);
   };
 
   const handleRemoveImage = index => {
@@ -142,8 +139,8 @@ function ReviewPage() {
     setSelectedImages(newSelectedImages);
     setPreviewImages(newPreviewImages);
 
-    console.log(newSelectedImages);
-    console.log(newPreviewImages);
+    // console.log(newSelectedImages);
+    // console.log(newPreviewImages);
   };
 
   const handleReviewModalOpen = review => {

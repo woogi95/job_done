@@ -60,7 +60,7 @@ const Index = () => {
   };
 
   useEffect(() => {
-    console.log("추천 글 상태 업데이트:", companies);
+    // console.log("추천 글 상태 업데이트:", companies);
   }, [companies]);
   return (
     <div className="pt-[80px] min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">

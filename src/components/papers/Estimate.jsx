@@ -19,15 +19,15 @@ const Estimate = () => {
   const getEstimate = async serviceId => {
     if (!serviceId) return;
     try {
-      console.log("이게 찍히니????", serviceId);
+      // console.log("이게 찍히니????", serviceId);
       const res = await loginApi.get(
         `/api/service/detail?serviceId=${serviceId}`,
       );
-      console.log("견적서 정보", res);
+      // console.log("견적서 정보", res);
       if (res.data) {
         setPapers(res.data.resultData);
       }
-      console.log(res.data.DataMessage);
+      // console.log(res.data.DataMessage);
     } catch (error) {
       console.error("견적서 조회 중 오류 발생:", error);
     }
